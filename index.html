@@ -20,8 +20,8 @@
       --shelf-shadow: #b8957a;
       --wishlist-bg: #f5efe8;
       --wishlist-shelf: #cbbdad;
-      --card-w: 120px;
-      --card-h: 200px;
+      --card-w: 140px;
+      --card-h: 240px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -119,12 +119,19 @@
 
     /* BOTTLE CARD */
     .bottle-card {
+      --tilt: 0deg;
       position: relative;
       width: var(--card-w);
       flex-shrink: 0;
       cursor: pointer;
       animation: fadeUp 0.5s ease both;
     }
+
+    /* Alternating tilts for a casual, shelf-placed look */
+    .bottle-card:nth-child(4n+1) { --tilt: -4deg; }
+    .bottle-card:nth-child(4n+2) { --tilt:  2deg; }
+    .bottle-card:nth-child(4n+3) { --tilt: -2.5deg; }
+    .bottle-card:nth-child(4n)   { --tilt:  3.5deg; }
 
     .bottle-card:nth-child(1) { animation-delay: 0.05s; }
     .bottle-card:nth-child(2) { animation-delay: 0.10s; }
@@ -144,11 +151,13 @@
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      transition: transform 0.3s cubic-bezier(.22,.68,0,1.2);
+      transform: rotate(var(--tilt));
+      transition: transform 0.35s cubic-bezier(.22,.68,0,1.2);
     }
 
+    /* On hover: lift and straighten */
     .bottle-card:hover .bottle-img-wrap {
-      transform: translateY(-10px);
+      transform: translateY(-12px) rotate(0deg);
     }
 
     .bottle-img-wrap img {
@@ -194,22 +203,25 @@
       font-size: 0.72rem;
     }
 
-    /* HOVER POPUP */
+    /* GLOBAL POPUP — fixed-positioned via JS to avoid overflow clipping */
     .popup {
       display: none;
-      position: absolute;
-      bottom: calc(100% + 14px);
-      left: 50%;
-      transform: translateX(-50%);
+      position: fixed;
       width: 220px;
       background: white;
       border-radius: 12px;
       box-shadow: 0 12px 40px rgba(60,30,20,0.18), 0 2px 8px rgba(60,30,20,0.08);
       padding: 16px;
-      z-index: 100;
+      z-index: 9999;
       pointer-events: none;
     }
 
+    .popup.visible {
+      display: block;
+      animation: popIn 0.18s ease;
+    }
+
+    /* Arrow pointing downward toward the card */
     .popup::after {
       content: '';
       position: absolute;
@@ -221,14 +233,16 @@
       clip-path: polygon(0 0, 100% 0, 50% 100%);
     }
 
-    .bottle-card:hover .popup {
-      display: block;
-      animation: popIn 0.18s ease;
+    /* Arrow pointing upward when popup is flipped below the card */
+    .popup.flipped::after {
+      bottom: auto;
+      top: -7px;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
     }
 
     @keyframes popIn {
-      from { opacity: 0; transform: translateX(-50%) translateY(6px); }
-      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .popup-brand {
@@ -349,7 +363,7 @@
       border: 2px dashed #b5a89a;
     }
 
-    /* WISHLIST DASHED OVERLAY */
+    /* WISHLIST BADGE */
     .wishlist-badge {
       position: absolute;
       top: 8px;
@@ -674,7 +688,6 @@
 <p class="section-label">the collection</p>
 <div class="shelf-wrapper" id="collection-wrapper">
   <div class="shelf-row" id="collection-shelf">
-    <!-- bottles rendered here -->
     <button class="add-btn" onclick="openModal('collection')">
       <span>+</span>add
     </button>
@@ -700,6 +713,9 @@
   <button class="export-btn" onclick="exportJSON()">↓ export fragrances.json</button>
   <p class="export-note">save & upload to github to keep your collection</p>
 </div>
+
+<!-- GLOBAL POPUP — lives outside shelf so overflow:auto can't clip it -->
+<div id="global-popup" class="popup"></div>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay">
@@ -800,9 +816,14 @@
   function renderShelf(shelf) {
     const container = document.getElementById(shelf + '-shelf');
     const addBtn = `<button class="add-btn" onclick="openModal('${shelf}')"><span>+</span>add</button>`;
-
     const cards = data[shelf].map((f, i) => buildCard(f, i, shelf)).join('');
     container.innerHTML = cards + addBtn;
+
+    // Attach popup hover events after rendering
+    container.querySelectorAll('.bottle-card').forEach((card, i) => {
+      card.addEventListener('mouseenter', () => showPopup(card, data[shelf][i]));
+      card.addEventListener('mouseleave', hidePopup);
+    });
   }
 
   function buildCard(f, index, shelf) {
@@ -810,6 +831,22 @@
       ? `<img src="${f.image}" alt="${f.name}">`
       : `<div class="bottle-placeholder">🌸</div>`;
 
+    const wishBadge = shelf === 'wishlist' ? `<div class="wishlist-badge">✦</div>` : '';
+
+    return `
+      <div class="bottle-card" style="animation-delay:${index * 0.05}s">
+        <button class="delete-btn" onclick="deleteFragrance('${shelf}', ${index})" title="remove">×</button>
+        ${wishBadge}
+        <div class="bottle-img-wrap">${imgHtml}</div>
+        <div class="bottle-name"><strong>${f.name}</strong>${f.brand}</div>
+      </div>
+    `;
+  }
+
+  // GLOBAL POPUP — fixed-positioned to avoid overflow clipping
+  const globalPopup = document.getElementById('global-popup');
+
+  function buildPopupContent(f) {
     const starsHtml = [1,2,3,4,5].map(n =>
       `<span class="star ${n <= (f.rating||0) ? 'filled' : ''}">★</span>`
     ).join('');
@@ -822,11 +859,10 @@
       </div>
     `).join('');
 
-    const wishBadge = shelf === 'wishlist' ? `<div class="wishlist-badge">✦</div>` : '';
     const notesSection = (f.top || f.mid || f.base) ? `
       <div class="notes-section">
-        ${f.top ? `<div class="notes-label">top</div><div class="notes-list">${f.top}</div>` : ''}
-        ${f.mid ? `<div class="notes-label" style="margin-top:4px">heart</div><div class="notes-list">${f.mid}</div>` : ''}
+        ${f.top  ? `<div class="notes-label">top</div><div class="notes-list">${f.top}</div>`  : ''}
+        ${f.mid  ? `<div class="notes-label" style="margin-top:4px">heart</div><div class="notes-list">${f.mid}</div>`  : ''}
         ${f.base ? `<div class="notes-label" style="margin-top:4px">base</div><div class="notes-list">${f.base}</div>` : ''}
       </div>
     ` : '';
@@ -834,22 +870,52 @@
     const personalNote = f.note ? `<div class="popup-personal-note">"${f.note}"</div>` : '';
 
     return `
-      <div class="bottle-card" style="animation-delay:${index * 0.05}s">
-        <button class="delete-btn" onclick="deleteFragrance('${shelf}', ${index})" title="remove">×</button>
-        ${wishBadge}
-        <div class="popup">
-          <div class="popup-brand">${f.brand || ''}</div>
-          <div class="popup-name">${f.name}</div>
-          <div class="popup-rating">${starsHtml}</div>
-          ${notesSection}
-          ${accordsHtml ? `<div class="accords">${accordsHtml}</div>` : ''}
-          ${personalNote}
-        </div>
-        <div class="bottle-img-wrap">${imgHtml}</div>
-        <div class="bottle-name"><strong>${f.name}</strong>${f.brand}</div>
-      </div>
+      <div class="popup-brand">${f.brand || ''}</div>
+      <div class="popup-name">${f.name}</div>
+      <div class="popup-rating">${starsHtml}</div>
+      ${notesSection}
+      ${accordsHtml ? `<div class="accords">${accordsHtml}</div>` : ''}
+      ${personalNote}
     `;
   }
+
+  function showPopup(card, f) {
+    globalPopup.innerHTML = buildPopupContent(f);
+    globalPopup.classList.remove('flipped');
+    globalPopup.classList.add('visible');
+
+    requestAnimationFrame(() => {
+      const rect = card.getBoundingClientRect();
+      const pw = globalPopup.offsetWidth;
+      const ph = globalPopup.offsetHeight;
+
+      // Default: popup above card
+      let top = rect.top - ph - 14;
+      let flipped = false;
+
+      // Not enough room above → flip below
+      if (top < 8) {
+        top = rect.bottom + 14;
+        flipped = true;
+      }
+
+      // Center horizontally over card, clamped to viewport
+      let left = rect.left + rect.width / 2 - pw / 2;
+      left = Math.max(8, Math.min(left, window.innerWidth - pw - 8));
+
+      globalPopup.style.top  = top + 'px';
+      globalPopup.style.left = left + 'px';
+
+      if (flipped) globalPopup.classList.add('flipped');
+    });
+  }
+
+  function hidePopup() {
+    globalPopup.classList.remove('visible', 'flipped');
+  }
+
+  // Hide popup on scroll so it doesn't drift
+  window.addEventListener('scroll', hidePopup, true);
 
   // MODAL
   function openModal(shelf) {
@@ -879,6 +945,10 @@
 
   document.getElementById('modal-overlay').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
   });
 
   // RATING
@@ -929,21 +999,21 @@
     if (!name) { alert('please enter a fragrance name'); return; }
 
     const accords = [...document.querySelectorAll('.accord-entry')].map(row => ({
-      name: row.querySelector('input[type="text"]').value.trim(),
+      name:  row.querySelector('input[type="text"]').value.trim(),
       value: row.querySelector('input[type="range"]').value,
       color: row.querySelector('input[type="color"]').value
     })).filter(a => a.name);
 
     const frag = {
-      brand: document.getElementById('f-brand').value.trim(),
+      brand:  document.getElementById('f-brand').value.trim(),
       name,
-      image: currentImageData,
-      top: document.getElementById('f-top').value.trim(),
-      mid: document.getElementById('f-mid').value.trim(),
-      base: document.getElementById('f-base').value.trim(),
+      image:  currentImageData,
+      top:    document.getElementById('f-top').value.trim(),
+      mid:    document.getElementById('f-mid').value.trim(),
+      base:   document.getElementById('f-base').value.trim(),
       accords,
       rating: currentRating,
-      note: document.getElementById('f-note').value.trim()
+      note:   document.getElementById('f-note').value.trim()
     };
 
     data[currentShelf].push(frag);
@@ -962,10 +1032,9 @@
 
   // EXPORT JSON
   function exportJSON() {
-    // Strip image data for clean JSON (images are large base64 strings)
     const exportData = {
       collection: data.collection.map(f => ({...f, image: f.image ? '[image stored locally]' : null})),
-      wishlist: data.wishlist.map(f => ({...f, image: f.image ? '[image stored locally]' : null}))
+      wishlist:   data.wishlist.map(f => ({...f, image: f.image ? '[image stored locally]' : null}))
     };
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
