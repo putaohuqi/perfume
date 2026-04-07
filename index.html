@@ -1846,6 +1846,13 @@
       '#c39dc7', '#d8849b', '#baa18e', '#b99a77', '#9cb0a1'
     ];
 
+    const BOTTLE_IMAGE_EXPORT = {
+      maxWidth: 720,
+      maxHeight: 1152,
+      mimeType: 'image/webp',
+      quality: 0.88
+    };
+
     let appState = createDefaultAppState();
     let uiState = { search: '', sortBy: 'added', sortDir: 'desc' };
     let currentShelf = 'collection';
@@ -2008,8 +2015,18 @@
     }
 
     function persistApp() {
-      localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(appState));
-      localStorage.setItem(APP_STORAGE_KEY + ':ui', JSON.stringify(uiState));
+      try {
+        localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(appState));
+        localStorage.setItem(APP_STORAGE_KEY + ':ui', JSON.stringify(uiState));
+        return true;
+      } catch (error) {
+        console.error('Could not persist perfume wall state.', error);
+        const message = isStorageQuotaError(error)
+          ? 'This browser wall ran out of local storage. Try cropping bottle PNGs tighter or replacing a few oversized images first.'
+          : 'This browser could not save the latest wall changes just now.';
+        alert(message);
+        return false;
+      }
     }
 
     function getCurrentProfile() {
@@ -2688,13 +2705,21 @@
         cropState.outputHeight
       );
 
-      const cropped = canvas.toDataURL('image/png');
-
       if (cropState.target === 'accord') {
+        const cropped = canvas.toDataURL('image/png');
+        currentAccordImageOriginal = cropped;
         currentAccordImageData = cropped;
         setAccordPreview(cropped, 'cropped accord screenshot');
         setExtractStatus('Screenshot cropped. You can run OCR again whenever you want.', 'idle');
       } else {
+        let cropped;
+        try {
+          cropped = canvas.toDataURL(BOTTLE_IMAGE_EXPORT.mimeType, BOTTLE_IMAGE_EXPORT.quality);
+        } catch (error) {
+          console.warn('Could not encode cropped bottle image as WebP, falling back to PNG.', error);
+          cropped = canvas.toDataURL('image/png');
+        }
+        currentBottleImageOriginal = cropped;
         currentImageData = cropped;
         setBottleImagePreview(cropped, 'cropped bottle image');
       }
@@ -2752,46 +2777,65 @@
         .filter(accord => accord.name);
     }
 
-    function saveFragrance() {
+    async function saveFragrance() {
       const name = document.getElementById('f-name').value.trim();
       if (!name) {
         alert('please enter a fragrance name');
         return;
       }
 
-      const targetShelf = document.getElementById('f-shelf-select').value;
-      const currentData = getCurrentData();
-      const existingLocation = editingFragranceId ? findFragranceLocation(editingFragranceId, currentData) : null;
-      const existing = existingLocation ? currentData[existingLocation.shelf][existingLocation.index] : null;
+      const saveButton = document.getElementById('save-fragrance-btn');
+      const originalButtonText = saveButton.textContent;
+      saveButton.disabled = true;
+      saveButton.textContent = 'saving...';
 
-      const fragrance = normalizeFragrance({
-        id: existing?.id || editingFragranceId || createFragranceId(),
-        brand: document.getElementById('f-brand').value.trim(),
-        name,
-        image: currentImageData,
-        top: document.getElementById('f-top').value.trim(),
-        mid: document.getElementById('f-mid').value.trim(),
-        base: document.getElementById('f-base').value.trim(),
-        accords: collectAccordsFromBuilder(),
-        rating: currentRating,
-        note: document.getElementById('f-note').value.trim(),
-        createdAt: existing?.createdAt || new Date().toISOString()
-      });
+      try {
+        const targetShelf = document.getElementById('f-shelf-select').value;
+        const currentData = cloneData(getCurrentData());
+        const existingLocation = editingFragranceId ? findFragranceLocation(editingFragranceId, currentData) : null;
+        const existing = existingLocation ? currentData[existingLocation.shelf][existingLocation.index] : null;
+        const optimizedImage = currentImageData
+          ? await prepareBottleImageForStorage(currentImageData)
+          : null;
 
-      if (existingLocation) {
-        if (existingLocation.shelf === targetShelf) {
-          currentData[targetShelf][existingLocation.index] = fragrance;
+        const fragrance = normalizeFragrance({
+          id: existing?.id || editingFragranceId || createFragranceId(),
+          brand: document.getElementById('f-brand').value.trim(),
+          name,
+          image: optimizedImage,
+          top: document.getElementById('f-top').value.trim(),
+          mid: document.getElementById('f-mid').value.trim(),
+          base: document.getElementById('f-base').value.trim(),
+          accords: collectAccordsFromBuilder(),
+          rating: currentRating,
+          note: document.getElementById('f-note').value.trim(),
+          createdAt: existing?.createdAt || new Date().toISOString()
+        });
+
+        if (existingLocation) {
+          if (existingLocation.shelf === targetShelf) {
+            currentData[targetShelf][existingLocation.index] = fragrance;
+          } else {
+            currentData[existingLocation.shelf].splice(existingLocation.index, 1);
+            currentData[targetShelf].push(fragrance);
+          }
         } else {
-          currentData[existingLocation.shelf].splice(existingLocation.index, 1);
           currentData[targetShelf].push(fragrance);
         }
-      } else {
-        currentData[targetShelf].push(fragrance);
-      }
 
-      persistApp();
-      renderAll();
-      closeModal();
+        if (!saveCurrentProfileData(currentData)) return;
+
+        currentImageData = fragrance.image;
+        currentBottleImageOriginal = fragrance.image;
+        renderAll();
+        closeModal();
+      } catch (error) {
+        console.error('Could not save fragrance.', error);
+        alert('I could not save this fragrance just now. If you changed the bottle image, try cropping it a little tighter and saving again.');
+      } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = originalButtonText;
+      }
     }
 
     function deleteFragrance(shelf, index) {
@@ -3258,6 +3302,23 @@
       return `https://${value}`;
     }
 
+    function cloneData(data) {
+      return JSON.parse(JSON.stringify(data));
+    }
+
+    function saveCurrentProfileData(nextData) {
+      const profile = getCurrentProfile();
+      const previousData = profile.data;
+      profile.data = normalizeData(nextData);
+
+      if (persistApp()) {
+        return true;
+      }
+
+      profile.data = previousData;
+      return false;
+    }
+
     function createFragranceId() {
       if (window.crypto?.randomUUID) {
         return window.crypto.randomUUID();
@@ -3374,6 +3435,49 @@
       }
 
       return { h, s, l };
+    }
+
+    async function prepareBottleImageForStorage(src) {
+      if (!src) return null;
+      return optimizeImageData(src, BOTTLE_IMAGE_EXPORT);
+    }
+
+    async function optimizeImageData(src, options = {}) {
+      const image = await loadImage(src);
+      const maxWidth = options.maxWidth || image.naturalWidth;
+      const maxHeight = options.maxHeight || image.naturalHeight;
+      const mimeType = options.mimeType || 'image/png';
+      const quality = options.quality ?? 0.92;
+
+      const scale = Math.min(1, maxWidth / image.naturalWidth, maxHeight / image.naturalHeight);
+      const width = Math.max(1, Math.round(image.naturalWidth * scale));
+      const height = Math.max(1, Math.round(image.naturalHeight * scale));
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+
+      canvas.width = width;
+      canvas.height = height;
+      context.clearRect(0, 0, width, height);
+      context.drawImage(image, 0, 0, width, height);
+
+      try {
+        return canvas.toDataURL(mimeType, quality);
+      } catch (error) {
+        console.warn(`Could not encode ${mimeType}, falling back to PNG.`, error);
+        return canvas.toDataURL('image/png');
+      }
+    }
+
+    function isStorageQuotaError(error) {
+      return Boolean(
+        error &&
+        (
+          error.name === 'QuotaExceededError' ||
+          error.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+          error.code === 22 ||
+          error.code === 1014
+        )
+      );
     }
 
     function levenshtein(a, b) {
