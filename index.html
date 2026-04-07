@@ -2,150 +2,563 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>my fragrance shelf</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --cream: #faf6f1;
-      --blush: #e8c4b8;
-      --blush-light: #f2ddd6;
-      --blush-muted: #d4a99a;
-      --rose: #c47b6a;
-      --ink: #2a1f1a;
-      --ink-light: #6b5750;
+      --cream: #fbf6f0;
+      --paper: rgba(255, 251, 247, 0.86);
+      --paper-strong: rgba(255, 251, 248, 0.96);
+      --blush: #ebc9bc;
+      --blush-light: #f5dfd6;
+      --blush-muted: #d8ab9d;
+      --rose: #bf7665;
+      --rose-deep: #985646;
+      --ink: #2d201a;
+      --ink-light: #6c5951;
+      --ink-soft: #917b72;
+      --gold: #d8b37a;
+      --sage: #8ea78a;
       --shelf-wood: #d9b89c;
-      --shelf-shadow: #b8957a;
-      --wishlist-bg: #f5efe8;
-      --wishlist-shelf: #cbbdad;
-      --card-w: 170px;
-      --card-h: 280px;
+      --shelf-shadow: #b58f75;
+      --wishlist-bg: linear-gradient(180deg, rgba(245, 237, 231, 0.92) 0%, rgba(241, 229, 220, 0.82) 100%);
+      --wishlist-shelf: #ccb7aa;
+      --line: rgba(165, 120, 96, 0.16);
+      --card-w: clamp(182px, 18vw, 222px);
+      --card-h: clamp(312px, 31vw, 386px);
+      --page-max: 1380px;
+      --shadow-soft: 0 18px 40px rgba(94, 58, 41, 0.08);
+      --shadow-card: 0 24px 60px rgba(94, 58, 41, 0.14);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
-      background: var(--cream);
+      min-height: 100vh;
       color: var(--ink);
       font-family: 'Jost', sans-serif;
       font-weight: 300;
-      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255, 225, 214, 0.86) 0%, rgba(255, 225, 214, 0) 34%),
+        radial-gradient(circle at top right, rgba(244, 211, 198, 0.62) 0%, rgba(244, 211, 198, 0) 28%),
+        linear-gradient(180deg, #fff9f4 0%, var(--cream) 42%, #f8f0e8 100%);
+      overflow-x: hidden;
     }
 
-    /* GRAIN OVERLAY */
-    body::before {
+    body::before,
+    body::after {
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
       pointer-events: none;
-      z-index: 1000;
-      opacity: 0.4;
     }
 
-    /* HEADER */
-    header {
-      text-align: center;
-      padding: 60px 20px 20px;
+    body::before {
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.045'/%3E%3C/svg%3E");
+      z-index: 1;
+      opacity: 0.45;
     }
 
-    header h1 {
+    body::after {
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.64) 0%, rgba(255, 255, 255, 0) 22%),
+        radial-gradient(circle at 82% 26%, rgba(255, 235, 228, 0.72) 0%, rgba(255, 235, 228, 0) 18%),
+        radial-gradient(circle at 68% 70%, rgba(243, 208, 188, 0.28) 0%, rgba(243, 208, 188, 0) 24%);
+      z-index: 0;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: none;
+      background: none;
+    }
+
+    img {
+      display: block;
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
+      max-width: var(--page-max);
+      margin: 0 auto;
+      padding: 28px 20px 76px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(330px, 0.85fr);
+      gap: 26px;
+      align-items: start;
+      padding: 26px 0 20px;
+    }
+
+    .hero-copy {
+      position: relative;
+      padding: 34px 34px 30px;
+      border-radius: 34px;
+      background: linear-gradient(135deg, rgba(255, 252, 249, 0.92) 0%, rgba(250, 240, 233, 0.82) 100%);
+      border: 1px solid rgba(200, 151, 127, 0.15);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .hero-copy::before {
+      content: '';
+      position: absolute;
+      top: -36px;
+      right: -16px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 218, 204, 0.8) 0%, rgba(245, 218, 204, 0) 72%);
+      opacity: 0.9;
+    }
+
+    .hero-copy::after {
+      content: '✦';
+      position: absolute;
+      right: 36px;
+      top: 30px;
+      color: rgba(191, 118, 101, 0.24);
+      font-size: 2rem;
+    }
+
+    .hero-kicker {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--rose);
+    }
+
+    .hero-kicker::before {
+      content: '';
+      width: 42px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(191, 118, 101, 0.12), rgba(191, 118, 101, 0.72));
+    }
+
+    .hero h1 {
+      position: relative;
+      z-index: 1;
       font-family: 'Cormorant Garamond', serif;
       font-weight: 300;
       font-style: italic;
-      font-size: clamp(2.2rem, 5vw, 3.8rem);
-      color: var(--ink);
+      font-size: clamp(3rem, 7vw, 5.35rem);
+      line-height: 0.96;
       letter-spacing: 0.02em;
-      line-height: 1.1;
+      color: var(--ink);
+      text-wrap: balance;
     }
 
-    header p {
-      margin-top: 8px;
-      font-size: 0.75rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
+    .hero p {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin-top: 18px;
+      font-size: 1rem;
+      line-height: 1.75;
       color: var(--ink-light);
     }
 
-    /* SECTION TITLES */
-    .section-label {
-      text-align: center;
-      margin: 50px 0 0;
+    .hero-ribbon {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .hero-ribbon span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 10px 16px;
+      background: rgba(255, 250, 246, 0.88);
+      border: 1px solid rgba(191, 118, 101, 0.14);
+      font-size: 0.73rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      box-shadow: 0 10px 24px rgba(94, 58, 41, 0.06);
+    }
+
+    .hero-ribbon span:first-child {
+      color: var(--rose-deep);
+      border-color: rgba(191, 118, 101, 0.24);
+    }
+
+    .hero-panel {
+      display: grid;
+      gap: 16px;
+      padding: 22px;
+      border-radius: 30px;
+      background: rgba(255, 253, 250, 0.86);
+      border: 1px solid rgba(165, 120, 96, 0.12);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(14px);
+    }
+
+    .profile-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(252, 244, 238, 0.96) 0%, rgba(255, 251, 247, 0.92) 100%);
+      border: 1px solid rgba(212, 169, 154, 0.22);
+    }
+
+    .profile-badge {
+      width: 64px;
+      height: 64px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, rgba(232, 196, 184, 0.95), rgba(214, 171, 157, 0.95));
+      color: white;
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      font-weight: 400;
-      letter-spacing: 0.3em;
+      font-size: 2rem;
+      box-shadow: 0 16px 30px rgba(191, 118, 101, 0.24);
+    }
+
+    .mini-label,
+    .control-label,
+    .stat-label,
+    .modal-sub,
+    label {
+      font-size: 0.66rem;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .profile-card h2 {
+      margin-top: 4px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.9rem;
+      font-weight: 400;
+      line-height: 1.05;
+      color: var(--ink);
+    }
+
+    .profile-card p:last-child {
+      margin-top: 6px;
+      font-size: 0.92rem;
+      color: var(--ink-light);
+      line-height: 1.5;
+    }
+
+    .profile-actions {
+      display: grid;
+      gap: 12px;
+    }
+
+    .controls-bar,
+    .control-field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .controls-bar {
+      margin-top: 14px;
+      padding: 18px;
+      border-radius: 28px;
+      background: rgba(255, 251, 248, 0.82);
+      border: 1px solid rgba(165, 120, 96, 0.12);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(16px);
+      flex-direction: row;
+      align-items: end;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .control-field.grow {
+      flex: 1 1 260px;
+    }
+
+    .control-field.compact {
+      min-width: 180px;
+      flex: 0 0 180px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1.5px solid rgba(216, 171, 157, 0.26);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(255, 251, 248, 0.96);
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: rgba(191, 118, 101, 0.42);
+      box-shadow: 0 0 0 4px rgba(232, 196, 184, 0.2);
+    }
+
+    textarea {
+      min-height: 86px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-secondary,
+    .sort-direction-btn,
+    .export-btn,
+    .text-pill,
+    .btn-cancel,
+    .btn-save {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .btn-secondary,
+    .sort-direction-btn,
+    .text-pill,
+    .btn-cancel {
+      padding: 11px 16px;
+      border: 1.5px solid rgba(216, 171, 157, 0.3);
+      background: rgba(255, 251, 248, 0.95);
       color: var(--ink-light);
     }
 
-    /* SHELF */
+    .btn-secondary:hover,
+    .sort-direction-btn:hover,
+    .text-pill:hover,
+    .btn-cancel:hover,
+    .export-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(191, 118, 101, 0.34);
+      box-shadow: 0 14px 28px rgba(120, 80, 50, 0.08);
+      color: var(--rose-deep);
+    }
+
+    .btn-save {
+      padding: 12px 22px;
+      background: linear-gradient(135deg, var(--rose) 0%, var(--rose-deep) 100%);
+      color: white;
+      letter-spacing: 0.08em;
+      box-shadow: 0 18px 34px rgba(191, 118, 101, 0.24);
+    }
+
+    .btn-save:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 22px 40px rgba(191, 118, 101, 0.28);
+    }
+
+    .profile-note {
+      font-size: 0.79rem;
+      line-height: 1.6;
+      color: var(--ink-light);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat-card {
+      min-height: 112px;
+      padding: 16px 18px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255, 252, 249, 0.92), rgba(249, 241, 235, 0.82));
+      border: 1px solid rgba(216, 171, 157, 0.18);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 14px 26px rgba(94, 58, 41, 0.06);
+    }
+
+    .stat-card strong {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 400;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .stat-card span:last-child {
+      font-size: 0.83rem;
+      line-height: 1.5;
+      color: var(--ink-light);
+    }
+
+    .section-block {
+      position: relative;
+      margin-top: 26px;
+      padding: 26px 0 34px;
+      border-radius: 38px;
+      background: rgba(255, 252, 248, 0.72);
+      border: 1px solid rgba(216, 171, 157, 0.16);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .section-block::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 94% 0%, rgba(243, 208, 188, 0.22), transparent 26%),
+        radial-gradient(circle at 6% 4%, rgba(255, 255, 255, 0.38), transparent 20%);
+      pointer-events: none;
+    }
+
+    .section-block.wishlist {
+      background: var(--wishlist-bg);
+    }
+
+    .section-top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 0 28px;
+    }
+
+    .section-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .section-sub {
+      margin-top: 8px;
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
     .shelf-wrapper {
       position: relative;
-      padding: 30px 40px 0;
+      z-index: 1;
+      width: 100%;
+      margin-top: 18px;
+      padding: 20px 28px 0;
       overflow-x: auto;
-      max-width: 900px;
-      margin: 0 auto;
+      overflow-y: visible;
     }
 
     .shelf-row {
       display: flex;
-      gap: 28px;
+      gap: 34px;
       align-items: flex-end;
-      padding-bottom: 0;
-      min-height: calc(var(--card-h) + 20px);
-      flex-wrap: nowrap;
+      min-height: calc(var(--card-h) + 42px);
       min-width: max-content;
+      padding-bottom: 12px;
     }
 
-    /* SHELF PLANK */
     .shelf-plank {
-      height: 14px;
-      background: linear-gradient(180deg, var(--shelf-wood) 0%, var(--shelf-shadow) 100%);
-      border-radius: 2px;
-      max-width: 900px;
-      margin: 0 auto;
-      box-shadow: 0 6px 20px rgba(120,80,50,0.18), 0 2px 4px rgba(120,80,50,0.12);
       position: relative;
+      z-index: 1;
+      height: 18px;
+      margin: 0 28px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, var(--shelf-wood) 0%, var(--shelf-shadow) 100%);
+      box-shadow: 0 8px 26px rgba(120, 80, 50, 0.22), inset 0 2px 1px rgba(255, 255, 255, 0.2);
     }
 
     .shelf-plank::after {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
+      inset: 2px 2px auto;
       height: 3px;
-      background: rgba(255,255,255,0.3);
-      border-radius: 2px 2px 0 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.32);
     }
 
-    /* BOTTLE CARD */
+    .wishlist .shelf-plank {
+      background: linear-gradient(180deg, var(--wishlist-shelf) 0%, #b39e91 100%);
+    }
+
     .bottle-card {
       --tilt: 0deg;
+      --card-rise: 0px;
+      --card-scale: 1;
+      --glow: rgba(232, 196, 184, 0.42);
       position: relative;
       width: var(--card-w);
-      flex-shrink: 0;
       cursor: pointer;
-      animation: fadeUp 0.5s ease both;
+      flex-shrink: 0;
+      animation: fadeUp 0.55s ease both;
     }
 
-    /* Alternating tilts for a casual, shelf-placed look */
-    .bottle-card:nth-child(4n+1) { --tilt: -4deg; }
-    .bottle-card:nth-child(4n+2) { --tilt:  2deg; }
-    .bottle-card:nth-child(4n+3) { --tilt: -2.5deg; }
-    .bottle-card:nth-child(4n)   { --tilt:  3.5deg; }
+    .bottle-card::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 56px;
+      width: 72%;
+      height: 24px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--glow) 0%, rgba(232, 196, 184, 0) 72%);
+      filter: blur(2px);
+      opacity: 0.78;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+    }
 
-    .bottle-card:nth-child(1) { animation-delay: 0.05s; }
-    .bottle-card:nth-child(2) { animation-delay: 0.10s; }
-    .bottle-card:nth-child(3) { animation-delay: 0.15s; }
-    .bottle-card:nth-child(4) { animation-delay: 0.20s; }
-    .bottle-card:nth-child(5) { animation-delay: 0.25s; }
-    .bottle-card:nth-child(6) { animation-delay: 0.30s; }
+    .bottle-card:hover::before {
+      transform: translateX(-50%) scale(1.1);
+      opacity: 0.98;
+    }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .bottle-card:hover .card-actions {
+      opacity: 1;
+      transform: translate(-50%, 0);
+      pointer-events: auto;
     }
 
     .bottle-img-wrap {
@@ -154,68 +567,194 @@
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      transform: rotate(var(--tilt));
-      transition: transform 0.35s cubic-bezier(.22,.68,0,1.2);
+      transform: translateY(var(--card-rise)) rotate(var(--tilt)) scale(var(--card-scale));
+      transform-origin: bottom center;
+      transition: transform 0.4s cubic-bezier(.22, .68, 0, 1.2);
     }
 
-    /* On hover: lift and straighten */
     .bottle-card:hover .bottle-img-wrap {
-      transform: translateY(-12px) rotate(0deg);
+      transform: translateY(calc(var(--card-rise) - 18px)) rotate(calc(var(--tilt) * -0.18)) scale(calc(var(--card-scale) + 0.03));
     }
 
     .bottle-img-wrap img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 8px 16px rgba(60,30,20,0.18));
-      transition: filter 0.3s;
+      filter: drop-shadow(0 12px 20px rgba(60, 30, 20, 0.18));
+      transition: filter 0.3s ease;
     }
 
     .bottle-card:hover .bottle-img-wrap img {
-      filter: drop-shadow(0 16px 28px rgba(60,30,20,0.25));
+      filter: drop-shadow(0 20px 28px rgba(60, 30, 20, 0.24));
     }
 
-    /* Placeholder for missing images */
+    .wishlist .bottle-img-wrap img {
+      filter: drop-shadow(0 10px 18px rgba(60, 30, 20, 0.15)) saturate(0.76);
+      opacity: 0.88;
+    }
+
+    .wishlist .bottle-card:hover .bottle-img-wrap img {
+      filter: drop-shadow(0 18px 26px rgba(60, 30, 20, 0.22)) saturate(0.88);
+      opacity: 1;
+    }
+
     .bottle-placeholder {
-      width: 70px;
-      height: var(--card-h);
-      background: linear-gradient(160deg, var(--blush-light), var(--blush));
-      border-radius: 8px 8px 4px 4px;
+      width: 82px;
+      height: calc(var(--card-h) - 22px);
+      border-radius: 24px 24px 10px 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.6rem;
-      box-shadow: 0 4px 16px rgba(180,100,80,0.12);
+      background: linear-gradient(180deg, rgba(247, 229, 221, 0.96) 0%, rgba(232, 196, 184, 0.96) 100%);
+      color: var(--rose-deep);
+      font-size: 2rem;
+      box-shadow: 0 14px 28px rgba(191, 118, 101, 0.16);
+    }
+
+    .wishlist .bottle-placeholder {
+      background: linear-gradient(180deg, rgba(228, 219, 211, 0.96) 0%, rgba(204, 190, 180, 0.96) 100%);
+      border: 2px dashed rgba(148, 132, 122, 0.42);
+      color: #836a60;
+    }
+
+    .card-actions {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translate(-50%, 8px);
+      display: flex;
+      gap: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: rgba(255, 250, 246, 0.94);
+      border: 1px solid rgba(216, 171, 157, 0.24);
+      color: var(--ink-light);
+      box-shadow: 0 12px 24px rgba(94, 58, 41, 0.08);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-1px);
+      background: white;
+      color: var(--rose-deep);
+    }
+
+    .icon-btn.danger:hover {
+      color: #b24f4f;
+    }
+
+    .wishlist-badge {
+      position: absolute;
+      top: 10px;
+      right: 18px;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 246, 241, 0.92);
+      border: 1px solid rgba(216, 171, 157, 0.22);
+      color: var(--rose);
+      box-shadow: 0 12px 24px rgba(94, 58, 41, 0.08);
+      z-index: 2;
     }
 
     .bottle-name {
+      margin-top: 14px;
       text-align: center;
-      margin-top: 10px;
-      font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      color: var(--ink-light);
-      line-height: 1.4;
-      white-space: normal;
-      word-break: break-word;
+      font-size: 0.74rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      line-height: 1.45;
+      text-wrap: balance;
     }
 
     .bottle-name strong {
       display: block;
+      margin-bottom: 5px;
+      font-size: 0.95rem;
+      font-family: 'Cormorant Garamond', serif;
       font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: none;
       color: var(--ink);
-      font-size: 0.72rem;
     }
 
-    /* GLOBAL POPUP — fixed-positioned via JS to avoid overflow clipping */
+    .add-btn {
+      width: var(--card-w);
+      height: calc(var(--card-h) - 16px);
+      border-radius: 30px;
+      border: 1.8px dashed rgba(191, 118, 101, 0.38);
+      background: rgba(255, 251, 248, 0.62);
+      color: var(--rose-deep);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-shrink: 0;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.36);
+      transition: transform 0.24s ease, border-color 0.24s ease, background 0.24s ease, box-shadow 0.24s ease;
+    }
+
+    .add-btn:hover {
+      transform: translateY(-4px);
+      border-color: rgba(191, 118, 101, 0.62);
+      background: rgba(255, 249, 244, 0.88);
+      box-shadow: 0 20px 36px rgba(191, 118, 101, 0.12);
+    }
+
+    .add-btn span {
+      font-size: 2.6rem;
+      line-height: 1;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .add-btn small {
+      font-size: 0.76rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .empty-note {
+      min-width: min(620px, calc(100vw - 120px));
+      min-height: calc(var(--card-h) - 12px);
+      padding: 32px;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 249, 244, 0.66);
+      border: 1px dashed rgba(191, 118, 101, 0.24);
+      color: var(--ink-light);
+      font-size: 0.92rem;
+      text-align: center;
+      line-height: 1.7;
+    }
+
     .popup {
       display: none;
       position: fixed;
-      width: 220px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 12px 40px rgba(60,30,20,0.18), 0 2px 8px rgba(60,30,20,0.08);
-      padding: 16px;
-      z-index: 9999;
+      width: 268px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid rgba(216, 171, 157, 0.18);
+      box-shadow: 0 22px 54px rgba(60, 30, 20, 0.18), 0 4px 10px rgba(60, 30, 20, 0.08);
+      backdrop-filter: blur(16px);
+      z-index: 2000;
       pointer-events: none;
     }
 
@@ -224,28 +763,24 @@
       animation: popIn 0.18s ease;
     }
 
-    /* Arrow pointing downward toward the card */
     .popup::after {
       content: '';
       position: absolute;
-      bottom: -7px;
+      bottom: -8px;
       left: 50%;
       transform: translateX(-50%);
-      width: 14px; height: 14px;
-      background: white;
+      width: 16px;
+      height: 16px;
+      background: inherit;
       clip-path: polygon(0 0, 100% 0, 50% 100%);
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
     }
 
-    /* Arrow pointing upward when popup is flipped below the card */
     .popup.flipped::after {
+      top: -8px;
       bottom: auto;
-      top: -7px;
       clip-path: polygon(50% 0, 100% 100%, 0 100%);
-    }
-
-    @keyframes popIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
     }
 
     .popup-brand {
@@ -258,170 +793,154 @@
 
     .popup-name {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.05rem;
-      font-weight: 500;
-      color: var(--ink);
+      font-size: 1.22rem;
+      line-height: 1.1;
       margin-bottom: 10px;
-      line-height: 1.2;
+      color: var(--ink);
     }
 
     .popup-rating {
       display: flex;
-      gap: 2px;
+      gap: 3px;
+      margin-bottom: 12px;
+    }
+
+    .star {
+      color: rgba(216, 171, 157, 0.66);
+      font-size: 0.86rem;
+    }
+
+    .star.filled {
+      color: var(--rose);
+    }
+
+    .notes-section {
+      display: grid;
+      gap: 8px;
       margin-bottom: 10px;
     }
 
-    .star { color: var(--blush-muted); font-size: 0.75rem; }
-    .star.filled { color: var(--rose); }
-
-    .notes-section {
-      margin-bottom: 8px;
+    .notes-block {
+      display: grid;
+      gap: 3px;
     }
 
     .notes-label {
       font-size: 0.58rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--ink-light);
-      margin-bottom: 4px;
+      color: var(--ink-soft);
     }
 
     .notes-list {
-      font-size: 0.72rem;
+      font-size: 0.74rem;
+      line-height: 1.55;
       color: var(--ink);
-      line-height: 1.6;
     }
 
-    /* ACCORD BARS */
     .accords {
+      display: grid;
+      gap: 6px;
       margin-top: 8px;
     }
 
     .accord-row {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      margin-bottom: 4px;
-      gap: 6px;
+      gap: 8px;
     }
 
     .accord-bar-wrap {
-      flex: 1;
-      height: 18px;
-      background: #f5f0ee;
-      border-radius: 4px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(240, 232, 228, 0.78);
       overflow: hidden;
     }
 
     .accord-bar {
       height: 100%;
-      border-radius: 4px;
+      border-radius: 999px;
       display: flex;
       align-items: center;
-      padding-left: 7px;
-      font-size: 0.6rem;
-      font-weight: 500;
+      padding: 0 10px;
       color: white;
+      font-size: 0.63rem;
+      font-weight: 500;
       letter-spacing: 0.04em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
+    }
+
+    .accord-value {
+      font-size: 0.68rem;
+      color: var(--ink-soft);
+      min-width: 30px;
+      text-align: right;
     }
 
     .popup-personal-note {
-      margin-top: 8px;
-      font-size: 0.68rem;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(216, 171, 157, 0.18);
+      font-size: 0.74rem;
+      line-height: 1.6;
       font-style: italic;
       color: var(--ink-light);
-      border-top: 1px solid #f0e8e4;
-      padding-top: 8px;
-      line-height: 1.5;
     }
 
-    /* WISHLIST SECTION */
-    .wishlist-section {
-      background: var(--wishlist-bg);
-      margin-top: 60px;
-      padding-top: 10px;
-      padding-bottom: 60px;
-      border-top: 1px solid #e8ddd4;
-    }
-
-    .wishlist-section .shelf-plank {
-      background: linear-gradient(180deg, var(--wishlist-shelf) 0%, #b0a090 100%);
-    }
-
-    .wishlist-section .bottle-img-wrap img {
-      filter: drop-shadow(0 8px 16px rgba(60,30,20,0.12)) saturate(0.7);
-      opacity: 0.85;
-    }
-
-    .wishlist-section .bottle-card:hover .bottle-img-wrap img {
-      filter: drop-shadow(0 16px 28px rgba(60,30,20,0.2)) saturate(0.85);
-      opacity: 1;
-    }
-
-    .wishlist-section .bottle-placeholder {
-      background: linear-gradient(160deg, #e4dbd3, #cfc4ba);
-      border: 2px dashed #b5a89a;
-    }
-
-    /* WISHLIST BADGE */
-    .wishlist-badge {
-      position: absolute;
-      top: 8px;
-      right: 6px;
-      width: 18px;
-      height: 18px;
-      background: var(--blush-light);
-      border: 1.5px solid var(--blush-muted);
-      border-radius: 50%;
+    .export-section {
+      margin-top: 26px;
+      padding: 24px 28px;
+      border-radius: 30px;
+      background: rgba(255, 252, 248, 0.82);
+      border: 1px solid rgba(216, 171, 157, 0.16);
+      box-shadow: var(--shadow-soft);
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      justify-content: center;
-      font-size: 0.6rem;
+      justify-content: space-between;
+      gap: 16px;
     }
 
-    /* ADD BUTTON */
-    .add-btn {
-      width: var(--card-w);
-      height: var(--card-h);
-      border: 2px dashed var(--blush-muted);
-      border-radius: 8px;
-      background: transparent;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    .export-copy {
+      display: grid;
       gap: 6px;
-      color: var(--blush-muted);
-      font-family: 'Jost', sans-serif;
-      font-size: 0.68rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      transition: all 0.2s;
-      flex-shrink: 0;
     }
 
-    .add-btn:hover {
-      border-color: var(--rose);
-      color: var(--rose);
-      background: rgba(196,123,106,0.04);
+    .export-copy h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: 1.5rem;
+      color: var(--ink);
     }
 
-    .add-btn span { font-size: 1.5rem; line-height: 1; }
+    .export-copy p {
+      color: var(--ink-light);
+      font-size: 0.88rem;
+      line-height: 1.65;
+      max-width: 620px;
+    }
 
-    /* MODAL */
+    .export-btn {
+      padding: 12px 22px;
+      border: 1.5px solid rgba(216, 171, 157, 0.28);
+      background: rgba(255, 251, 248, 0.95);
+      color: var(--ink-light);
+    }
+
     .modal-overlay {
-      display: none;
       position: fixed;
       inset: 0;
-      background: rgba(42,31,26,0.45);
-      backdrop-filter: blur(4px);
-      z-index: 500;
+      z-index: 3000;
+      display: none;
       align-items: center;
       justify-content: center;
+      padding: 20px;
+      background: rgba(42, 31, 26, 0.46);
+      backdrop-filter: blur(7px);
     }
 
     .modal-overlay.open {
@@ -429,625 +948,2399 @@
       animation: fadeIn 0.2s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-
     .modal {
-      background: white;
-      border-radius: 16px;
-      padding: 36px 32px;
-      width: 480px;
-      max-width: 95vw;
-      max-height: 90vh;
+      width: min(860px, 96vw);
+      max-height: 92vh;
       overflow-y: auto;
-      box-shadow: 0 24px 64px rgba(42,31,26,0.22);
-      animation: slideUp 0.25s cubic-bezier(.22,.68,0,1.1);
+      padding: 28px;
+      border-radius: 28px;
+      background: rgba(255, 253, 250, 0.98);
+      box-shadow: 0 26px 80px rgba(42, 31, 26, 0.28);
+      animation: slideUp 0.24s cubic-bezier(.22, .68, 0, 1.1);
     }
 
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to   { transform: translateY(0); opacity: 1; }
+    .modal-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 24px;
     }
 
     .modal h2 {
       font-family: 'Cormorant Garamond', serif;
       font-weight: 400;
-      font-size: 1.6rem;
+      font-size: 2rem;
       color: var(--ink);
-      margin-bottom: 4px;
     }
 
-    .modal-sub {
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+    .modal-close {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background: rgba(255, 248, 243, 0.92);
+      border: 1px solid rgba(216, 171, 157, 0.2);
       color: var(--ink-light);
-      margin-bottom: 24px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: white;
+      color: var(--rose-deep);
     }
 
     .form-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
     }
 
-    .form-group.full { grid-column: 1 / -1; }
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
 
-    label {
-      font-size: 0.65rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+    .img-upload-area {
+      position: relative;
+      border-radius: 18px;
+      border: 1.6px dashed rgba(216, 171, 157, 0.34);
+      background: rgba(255, 249, 244, 0.72);
+      padding: 20px;
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+
+    .img-upload-area:hover {
+      border-color: rgba(191, 118, 101, 0.42);
+      background: rgba(255, 247, 241, 0.92);
+      transform: translateY(-1px);
+    }
+
+    .img-upload-area.small {
+      min-height: 96px;
+      padding: 18px;
+    }
+
+    .img-upload-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .img-upload-area p {
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: var(--ink-light);
+      pointer-events: none;
+    }
+
+    .img-preview {
+      max-width: 110px;
+      max-height: 110px;
+      object-fit: contain;
+      display: none;
+      pointer-events: none;
+    }
+
+    .img-preview.wide {
+      max-width: min(100%, 320px);
+      max-height: 120px;
+      border-radius: 12px;
+      box-shadow: 0 14px 28px rgba(94, 58, 41, 0.08);
+    }
+
+    .image-tools {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .image-tools[hidden] {
+      display: none;
+    }
+
+    .tool-hint {
+      font-size: 0.74rem;
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    .extractor-card {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255, 248, 243, 0.96) 0%, rgba(253, 246, 240, 0.92) 100%);
+      border: 1px solid rgba(216, 171, 157, 0.22);
+    }
+
+    .extractor-card p {
+      color: var(--ink-light);
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+
+    .inline-action {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .extract-status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: fit-content;
+      max-width: 100%;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 251, 248, 0.92);
+      border: 1px solid rgba(216, 171, 157, 0.18);
+      font-size: 0.72rem;
+      line-height: 1.5;
       color: var(--ink-light);
     }
 
-    input, textarea, select {
-      border: 1.5px solid #e8ddd8;
-      border-radius: 8px;
-      padding: 9px 12px;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.85rem;
-      color: var(--ink);
-      background: #fdfaf8;
-      outline: none;
-      transition: border-color 0.2s;
+    .extract-status.loading {
+      color: var(--rose-deep);
+      border-color: rgba(191, 118, 101, 0.22);
+      background: rgba(255, 245, 239, 0.96);
     }
 
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--blush-muted);
+    .extract-status.success {
+      color: #4f7a57;
+      border-color: rgba(79, 122, 87, 0.24);
+      background: rgba(238, 247, 239, 0.96);
     }
 
-    textarea { resize: vertical; min-height: 70px; }
+    .extract-status.error {
+      color: #91515b;
+      border-color: rgba(145, 81, 91, 0.24);
+      background: rgba(250, 241, 242, 0.96);
+    }
 
-    /* ACCORDS BUILDER */
     .accord-builder {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .accord-entry {
-      display: flex;
-      gap: 8px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(100px, 1fr) auto auto auto;
+      gap: 10px;
       align-items: center;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255, 251, 248, 0.94);
+      border: 1px solid rgba(216, 171, 157, 0.14);
     }
 
-    .accord-entry input[type="text"] { flex: 1; }
-    .accord-entry input[type="range"] { flex: 1; accent-color: var(--rose); }
+    .accord-entry input[type="range"] {
+      padding: 0;
+      border: none;
+      background: transparent;
+      accent-color: var(--rose);
+    }
+
     .accord-entry input[type="color"] {
-      width: 32px; height: 32px;
-      border-radius: 6px; padding: 2px; cursor: pointer;
+      width: 40px;
+      min-width: 40px;
+      height: 40px;
+      padding: 2px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .accord-readout {
+      min-width: 40px;
+      text-align: center;
+      font-size: 0.76rem;
+      color: var(--ink-soft);
     }
 
     .accord-remove {
-      background: none;
-      border: none;
-      color: var(--blush-muted);
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      color: var(--ink-soft);
       cursor: pointer;
-      font-size: 1rem;
-      padding: 0 2px;
-      transition: color 0.2s;
+      transition: color 0.2s ease, background 0.2s ease;
     }
-    .accord-remove:hover { color: var(--rose); }
+
+    .accord-remove:hover {
+      color: var(--rose-deep);
+      background: rgba(255, 241, 237, 0.82);
+    }
 
     .add-accord-btn {
       align-self: flex-start;
-      background: none;
-      border: 1.5px dashed var(--blush-muted);
-      border-radius: 6px;
-      padding: 5px 12px;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.72rem;
+      margin-top: 2px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1.5px dashed rgba(216, 171, 157, 0.34);
       color: var(--ink-light);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
     }
 
-    .add-accord-btn:hover { border-color: var(--rose); color: var(--rose); }
+    .add-accord-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(191, 118, 101, 0.42);
+      color: var(--rose-deep);
+    }
 
-    /* RATING INPUT */
-    .rating-input { display: flex; gap: 4px; }
+    .rating-input {
+      display: flex;
+      gap: 6px;
+    }
+
     .rating-star {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
+      color: rgba(216, 171, 157, 0.46);
       cursor: pointer;
-      color: #ddd;
-      transition: color 0.15s;
+      transition: transform 0.14s ease, color 0.14s ease;
       user-select: none;
     }
-    .rating-star.active { color: var(--rose); }
 
-    /* IMAGE UPLOAD */
-    .img-upload-area {
-      border: 2px dashed #e0d4ce;
-      border-radius: 10px;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
+    .rating-star.active {
+      color: var(--rose);
     }
-    .img-upload-area:hover { border-color: var(--blush-muted); background: #fdf8f6; }
-    .img-upload-area input[type="file"] {
-      position: absolute; inset: 0; opacity: 0; cursor: pointer; border: none; padding: 0;
-    }
-    .img-upload-area p { font-size: 0.72rem; color: var(--ink-light); pointer-events: none; }
-    .img-preview { max-height: 80px; max-width: 80px; object-fit: contain; margin-bottom: 6px; display: none; }
 
-    /* MODAL BUTTONS */
+    .rating-star:hover {
+      transform: translateY(-1px);
+    }
+
     .modal-actions {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
       gap: 10px;
       margin-top: 24px;
-      justify-content: flex-end;
     }
 
-    .btn-cancel {
-      background: none;
-      border: 1.5px solid #e0d4ce;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.8rem;
+    .crop-modal {
+      width: min(920px, 96vw);
+    }
+
+    .crop-shell {
+      display: grid;
+      gap: 18px;
+    }
+
+    .crop-copy {
+      display: grid;
+      gap: 6px;
+    }
+
+    .crop-copy p {
+      font-size: 0.9rem;
+      line-height: 1.65;
       color: var(--ink-light);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-cancel:hover { border-color: var(--ink-light); }
-
-    .btn-save {
-      background: var(--rose);
-      border: none;
-      border-radius: 8px;
-      padding: 10px 24px;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      color: white;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-save:hover { background: var(--blush-muted); }
-
-    /* JSON EXPORT */
-    .export-section {
-      margin-top: 60px;
-      text-align: center;
-      padding-bottom: 60px;
     }
 
-    .export-btn {
-      background: none;
-      border: 1.5px solid var(--blush-muted);
-      border-radius: 8px;
-      padding: 10px 24px;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .export-btn:hover { border-color: var(--rose); color: var(--rose); }
-
-    .export-note {
-      margin-top: 8px;
-      font-size: 0.65rem;
-      color: var(--ink-light);
-      letter-spacing: 0.06em;
-    }
-
-    /* SCROLLBAR */
-    .shelf-wrapper::-webkit-scrollbar { height: 4px; }
-    .shelf-wrapper::-webkit-scrollbar-track { background: transparent; }
-    .shelf-wrapper::-webkit-scrollbar-thumb { background: var(--blush); border-radius: 4px; }
-
-    /* EMPTY STATE */
-    .empty-note {
-      text-align: center;
-      padding: 30px;
-      font-size: 0.8rem;
-      color: var(--ink-light);
-      font-style: italic;
-    }
-
-    /* DELETE BUTTON */
-    .delete-btn {
-      position: absolute;
-      top: -6px;
-      left: -6px;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--rose);
-      border: none;
-      color: white;
-      font-size: 0.7rem;
-      cursor: pointer;
-      display: none;
-      align-items: center;
+    .crop-workspace {
+      display: flex;
       justify-content: center;
-      z-index: 10;
+      padding: 18px;
+      border-radius: 24px;
+      background:
+        linear-gradient(45deg, rgba(248, 239, 233, 0.82) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(248, 239, 233, 0.82) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(248, 239, 233, 0.82) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(248, 239, 233, 0.82) 75%);
+      background-size: 22px 22px;
+      background-position: 0 0, 0 11px, 11px -11px, -11px 0;
+      border: 1px solid rgba(216, 171, 157, 0.24);
+      overflow: hidden;
     }
 
-    .bottle-card:hover .delete-btn { display: flex; }
+    .crop-viewport {
+      position: relative;
+      width: min(100%, 560px);
+      aspect-ratio: 5 / 8;
+      border-radius: 28px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(255, 249, 244, 0.92), rgba(249, 238, 229, 0.9));
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6), 0 18px 40px rgba(94, 58, 41, 0.12);
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .crop-viewport.dragging {
+      cursor: grabbing;
+    }
+
+    .crop-viewport::before,
+    .crop-viewport::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .crop-viewport::before {
+      background:
+        linear-gradient(90deg, transparent 32.8%, rgba(255, 255, 255, 0.46) 33%, rgba(255, 255, 255, 0.46) 33.6%, transparent 33.8%, transparent 66.2%, rgba(255, 255, 255, 0.46) 66.4%, rgba(255, 255, 255, 0.46) 67%, transparent 67.2%),
+        linear-gradient(180deg, transparent 32.8%, rgba(255, 255, 255, 0.46) 33%, rgba(255, 255, 255, 0.46) 33.6%, transparent 33.8%, transparent 66.2%, rgba(255, 255, 255, 0.46) 66.4%, rgba(255, 255, 255, 0.46) 67%, transparent 67.2%);
+      mix-blend-mode: screen;
+    }
+
+    .crop-viewport::after {
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.82);
+      border-radius: 28px;
+    }
+
+    .crop-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: center center;
+      will-change: transform;
+      max-width: none;
+      max-height: none;
+      pointer-events: none;
+    }
+
+    .crop-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .crop-slider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255, 249, 244, 0.84);
+      border: 1px solid rgba(216, 171, 157, 0.22);
+    }
+
+    .crop-slider input[type="range"] {
+      padding: 0;
+      border: none;
+      background: transparent;
+      accent-color: var(--rose);
+    }
+
+    .crop-readout {
+      min-width: 52px;
+      text-align: right;
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+    }
+
+    .shelf-wrapper::-webkit-scrollbar {
+      height: 7px;
+    }
+
+    .shelf-wrapper::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .shelf-wrapper::-webkit-scrollbar-thumb {
+      background: rgba(216, 171, 157, 0.82);
+      border-radius: 999px;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1120px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-panel {
+        max-width: 760px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      :root {
+        --card-w: 170px;
+        --card-h: 294px;
+      }
+
+      main {
+        padding-inline: 14px;
+      }
+
+      .hero-copy,
+      .hero-panel,
+      .section-block,
+      .export-section,
+      .modal {
+        border-radius: 26px;
+      }
+
+      .hero-copy {
+        padding: 28px 24px 26px;
+      }
+
+      .controls-bar {
+        padding: 16px;
+      }
+
+      .form-grid,
+      .inline-action {
+        grid-template-columns: 1fr;
+      }
+
+      .crop-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .accord-entry {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .section-top,
+      .shelf-wrapper,
+      .shelf-plank,
+      .export-section {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .shelf-plank {
+        margin-left: 18px;
+        margin-right: 18px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-ribbon,
+      .button-row,
+      .modal-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .section-top {
+        flex-direction: column;
+        align-items: start;
+      }
+    }
   </style>
 </head>
 <body>
-
-<header>
-  <h1>my fragrance shelf</h1>
-  <p>a curated collection</p>
-</header>
-
-<!-- OWNED SHELF -->
-<p class="section-label">the collection</p>
-<div class="shelf-wrapper" id="collection-wrapper">
-  <div class="shelf-row" id="collection-shelf">
-    <button class="add-btn" onclick="openModal('collection')">
-      <span>+</span>add
-    </button>
-  </div>
-</div>
-<div class="shelf-plank" id="collection-plank"></div>
-
-<!-- WISHLIST SHELF -->
-<div class="wishlist-section">
-  <p class="section-label">the wishlist</p>
-  <div class="shelf-wrapper" id="wishlist-wrapper">
-    <div class="shelf-row" id="wishlist-shelf">
-      <button class="add-btn" onclick="openModal('wishlist')">
-        <span>+</span>add
-      </button>
-    </div>
-  </div>
-  <div class="shelf-plank" id="wishlist-plank"></div>
-</div>
-
-<!-- EXPORT -->
-<div class="export-section">
-  <button class="export-btn" onclick="exportJSON()">↓ export fragrances.json</button>
-  <p class="export-note">save & upload to github to keep your collection</p>
-</div>
-
-<!-- GLOBAL POPUP — lives outside shelf so overflow:auto can't clip it -->
-<div id="global-popup" class="popup"></div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal">
-    <h2 id="modal-title">add fragrance</h2>
-    <p class="modal-sub" id="modal-sub">to the collection</p>
-
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Brand</label>
-        <input type="text" id="f-brand" placeholder="e.g. Jo Malone">
-      </div>
-      <div class="form-group">
-        <label>Name</label>
-        <input type="text" id="f-name" placeholder="e.g. Peony & Blush Suede">
-      </div>
-      <div class="form-group full">
-        <label>Bottle Image</label>
-        <div class="img-upload-area" id="upload-area">
-          <img class="img-preview" id="img-preview" src="" alt="">
-          <p id="upload-label">click to upload bottle image</p>
-          <input type="file" accept="image/*" id="f-image" onchange="handleImageUpload(event)">
+  <main>
+    <header class="hero">
+      <div class="hero-copy">
+        <div class="hero-kicker">perfume wall</div>
+        <h1>my fragrance shelf</h1>
+        <p id="hero-subtitle">A plush little vanity for bottles, notes, and the moods they leave behind.</p>
+        <div class="hero-ribbon">
+          <span id="active-profile-pill">local wall</span>
+          <span id="storage-mode-pill">saved in this browser</span>
         </div>
       </div>
 
-      <div class="form-group full">
-        <label>Top Notes</label>
-        <input type="text" id="f-top" placeholder="e.g. bergamot, lemon, pink pepper">
+      <aside class="hero-panel">
+        <div class="profile-card">
+          <div class="profile-badge" id="profile-badge">M</div>
+          <div>
+            <div class="mini-label">active account</div>
+            <h2 id="profile-name-display">my fragrance wall</h2>
+            <p id="profile-tagline-display">soft petals, sweet woods, and a little chaos.</p>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <div class="control-field">
+            <label for="profile-select">Switch Wall</label>
+            <select id="profile-select" onchange="switchProfile(this.value)"></select>
+          </div>
+          <div class="button-row">
+            <button class="btn-secondary" type="button" onclick="openProfileModal()">new wall</button>
+            <button class="btn-secondary" type="button" onclick="openProfileModal(true)">edit profile</button>
+          </div>
+          <p class="profile-note">This project now supports lightweight local accounts, so each person can keep their own perfume wall in the same browser without touching anyone else’s shelf.</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">collection</span>
+            <strong id="stat-collection">0</strong>
+            <span id="stat-collection-note">bottles resting on the shelf</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">wishlist</span>
+            <strong id="stat-wishlist">0</strong>
+            <span id="stat-wishlist-note">future crushes queued up</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">average love</span>
+            <strong id="stat-rating">0.0</strong>
+            <span id="stat-rating-note">stars across rated perfumes</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">top accord</span>
+            <strong id="stat-accord">none</strong>
+            <span id="stat-accord-note">your loudest scent signature</span>
+          </div>
+        </div>
+      </aside>
+    </header>
+
+    <section class="controls-bar">
+      <div class="control-field grow">
+        <label for="search-input">Browse</label>
+        <input id="search-input" type="text" placeholder="search by perfume, brand, accord, note..." oninput="setSearch(this.value)">
       </div>
-      <div class="form-group full">
-        <label>Middle / Heart Notes</label>
-        <input type="text" id="f-mid" placeholder="e.g. rose, peony, jasmine">
+      <div class="control-field compact">
+        <label for="sort-select">Sort By</label>
+        <select id="sort-select" onchange="setSort(this.value)">
+          <option value="added">recently added</option>
+          <option value="name">name</option>
+          <option value="brand">brand</option>
+          <option value="rating">rating</option>
+          <option value="accords">accord count</option>
+        </select>
       </div>
-      <div class="form-group full">
-        <label>Base Notes</label>
-        <input type="text" id="f-base" placeholder="e.g. musk, sandalwood, amber">
+      <button class="sort-direction-btn" id="sort-direction-btn" type="button" onclick="toggleSortDirection()">newest first</button>
+      <button class="btn-secondary" type="button" onclick="clearFilters()">clear filters</button>
+    </section>
+
+    <section class="section-block">
+      <div class="section-top">
+        <div>
+          <p class="section-label">the collection</p>
+          <p class="section-sub" id="collection-meta">0 bottles resting on the shelf</p>
+        </div>
+      </div>
+      <div class="shelf-wrapper" id="collection-wrapper">
+        <div class="shelf-row" id="collection-shelf"></div>
+      </div>
+      <div class="shelf-plank" id="collection-plank"></div>
+    </section>
+
+    <section class="section-block wishlist">
+      <div class="section-top">
+        <div>
+          <p class="section-label">the wishlist</p>
+          <p class="section-sub" id="wishlist-meta">0 bottles on deck</p>
+        </div>
+      </div>
+      <div class="shelf-wrapper" id="wishlist-wrapper">
+        <div class="shelf-row" id="wishlist-shelf"></div>
+      </div>
+      <div class="shelf-plank" id="wishlist-plank"></div>
+    </section>
+
+    <section class="export-section">
+      <div class="export-copy">
+        <h3>back up this wall</h3>
+        <p id="export-note">Download the current profile as JSON so you can keep a snapshot, move it later, or wire it into a future real sign-in system.</p>
+      </div>
+      <button class="export-btn" type="button" onclick="exportJSON()">download current wall</button>
+    </section>
+  </main>
+
+  <div id="global-popup" class="popup"></div>
+
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h2 id="modal-title">add fragrance</h2>
+          <p class="modal-sub" id="modal-sub">to the collection</p>
+        </div>
+        <button class="modal-close" type="button" onclick="closeModal()" aria-label="Close fragrance editor">×</button>
       </div>
 
-      <div class="form-group full">
-        <label>Main Accords</label>
-        <div class="accord-builder" id="accord-builder"></div>
-        <button class="add-accord-btn" onclick="addAccordRow()">+ add accord</button>
-      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="f-shelf-select">Shelf</label>
+          <select id="f-shelf-select">
+            <option value="collection">collection</option>
+            <option value="wishlist">wishlist</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="f-brand">Brand</label>
+          <input type="text" id="f-brand" placeholder="e.g. Jo Malone">
+        </div>
+        <div class="form-group full">
+          <label for="f-name">Name</label>
+          <input type="text" id="f-name" placeholder="e.g. Peony &amp; Blush Suede">
+        </div>
 
-      <div class="form-group full">
-        <label>My Rating</label>
-        <div class="rating-input" id="rating-input">
-          <span class="rating-star" data-v="1" onclick="setRating(1)">★</span>
-          <span class="rating-star" data-v="2" onclick="setRating(2)">★</span>
-          <span class="rating-star" data-v="3" onclick="setRating(3)">★</span>
-          <span class="rating-star" data-v="4" onclick="setRating(4)">★</span>
-          <span class="rating-star" data-v="5" onclick="setRating(5)">★</span>
+        <div class="form-group full">
+          <label>Bottle Image</label>
+          <div class="img-upload-area">
+            <img class="img-preview" id="img-preview" src="" alt="">
+            <p id="upload-label">click to upload a bottle image</p>
+            <input type="file" accept="image/*" id="f-image" onchange="handleBottleImageUpload(event)">
+          </div>
+          <div class="image-tools" id="bottle-image-tools" hidden>
+            <button class="btn-secondary" type="button" onclick="openCropper('bottle')">crop / zoom bottle</button>
+            <span class="tool-hint">use this when the PNG has too much empty space and you want the bottle to sit larger on the shelf.</span>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label>Accord Auto-Extractor</label>
+          <div class="extractor-card">
+            <p>Paste a Fragrantica perfume page for a best-effort accord pull, or upload a cropped screenshot of the accord bars to OCR the names, colours, and rough strengths.</p>
+
+            <div class="inline-action">
+              <input type="url" id="f-fragrantica-url" placeholder="https://www.fragrantica.com/perfume/...">
+              <button class="btn-secondary" type="button" id="fragrantica-btn" onclick="extractAccordsFromFragrantica()">pull accords</button>
+            </div>
+
+            <div class="img-upload-area small">
+              <img class="img-preview wide" id="accord-preview" src="" alt="">
+              <p id="accord-upload-label">upload a cropped screenshot of the accord bars</p>
+              <input type="file" accept="image/*" id="f-accord-image" onchange="handleAccordImageUpload(event)">
+            </div>
+
+            <div class="image-tools" id="accord-image-tools" hidden>
+              <button class="btn-secondary" type="button" onclick="openCropper('accord')">crop / zoom screenshot</button>
+              <span class="tool-hint">tight crops help the OCR pick up better labels and percentages.</span>
+            </div>
+
+            <div class="button-row">
+              <button class="btn-secondary" type="button" id="accord-image-btn" onclick="extractAccordsFromImage()">read screenshot</button>
+            </div>
+
+            <div class="extract-status" id="extract-status">Ready when you are. A tightly cropped main-accords screenshot gives the best result.</div>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label for="f-top">Top Notes</label>
+          <input type="text" id="f-top" placeholder="e.g. bergamot, lemon, pink pepper">
+        </div>
+        <div class="form-group full">
+          <label for="f-mid">Middle / Heart Notes</label>
+          <input type="text" id="f-mid" placeholder="e.g. rose, peony, jasmine">
+        </div>
+        <div class="form-group full">
+          <label for="f-base">Base Notes</label>
+          <input type="text" id="f-base" placeholder="e.g. musk, sandalwood, amber">
+        </div>
+
+        <div class="form-group full">
+          <label>Main Accords</label>
+          <div class="accord-builder" id="accord-builder"></div>
+          <button class="add-accord-btn" type="button" onclick="addAccordRow()">+ add accord</button>
+        </div>
+
+        <div class="form-group full">
+          <label>My Rating</label>
+          <div class="rating-input" id="rating-input">
+            <span class="rating-star" data-v="1" onclick="setRating(1)">★</span>
+            <span class="rating-star" data-v="2" onclick="setRating(2)">★</span>
+            <span class="rating-star" data-v="3" onclick="setRating(3)">★</span>
+            <span class="rating-star" data-v="4" onclick="setRating(4)">★</span>
+            <span class="rating-star" data-v="5" onclick="setRating(5)">★</span>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label for="f-note">Personal Note</label>
+          <textarea id="f-note" placeholder="how does this one make you feel?"></textarea>
         </div>
       </div>
 
-      <div class="form-group full">
-        <label>Personal Note</label>
-        <textarea id="f-note" placeholder="how does this one make you feel?"></textarea>
+      <div class="modal-actions">
+        <button class="btn-cancel" type="button" onclick="closeModal()">cancel</button>
+        <button class="btn-save" id="save-fragrance-btn" type="button" onclick="saveFragrance()">save to shelf</button>
       </div>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">cancel</button>
-      <button class="btn-save" onclick="saveFragrance()">save to shelf</button>
     </div>
   </div>
-</div>
 
-<script>
-  // STATE
-  let data = { collection: [], wishlist: [] };
-  let currentShelf = 'collection';
-  let currentRating = 0;
-  let currentImageData = null;
-  let editingIndex = null;
-
-  const ACCORD_COLORS = [
-    '#e05c4a','#e8947a','#6db36d','#c5a46e','#8eccd4',
-    '#d4b8d4','#f2c96e','#7ab5d4','#d47a8c','#9ab87a'
-  ];
-
-  // LOAD from localStorage
-  function loadData() {
-    const saved = localStorage.getItem('fragranceShelf');
-    if (saved) data = JSON.parse(saved);
-    renderAll();
-  }
-
-  function saveData() {
-    localStorage.setItem('fragranceShelf', JSON.stringify(data));
-  }
-
-  function renderAll() {
-    renderShelf('collection');
-    renderShelf('wishlist');
-  }
-
-  function renderShelf(shelf) {
-    const container = document.getElementById(shelf + '-shelf');
-    const addBtn = `<button class="add-btn" onclick="openModal('${shelf}')"><span>+</span>add</button>`;
-    const cards = data[shelf].map((f, i) => buildCard(f, i, shelf)).join('');
-    container.innerHTML = cards + addBtn;
-
-    // Attach popup hover events after rendering
-    container.querySelectorAll('.bottle-card').forEach((card, i) => {
-      card.addEventListener('mouseenter', () => showPopup(card, data[shelf][i]));
-      card.addEventListener('mouseleave', hidePopup);
-    });
-  }
-
-  function buildCard(f, index, shelf) {
-    const imgHtml = f.image
-      ? `<img src="${f.image}" alt="${f.name}">`
-      : `<div class="bottle-placeholder">🌸</div>`;
-
-    const wishBadge = shelf === 'wishlist' ? `<div class="wishlist-badge">✦</div>` : '';
-
-    return `
-      <div class="bottle-card" style="animation-delay:${index * 0.05}s">
-        <button class="delete-btn" onclick="deleteFragrance('${shelf}', ${index})" title="remove">×</button>
-        ${wishBadge}
-        <div class="bottle-img-wrap">${imgHtml}</div>
-        <div class="bottle-name"><strong>${f.name}</strong>${f.brand}</div>
+  <div class="modal-overlay" id="profile-overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h2 id="profile-modal-title">new wall</h2>
+          <p class="modal-sub" id="profile-modal-sub">create a local account for another perfume lover</p>
+        </div>
+        <button class="modal-close" type="button" onclick="closeProfileModal()" aria-label="Close profile editor">×</button>
       </div>
-    `;
-  }
 
-  // GLOBAL POPUP — fixed-positioned to avoid overflow clipping
-  const globalPopup = document.getElementById('global-popup');
-
-  function buildPopupContent(f) {
-    const starsHtml = [1,2,3,4,5].map(n =>
-      `<span class="star ${n <= (f.rating||0) ? 'filled' : ''}">★</span>`
-    ).join('');
-
-    const accordsHtml = (f.accords||[]).map(a => `
-      <div class="accord-row">
-        <div class="accord-bar-wrap">
-          <div class="accord-bar" style="width:${a.value}%;background:${a.color};">${a.name}</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="p-name">Display Name</label>
+          <input type="text" id="p-name" placeholder="e.g. Maggie's Wall">
+        </div>
+        <div class="form-group">
+          <label for="p-tagline">Shelf Mood</label>
+          <input type="text" id="p-tagline" placeholder="e.g. airy florals, skin musks, bedtime vanilla">
+        </div>
+        <div class="form-group full">
+          <label>How it works</label>
+          <div class="extractor-card">
+            <p>Each wall lives in local storage for this browser right now, so different people can keep their own collections without mixing shelves. If you want true sign-in later, this structure is ready to plug into a backend like Supabase or Firebase.</p>
+          </div>
         </div>
       </div>
-    `).join('');
 
-    const notesSection = (f.top || f.mid || f.base) ? `
-      <div class="notes-section">
-        ${f.top  ? `<div class="notes-label">top</div><div class="notes-list">${f.top}</div>`  : ''}
-        ${f.mid  ? `<div class="notes-label" style="margin-top:4px">heart</div><div class="notes-list">${f.mid}</div>`  : ''}
-        ${f.base ? `<div class="notes-label" style="margin-top:4px">base</div><div class="notes-list">${f.base}</div>` : ''}
+      <div class="modal-actions">
+        <button class="btn-cancel" type="button" onclick="closeProfileModal()">cancel</button>
+        <button class="btn-save" type="button" onclick="saveProfileModal()">save wall</button>
       </div>
-    ` : '';
+    </div>
+  </div>
 
-    const personalNote = f.note ? `<div class="popup-personal-note">"${f.note}"</div>` : '';
+  <div class="modal-overlay" id="crop-overlay">
+    <div class="modal crop-modal">
+      <div class="modal-head">
+        <div>
+          <h2 id="crop-title">crop image</h2>
+          <p class="modal-sub" id="crop-sub">drag to place, then zoom until it feels right</p>
+        </div>
+        <button class="modal-close" type="button" onclick="closeCropper()" aria-label="Close cropper">×</button>
+      </div>
 
-    return `
-      <div class="popup-brand">${f.brand || ''}</div>
-      <div class="popup-name">${f.name}</div>
-      <div class="popup-rating">${starsHtml}</div>
-      ${notesSection}
-      ${accordsHtml ? `<div class="accords">${accordsHtml}</div>` : ''}
-      ${personalNote}
-    `;
-  }
+      <div class="crop-shell">
+        <div class="crop-copy">
+          <p id="crop-note">This always starts from the current source image, so you can tighten the framing before saving.</p>
+        </div>
 
-  function showPopup(card, f) {
-    globalPopup.innerHTML = buildPopupContent(f);
-    globalPopup.classList.remove('flipped');
-    globalPopup.classList.add('visible');
+        <div class="crop-workspace">
+          <div class="crop-viewport" id="crop-viewport">
+            <img class="crop-image" id="crop-image" src="" alt="">
+          </div>
+        </div>
 
-    requestAnimationFrame(() => {
-      const rect = card.getBoundingClientRect();
-      const pw = globalPopup.offsetWidth;
-      const ph = globalPopup.offsetHeight;
+        <div class="crop-controls">
+          <div class="crop-slider">
+            <label class="control-label" for="crop-zoom">Zoom</label>
+            <input id="crop-zoom" type="range" min="100" max="340" value="100" step="1" oninput="updateCropZoom(this.value)">
+            <span class="crop-readout" id="crop-zoom-readout">100%</span>
+          </div>
+          <button class="btn-secondary" type="button" onclick="resetCropper()">reset</button>
+          <button class="btn-save" type="button" onclick="applyCrop()">apply crop</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      // Default: popup above card
-      let top = rect.top - ph - 14;
-      let flipped = false;
+  <script>
+    const APP_STORAGE_KEY = 'perfumeWallAppV2';
+    const LEGACY_STORAGE_KEY = 'fragranceShelf';
 
-      // Not enough room above → flip below
-      if (top < 8) {
-        top = rect.bottom + 14;
-        flipped = true;
+    const ACCORD_KEYWORDS = [
+      'white floral', 'yellow floral', 'green floral', 'soft spicy', 'fresh spicy',
+      'aromatic', 'balsamic', 'animalic', 'powdery', 'fruity',
+      'floral', 'rose', 'violet', 'iris', 'citrus',
+      'woody', 'amber', 'vanilla', 'musky', 'sweet',
+      'fresh', 'marine', 'aquatic', 'ozonic', 'salty',
+      'earthy', 'patchouli', 'smoky', 'leather', 'tobacco',
+      'coffee', 'cacao', 'chocolate', 'nutty', 'coconut',
+      'lavender', 'cherry', 'honey', 'aldehydic', 'mossy',
+      'metallic', 'mineral', 'herbal', 'camphor', 'lactonic',
+      'warm spicy', 'cold spicy', 'anis', 'rum', 'boozy'
+    ];
+
+    const FALLBACK_ACCORD_COLORS = [
+      '#d77a7a', '#e0a97c', '#c1b07d', '#85a885', '#7ea7c7',
+      '#c39dc7', '#d8849b', '#baa18e', '#b99a77', '#9cb0a1'
+    ];
+
+    let appState = createDefaultAppState();
+    let uiState = { search: '', sortBy: 'added', sortDir: 'desc' };
+    let currentShelf = 'collection';
+    let editingIndex = null;
+    let editingShelf = null;
+    let currentRating = 0;
+    let currentImageData = null;
+    let currentBottleImageOriginal = null;
+    let currentAccordImageData = null;
+    let currentAccordImageOriginal = null;
+    let editingProfileMode = false;
+    let ocrLoaderPromise = null;
+    let cropState = createEmptyCropState();
+
+    const globalPopup = document.getElementById('global-popup');
+    const cropOverlay = document.getElementById('crop-overlay');
+    const cropViewport = document.getElementById('crop-viewport');
+    const cropImage = document.getElementById('crop-image');
+
+    function emptyData() {
+      return { collection: [], wishlist: [] };
+    }
+
+    function createEmptyCropState() {
+      return {
+        target: '',
+        source: '',
+        image: null,
+        aspectWidth: 5,
+        aspectHeight: 8,
+        outputWidth: 1000,
+        outputHeight: 1600,
+        zoom: 1,
+        x: 0,
+        y: 0,
+        baseScale: 1,
+        dragPointerId: null,
+        startX: 0,
+        startY: 0,
+        startOffsetX: 0,
+        startOffsetY: 0
+      };
+    }
+
+    function createDefaultAppState(initialData = emptyData()) {
+      const profileId = 'my-fragrance-wall';
+      return {
+        activeProfileId: profileId,
+        profiles: {
+          [profileId]: createProfile(profileId, 'my fragrance wall', 'soft petals, sweet woods, and a little chaos.', initialData)
+        }
+      };
+    }
+
+    function createProfile(id, name, tagline, data = emptyData()) {
+      return {
+        id,
+        name: name || 'my fragrance wall',
+        tagline: tagline || 'soft petals, sweet woods, and a little chaos.',
+        createdAt: new Date().toISOString(),
+        data: normalizeData(data)
+      };
+    }
+
+    function normalizeData(raw = {}) {
+      return {
+        collection: Array.isArray(raw.collection) ? raw.collection.map(normalizeFragrance) : [],
+        wishlist: Array.isArray(raw.wishlist) ? raw.wishlist.map(normalizeFragrance) : []
+      };
+    }
+
+    function normalizeFragrance(raw = {}) {
+      return {
+        brand: String(raw.brand || '').trim(),
+        name: String(raw.name || '').trim(),
+        image: raw.image || null,
+        top: String(raw.top || '').trim(),
+        mid: String(raw.mid || '').trim(),
+        base: String(raw.base || '').trim(),
+        accords: normalizeAccords(raw.accords || []),
+        rating: clamp(Number(raw.rating) || 0, 0, 5),
+        note: String(raw.note || '').trim(),
+        createdAt: raw.createdAt || new Date().toISOString()
+      };
+    }
+
+    function normalizeAccords(list = []) {
+      return list
+        .map((item, index) => {
+          const name = String(item.name || '').trim();
+          if (!name) return null;
+          return {
+            name,
+            value: clamp(parseInt(item.value, 10) || 0, 10, 100),
+            color: normalizeHex(item.color) || getAccordColor(name, index)
+          };
+        })
+        .filter(Boolean);
+    }
+
+    function loadApp() {
+      const savedApp = localStorage.getItem(APP_STORAGE_KEY);
+      if (savedApp) {
+        try {
+          appState = upgradeAppState(JSON.parse(savedApp));
+        } catch (error) {
+          console.warn('Could not read saved app state, using defaults instead.', error);
+          appState = createDefaultAppState();
+        }
+      } else {
+        const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+        if (legacy) {
+          try {
+            appState = createDefaultAppState(JSON.parse(legacy));
+          } catch (error) {
+            console.warn('Could not migrate legacy fragranceShelf data.', error);
+          }
+        }
       }
 
-      // Center horizontally over card, clamped to viewport
-      let left = rect.left + rect.width / 2 - pw / 2;
-      left = Math.max(8, Math.min(left, window.innerWidth - pw - 8));
+      const savedUi = localStorage.getItem(APP_STORAGE_KEY + ':ui');
+      if (savedUi) {
+        try {
+          const parsed = JSON.parse(savedUi);
+          uiState = {
+            search: String(parsed.search || ''),
+            sortBy: ['added', 'name', 'brand', 'rating', 'accords'].includes(parsed.sortBy) ? parsed.sortBy : 'added',
+            sortDir: parsed.sortDir === 'asc' ? 'asc' : 'desc'
+          };
+        } catch (error) {
+          console.warn('Could not restore UI state.', error);
+        }
+      }
 
-      globalPopup.style.top  = top + 'px';
-      globalPopup.style.left = left + 'px';
+      syncControls();
+      renderAll();
+    }
 
-      if (flipped) globalPopup.classList.add('flipped');
+    function upgradeAppState(raw = {}) {
+      const profileEntries = Object.entries(raw.profiles || {});
+      if (!profileEntries.length) {
+        return createDefaultAppState();
+      }
+
+      const profiles = {};
+      profileEntries.forEach(([id, profile]) => {
+        profiles[id] = createProfile(
+          id,
+          profile.name || 'fragrance wall',
+          profile.tagline || 'soft petals, sweet woods, and a little chaos.',
+          profile.data || emptyData()
+        );
+      });
+
+      const activeProfileId = profiles[raw.activeProfileId] ? raw.activeProfileId : Object.keys(profiles)[0];
+
+      return { activeProfileId, profiles };
+    }
+
+    function persistApp() {
+      localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(appState));
+      localStorage.setItem(APP_STORAGE_KEY + ':ui', JSON.stringify(uiState));
+    }
+
+    function getCurrentProfile() {
+      return appState.profiles[appState.activeProfileId];
+    }
+
+    function getCurrentData() {
+      return getCurrentProfile().data;
+    }
+
+    function renderAll() {
+      renderProfileUi();
+      renderStats();
+      renderShelf('collection');
+      renderShelf('wishlist');
+      updateExportNote();
+    }
+
+    function renderProfileUi() {
+      const profile = getCurrentProfile();
+      const options = Object.values(appState.profiles)
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(profileOption => `<option value="${escapeAttr(profileOption.id)}" ${profileOption.id === profile.id ? 'selected' : ''}>${escapeHtml(profileOption.name)}</option>`)
+        .join('');
+
+      document.getElementById('profile-select').innerHTML = options;
+      document.getElementById('profile-name-display').textContent = profile.name;
+      document.getElementById('profile-tagline-display').textContent = profile.tagline;
+      document.getElementById('profile-badge').textContent = makeMonogram(profile.name);
+      document.getElementById('active-profile-pill').textContent = profile.name;
+      document.getElementById('hero-subtitle').textContent = `A plush little vanity for ${profile.tagline}`;
+    }
+
+    function renderStats() {
+      const { collection, wishlist } = getCurrentData();
+      const all = [...collection, ...wishlist];
+      const rated = all.filter(item => item.rating);
+      const averageRating = rated.length ? (rated.reduce((sum, item) => sum + item.rating, 0) / rated.length).toFixed(1) : '0.0';
+      const accordSummary = summarizeAccords(all);
+
+      document.getElementById('stat-collection').textContent = collection.length;
+      document.getElementById('stat-wishlist').textContent = wishlist.length;
+      document.getElementById('stat-rating').textContent = averageRating;
+      document.getElementById('stat-accord').textContent = accordSummary.name;
+      document.getElementById('stat-collection-note').textContent = collection.length === 1 ? 'bottle resting on the shelf' : 'bottles resting on the shelf';
+      document.getElementById('stat-wishlist-note').textContent = wishlist.length === 1 ? 'future crush waiting' : 'future crushes queued up';
+      document.getElementById('stat-rating-note').textContent = rated.length ? `${rated.length} rated fragrance${rated.length === 1 ? '' : 's'}` : 'add ratings to see the average';
+      document.getElementById('stat-accord-note').textContent = accordSummary.note;
+    }
+
+    function renderShelf(shelf) {
+      const container = document.getElementById(`${shelf}-shelf`);
+      const visibleItems = getVisibleItems(shelf);
+      const totalItems = getCurrentData()[shelf].length;
+      const addButton = `
+        <button class="add-btn" type="button" onclick="openModal('${shelf}')">
+          <span>+</span>
+          <small>add fragrance</small>
+        </button>
+      `;
+
+      const cards = visibleItems.length
+        ? visibleItems.map(({ item, index }, viewIndex) => buildCard(item, index, shelf, viewIndex)).join('')
+        : `<div class="empty-note">${uiState.search ? 'No fragrances match this search yet. Try a softer filter or add a new bottle.' : 'This shelf is waiting for its next bottle.'}</div>`;
+
+      container.innerHTML = cards + addButton;
+
+      container.querySelectorAll('.bottle-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          const shelfName = card.dataset.shelf;
+          const index = Number(card.dataset.index);
+          showPopup(card, getCurrentData()[shelfName][index]);
+        });
+        card.addEventListener('mouseleave', hidePopup);
+      });
+
+      const shownText = visibleItems.length === totalItems
+        ? `${totalItems} ${totalItems === 1 ? 'fragrance' : 'fragrances'}`
+        : `${visibleItems.length} shown of ${totalItems}`;
+      const sortText = describeSort();
+
+      document.getElementById(`${shelf}-meta`).textContent = `${shownText} · ${sortText}`;
+    }
+
+    function getVisibleItems(shelf) {
+      const search = uiState.search.trim().toLowerCase();
+      const items = getCurrentData()[shelf].map((item, index) => ({ item, index }));
+      const filtered = search
+        ? items.filter(({ item }) => matchesSearch(item, search))
+        : items;
+
+      return filtered.sort((a, b) => compareFragrances(a.item, b.item, a.index, b.index));
+    }
+
+    function matchesSearch(item, search) {
+      const haystack = [
+        item.name,
+        item.brand,
+        item.top,
+        item.mid,
+        item.base,
+        item.note,
+        ...(item.accords || []).map(accord => accord.name)
+      ].join(' ').toLowerCase();
+
+      return haystack.includes(search);
+    }
+
+    function compareFragrances(a, b, indexA, indexB) {
+      const dir = uiState.sortDir === 'asc' ? 1 : -1;
+
+      if (uiState.sortBy === 'name') {
+        return a.name.localeCompare(b.name) * dir || (indexA - indexB) * dir;
+      }
+
+      if (uiState.sortBy === 'brand') {
+        return a.brand.localeCompare(b.brand) * dir || a.name.localeCompare(b.name) * dir;
+      }
+
+      if (uiState.sortBy === 'rating') {
+        return ((a.rating || 0) - (b.rating || 0)) * dir || a.name.localeCompare(b.name);
+      }
+
+      if (uiState.sortBy === 'accords') {
+        return ((a.accords?.length || 0) - (b.accords?.length || 0)) * dir || a.name.localeCompare(b.name);
+      }
+
+      const createdA = new Date(a.createdAt || 0).getTime() || indexA;
+      const createdB = new Date(b.createdAt || 0).getTime() || indexB;
+      return (createdA - createdB) * dir;
+    }
+
+    function buildCard(item, index, shelf, viewIndex) {
+      const tilt = seededRange(`${appState.activeProfileId}-${shelf}-${item.brand}-${item.name}-tilt`, -6.4, 6.4).toFixed(2);
+      const rise = seededRange(`${appState.activeProfileId}-${shelf}-${item.brand}-${item.name}-rise`, -6, 8).toFixed(2);
+      const scale = seededRange(`${appState.activeProfileId}-${shelf}-${item.brand}-${item.name}-scale`, 0.96, 1.05).toFixed(3);
+      const glow = item.accords?.[0]?.color || getAccordColor(item.name || item.brand || 'default', index);
+      const imageMarkup = item.image
+        ? `<img src="${escapeAttr(item.image)}" alt="${escapeAttr(item.name || 'fragrance bottle')}">`
+        : `<div class="bottle-placeholder">✿</div>`;
+
+      return `
+        <article
+          class="bottle-card"
+          data-shelf="${escapeAttr(shelf)}"
+          data-index="${index}"
+          style="--tilt:${tilt}deg; --card-rise:${rise}px; --card-scale:${scale}; --glow:${escapeAttr(hexToRgba(glow, 0.45))}; animation-delay:${(viewIndex + 1) * 0.05}s"
+        >
+          <div class="card-actions">
+            <button class="icon-btn" type="button" onclick="event.stopPropagation(); openModal('${shelf}', ${index})" aria-label="Edit fragrance">✎</button>
+            <button class="icon-btn danger" type="button" onclick="event.stopPropagation(); deleteFragrance('${shelf}', ${index})" aria-label="Remove fragrance">×</button>
+          </div>
+          ${shelf === 'wishlist' ? '<div class="wishlist-badge">✦</div>' : ''}
+          <div class="bottle-img-wrap">${imageMarkup}</div>
+          <div class="bottle-name"><strong>${escapeHtml(item.name)}</strong>${escapeHtml(item.brand)}</div>
+        </article>
+      `;
+    }
+
+    function buildPopupContent(item) {
+      const stars = [1, 2, 3, 4, 5]
+        .map(value => `<span class="star ${value <= (item.rating || 0) ? 'filled' : ''}">★</span>`)
+        .join('');
+
+      const accordRows = (item.accords || [])
+        .map(accord => `
+          <div class="accord-row">
+            <div class="accord-bar-wrap">
+              <div class="accord-bar" style="width:${clamp(Number(accord.value) || 0, 10, 100)}%; background:${escapeAttr(accord.color)};">
+                ${escapeHtml(accord.name)}
+              </div>
+            </div>
+            <span class="accord-value">${clamp(Number(accord.value) || 0, 10, 100)}%</span>
+          </div>
+        `)
+        .join('');
+
+      const notesBlocks = [
+        { label: 'top', value: item.top },
+        { label: 'heart', value: item.mid },
+        { label: 'base', value: item.base }
+      ].filter(part => part.value).map(part => `
+        <div class="notes-block">
+          <div class="notes-label">${part.label}</div>
+          <div class="notes-list">${escapeHtml(part.value)}</div>
+        </div>
+      `).join('');
+
+      const noteMarkup = item.note ? `<div class="popup-personal-note">"${escapeHtml(item.note)}"</div>` : '';
+
+      return `
+        <div class="popup-brand">${escapeHtml(item.brand || '')}</div>
+        <div class="popup-name">${escapeHtml(item.name || '')}</div>
+        <div class="popup-rating">${stars}</div>
+        ${notesBlocks ? `<div class="notes-section">${notesBlocks}</div>` : ''}
+        ${accordRows ? `<div class="accords">${accordRows}</div>` : ''}
+        ${noteMarkup}
+      `;
+    }
+
+    function showPopup(card, item) {
+      globalPopup.innerHTML = buildPopupContent(item);
+      globalPopup.classList.remove('flipped');
+      globalPopup.classList.add('visible');
+
+      requestAnimationFrame(() => {
+        const rect = card.getBoundingClientRect();
+        const popupWidth = globalPopup.offsetWidth;
+        const popupHeight = globalPopup.offsetHeight;
+        let top = rect.top - popupHeight - 16;
+        let flipped = false;
+
+        if (top < 10) {
+          top = rect.bottom + 16;
+          flipped = true;
+        }
+
+        let left = rect.left + rect.width / 2 - popupWidth / 2;
+        left = Math.max(12, Math.min(left, window.innerWidth - popupWidth - 12));
+
+        globalPopup.style.top = `${top}px`;
+        globalPopup.style.left = `${left}px`;
+
+        if (flipped) globalPopup.classList.add('flipped');
+      });
+    }
+
+    function hidePopup() {
+      globalPopup.classList.remove('visible', 'flipped');
+    }
+
+    window.addEventListener('scroll', hidePopup, true);
+    window.addEventListener('resize', hidePopup);
+
+    function syncControls() {
+      document.getElementById('search-input').value = uiState.search;
+      document.getElementById('sort-select').value = uiState.sortBy;
+      document.getElementById('sort-direction-btn').textContent = describeDirectionLabel();
+    }
+
+    function setSearch(value) {
+      uiState.search = value;
+      persistApp();
+      renderAll();
+    }
+
+    function setSort(value) {
+      uiState.sortBy = value;
+      persistApp();
+      renderAll();
+      syncControls();
+    }
+
+    function toggleSortDirection() {
+      uiState.sortDir = uiState.sortDir === 'asc' ? 'desc' : 'asc';
+      persistApp();
+      renderAll();
+      syncControls();
+    }
+
+    function clearFilters() {
+      uiState.search = '';
+      uiState.sortBy = 'added';
+      uiState.sortDir = 'desc';
+      persistApp();
+      syncControls();
+      renderAll();
+    }
+
+    function describeSort() {
+      const map = {
+        added: 'sorted by newest bottles',
+        name: 'sorted by fragrance name',
+        brand: 'sorted by brand',
+        rating: 'sorted by rating',
+        accords: 'sorted by accord count'
+      };
+      return map[uiState.sortBy] || map.added;
+    }
+
+    function describeDirectionLabel() {
+      const ascending = uiState.sortDir === 'asc';
+      if (uiState.sortBy === 'rating' || uiState.sortBy === 'accords') {
+        return ascending ? 'lowest first' : 'highest first';
+      }
+      if (uiState.sortBy === 'added') {
+        return ascending ? 'oldest first' : 'newest first';
+      }
+      return ascending ? 'A → Z' : 'Z → A';
+    }
+
+    function openModal(shelf, index = null) {
+      currentShelf = shelf;
+      editingShelf = shelf;
+      editingIndex = index;
+
+      const editing = index !== null;
+      const existing = editing ? getCurrentData()[shelf][index] : null;
+
+      document.getElementById('modal-title').textContent = editing ? 'edit fragrance' : 'add fragrance';
+      document.getElementById('modal-sub').textContent = editing
+        ? 'tweak the bottle, notes, or shelf placement'
+        : shelf === 'wishlist'
+          ? 'to the wishlist'
+          : 'to the collection';
+      document.getElementById('save-fragrance-btn').textContent = editing ? 'save changes' : 'save to shelf';
+
+      document.getElementById('f-shelf-select').value = shelf;
+      document.getElementById('f-brand').value = existing?.brand || '';
+      document.getElementById('f-name').value = existing?.name || '';
+      document.getElementById('f-top').value = existing?.top || '';
+      document.getElementById('f-mid').value = existing?.mid || '';
+      document.getElementById('f-base').value = existing?.base || '';
+      document.getElementById('f-note').value = existing?.note || '';
+      document.getElementById('f-fragrantica-url').value = '';
+
+      currentRating = existing?.rating || 0;
+      updateStars(currentRating);
+
+      currentBottleImageOriginal = existing?.image || null;
+      currentImageData = existing?.image || null;
+      setBottleImagePreview(currentImageData, currentImageData ? `${existing?.name || 'fragrance'} bottle` : '');
+      document.getElementById('f-image').value = '';
+
+      currentAccordImageOriginal = null;
+      currentAccordImageData = null;
+      setAccordPreview(null, '');
+      document.getElementById('f-accord-image').value = '';
+
+      replaceAccordRows(existing?.accords || []);
+      setExtractStatus('Ready when you are. A tightly cropped main-accords screenshot gives the best result.', 'idle');
+
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+    }
+
+    function openProfileModal(editCurrent = false) {
+      editingProfileMode = editCurrent;
+      const profile = getCurrentProfile();
+
+      document.getElementById('profile-modal-title').textContent = editCurrent ? 'edit wall' : 'new wall';
+      document.getElementById('profile-modal-sub').textContent = editCurrent
+        ? 'tune the active account details'
+        : 'create a local account for another perfume lover';
+      document.getElementById('p-name').value = editCurrent ? profile.name : '';
+      document.getElementById('p-tagline').value = editCurrent ? profile.tagline : '';
+
+      document.getElementById('profile-overlay').classList.add('open');
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profile-overlay').classList.remove('open');
+    }
+
+    document.getElementById('modal-overlay').addEventListener('click', event => {
+      if (event.target === event.currentTarget) closeModal();
     });
-  }
 
-  function hidePopup() {
-    globalPopup.classList.remove('visible', 'flipped');
-  }
-
-  // Hide popup on scroll so it doesn't drift
-  window.addEventListener('scroll', hidePopup, true);
-
-  // MODAL
-  function openModal(shelf) {
-    currentShelf = shelf;
-    editingIndex = null;
-    currentRating = 0;
-    currentImageData = null;
-    document.getElementById('modal-title').textContent = 'add fragrance';
-    document.getElementById('modal-sub').textContent = shelf === 'wishlist' ? 'to the wishlist' : 'to the collection';
-    document.getElementById('f-brand').value = '';
-    document.getElementById('f-name').value = '';
-    document.getElementById('f-top').value = '';
-    document.getElementById('f-mid').value = '';
-    document.getElementById('f-base').value = '';
-    document.getElementById('f-note').value = '';
-    document.getElementById('img-preview').style.display = 'none';
-    document.getElementById('upload-label').textContent = 'click to upload bottle image';
-    document.getElementById('accord-builder').innerHTML = '';
-    updateStars(0);
-    addAccordRow();
-    document.getElementById('modal-overlay').classList.add('open');
-  }
-
-  function closeModal() {
-    document.getElementById('modal-overlay').classList.remove('open');
-  }
-
-  document.getElementById('modal-overlay').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-  });
-
-  // RATING
-  function setRating(val) {
-    currentRating = val;
-    updateStars(val);
-  }
-
-  function updateStars(val) {
-    document.querySelectorAll('.rating-star').forEach(s => {
-      s.classList.toggle('active', parseInt(s.dataset.v) <= val);
+    document.getElementById('profile-overlay').addEventListener('click', event => {
+      if (event.target === event.currentTarget) closeProfileModal();
     });
-  }
 
-  // IMAGE
-  function handleImageUpload(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      currentImageData = ev.target.result;
-      document.getElementById('img-preview').src = currentImageData;
-      document.getElementById('img-preview').style.display = 'block';
-      document.getElementById('upload-label').textContent = file.name;
-    };
-    reader.readAsDataURL(file);
-  }
+    cropOverlay.addEventListener('click', event => {
+      if (event.target === event.currentTarget) closeCropper();
+    });
 
-  // ACCORDS
-  function addAccordRow(name='', value=70, color=null) {
-    const builder = document.getElementById('accord-builder');
-    const idx = builder.children.length;
-    const c = color || ACCORD_COLORS[idx % ACCORD_COLORS.length];
-    const row = document.createElement('div');
-    row.className = 'accord-entry';
-    row.innerHTML = `
-      <input type="text" placeholder="e.g. floral" value="${name}" style="flex:1.2">
-      <input type="range" min="20" max="100" value="${value}">
-      <input type="color" value="${c}">
-      <button class="accord-remove" onclick="this.parentElement.remove()">×</button>
-    `;
-    builder.appendChild(row);
-  }
+    cropViewport.addEventListener('pointerdown', beginCropDrag);
+    cropViewport.addEventListener('pointermove', moveCropDrag);
+    cropViewport.addEventListener('pointerup', endCropDrag);
+    cropViewport.addEventListener('pointercancel', endCropDrag);
 
-  // SAVE
-  function saveFragrance() {
-    const name = document.getElementById('f-name').value.trim();
-    if (!name) { alert('please enter a fragrance name'); return; }
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        closeModal();
+        closeProfileModal();
+        closeCropper();
+      }
+    });
 
-    const accords = [...document.querySelectorAll('.accord-entry')].map(row => ({
-      name:  row.querySelector('input[type="text"]').value.trim(),
-      value: row.querySelector('input[type="range"]').value,
-      color: row.querySelector('input[type="color"]').value
-    })).filter(a => a.name);
+    function saveProfileModal() {
+      const name = document.getElementById('p-name').value.trim();
+      const tagline = document.getElementById('p-tagline').value.trim();
 
-    const frag = {
-      brand:  document.getElementById('f-brand').value.trim(),
-      name,
-      image:  currentImageData,
-      top:    document.getElementById('f-top').value.trim(),
-      mid:    document.getElementById('f-mid').value.trim(),
-      base:   document.getElementById('f-base').value.trim(),
-      accords,
-      rating: currentRating,
-      note:   document.getElementById('f-note').value.trim()
-    };
+      if (!name) {
+        alert('please give this wall a display name');
+        return;
+      }
 
-    data[currentShelf].push(frag);
-    saveData();
-    renderAll();
-    closeModal();
-  }
+      if (editingProfileMode) {
+        const profile = getCurrentProfile();
+        profile.name = name;
+        profile.tagline = tagline || 'soft petals, sweet woods, and a little chaos.';
+      } else {
+        const id = makeUniqueProfileId(name);
+        appState.profiles[id] = createProfile(
+          id,
+          name,
+          tagline || 'soft petals, sweet woods, and a little chaos.',
+          emptyData()
+        );
+        appState.activeProfileId = id;
+      }
 
-  // DELETE
-  function deleteFragrance(shelf, index) {
-    if (!confirm('remove this fragrance?')) return;
-    data[shelf].splice(index, 1);
-    saveData();
-    renderAll();
-  }
+      persistApp();
+      renderAll();
+      closeProfileModal();
+    }
 
-  // EXPORT JSON
-  function exportJSON() {
-    const exportData = {
-      collection: data.collection.map(f => ({...f, image: f.image ? '[image stored locally]' : null})),
-      wishlist:   data.wishlist.map(f => ({...f, image: f.image ? '[image stored locally]' : null}))
-    };
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'fragrances.json';
-    a.click();
-  }
+    function switchProfile(profileId) {
+      if (!appState.profiles[profileId]) return;
+      appState.activeProfileId = profileId;
+      persistApp();
+      renderAll();
+    }
 
-  // INIT
-  loadData();
-</script>
+    function setRating(value) {
+      currentRating = value;
+      updateStars(value);
+    }
+
+    function updateStars(value) {
+      document.querySelectorAll('.rating-star').forEach(star => {
+        star.classList.toggle('active', Number(star.dataset.v) <= value);
+      });
+    }
+
+    function handleBottleImageUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = loadEvent => {
+        currentBottleImageOriginal = loadEvent.target.result;
+        currentImageData = currentBottleImageOriginal;
+        setBottleImagePreview(currentImageData, file.name);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function setBottleImagePreview(src, label) {
+      const preview = document.getElementById('img-preview');
+      const uploadLabel = document.getElementById('upload-label');
+      const tools = document.getElementById('bottle-image-tools');
+
+      if (src) {
+        preview.src = src;
+        preview.style.display = 'block';
+        uploadLabel.textContent = label || 'image selected';
+        tools.hidden = false;
+      } else {
+        preview.src = '';
+        preview.style.display = 'none';
+        uploadLabel.textContent = 'click to upload a bottle image';
+        tools.hidden = true;
+      }
+    }
+
+    function handleAccordImageUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = loadEvent => {
+        currentAccordImageOriginal = loadEvent.target.result;
+        currentAccordImageData = currentAccordImageOriginal;
+        setAccordPreview(currentAccordImageData, file.name);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function setAccordPreview(src, label) {
+      const preview = document.getElementById('accord-preview');
+      const uploadLabel = document.getElementById('accord-upload-label');
+      const tools = document.getElementById('accord-image-tools');
+
+      if (src) {
+        preview.src = src;
+        preview.style.display = 'block';
+        uploadLabel.textContent = label || 'accord screenshot selected';
+        tools.hidden = false;
+      } else {
+        preview.src = '';
+        preview.style.display = 'none';
+        uploadLabel.textContent = 'upload a cropped screenshot of the accord bars';
+        tools.hidden = true;
+      }
+    }
+
+    async function openCropper(target) {
+      const source = target === 'accord'
+        ? (currentAccordImageOriginal || currentAccordImageData)
+        : (currentBottleImageOriginal || currentImageData);
+
+      if (!source) {
+        alert(target === 'accord' ? 'upload a screenshot first' : 'upload a bottle image first');
+        return;
+      }
+
+      const config = target === 'accord'
+        ? {
+            title: 'crop accord screenshot',
+            sub: 'drag to frame just the accord bars, then zoom in until the text is comfortably readable',
+            note: 'Cropping tighter here makes the OCR much more reliable.',
+            aspectWidth: 16,
+            aspectHeight: 5,
+            outputWidth: 1600,
+            outputHeight: 500
+          }
+        : {
+            title: 'crop bottle image',
+            sub: 'drag the bottle into place, then zoom until it feels cute and shelf-sized',
+            note: 'This is perfect for trimming extra transparent or blank space around a PNG bottle.',
+            aspectWidth: 5,
+            aspectHeight: 8,
+            outputWidth: 1000,
+            outputHeight: 1600
+          };
+
+      try {
+        const image = await loadImage(source);
+        cropState = {
+          ...createEmptyCropState(),
+          ...config,
+          target,
+          source,
+          image
+        };
+
+        document.getElementById('crop-title').textContent = config.title;
+        document.getElementById('crop-sub').textContent = config.sub;
+        document.getElementById('crop-note').textContent = config.note;
+        cropViewport.style.aspectRatio = `${config.aspectWidth} / ${config.aspectHeight}`;
+        cropImage.src = source;
+        cropImage.style.width = `${image.naturalWidth}px`;
+        cropImage.style.height = `${image.naturalHeight}px`;
+        cropOverlay.classList.add('open');
+
+        requestAnimationFrame(() => {
+          resetCropper();
+        });
+      } catch (error) {
+        alert(error.message || 'could not open the cropper for this image');
+      }
+    }
+
+    function closeCropper() {
+      cropViewport.classList.remove('dragging');
+      cropOverlay.classList.remove('open');
+      cropState = createEmptyCropState();
+      cropImage.removeAttribute('src');
+      cropImage.style.transform = 'translate(-50%, -50%)';
+      document.getElementById('crop-zoom').value = '100';
+      document.getElementById('crop-zoom-readout').textContent = '100%';
+    }
+
+    function resetCropper() {
+      if (!cropState.image) return;
+
+      cropState.zoom = 1;
+      cropState.x = 0;
+      cropState.y = 0;
+      cropState.baseScale = Math.max(
+        cropViewport.clientWidth / cropState.image.naturalWidth,
+        cropViewport.clientHeight / cropState.image.naturalHeight
+      );
+
+      document.getElementById('crop-zoom').value = '100';
+      renderCropPreview();
+    }
+
+    function updateCropZoom(rawValue) {
+      if (!cropState.image) return;
+      cropState.zoom = Number(rawValue) / 100;
+      renderCropPreview();
+    }
+
+    function renderCropPreview() {
+      if (!cropState.image) return;
+
+      constrainCropPosition();
+
+      const scale = cropState.baseScale * cropState.zoom;
+      cropImage.style.transform = `translate(-50%, -50%) translate(${cropState.x}px, ${cropState.y}px) scale(${scale})`;
+      document.getElementById('crop-zoom-readout').textContent = `${Math.round(cropState.zoom * 100)}%`;
+    }
+
+    function constrainCropPosition() {
+      if (!cropState.image) return;
+
+      const scale = cropState.baseScale * cropState.zoom;
+      const displayedWidth = cropState.image.naturalWidth * scale;
+      const displayedHeight = cropState.image.naturalHeight * scale;
+      const maxOffsetX = Math.max(0, (displayedWidth - cropViewport.clientWidth) / 2);
+      const maxOffsetY = Math.max(0, (displayedHeight - cropViewport.clientHeight) / 2);
+
+      cropState.x = clamp(cropState.x, -maxOffsetX, maxOffsetX);
+      cropState.y = clamp(cropState.y, -maxOffsetY, maxOffsetY);
+    }
+
+    function beginCropDrag(event) {
+      if (!cropState.image) return;
+
+      cropState.dragPointerId = event.pointerId;
+      cropState.startX = event.clientX;
+      cropState.startY = event.clientY;
+      cropState.startOffsetX = cropState.x;
+      cropState.startOffsetY = cropState.y;
+
+      cropViewport.classList.add('dragging');
+      cropViewport.setPointerCapture(event.pointerId);
+    }
+
+    function moveCropDrag(event) {
+      if (!cropState.image || cropState.dragPointerId !== event.pointerId) return;
+
+      cropState.x = cropState.startOffsetX + (event.clientX - cropState.startX);
+      cropState.y = cropState.startOffsetY + (event.clientY - cropState.startY);
+      renderCropPreview();
+    }
+
+    function endCropDrag(event) {
+      if (cropState.dragPointerId !== event.pointerId) return;
+
+      cropState.dragPointerId = null;
+      cropViewport.classList.remove('dragging');
+      if (cropViewport.hasPointerCapture(event.pointerId)) {
+        cropViewport.releasePointerCapture(event.pointerId);
+      }
+    }
+
+    function applyCrop() {
+      if (!cropState.image) return;
+
+      const scale = cropState.baseScale * cropState.zoom;
+      const cropWidth = cropViewport.clientWidth / scale;
+      const cropHeight = cropViewport.clientHeight / scale;
+      const sourceX = clamp((cropState.image.naturalWidth - cropWidth) / 2 - (cropState.x / scale), 0, cropState.image.naturalWidth - cropWidth);
+      const sourceY = clamp((cropState.image.naturalHeight - cropHeight) / 2 - (cropState.y / scale), 0, cropState.image.naturalHeight - cropHeight);
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+
+      canvas.width = cropState.outputWidth;
+      canvas.height = cropState.outputHeight;
+
+      context.drawImage(
+        cropState.image,
+        sourceX,
+        sourceY,
+        cropWidth,
+        cropHeight,
+        0,
+        0,
+        cropState.outputWidth,
+        cropState.outputHeight
+      );
+
+      const cropped = canvas.toDataURL('image/png');
+
+      if (cropState.target === 'accord') {
+        currentAccordImageData = cropped;
+        setAccordPreview(cropped, 'cropped accord screenshot');
+        setExtractStatus('Screenshot cropped. You can run OCR again whenever you want.', 'idle');
+      } else {
+        currentImageData = cropped;
+        setBottleImagePreview(cropped, 'cropped bottle image');
+      }
+
+      closeCropper();
+    }
+
+    function addAccordRow(name = '', value = 70, color = null) {
+      const builder = document.getElementById('accord-builder');
+      const row = document.createElement('div');
+      const nextColor = color || getAccordColor(name || `accord-${builder.children.length}`, builder.children.length);
+      const safeName = escapeAttr(name);
+
+      row.className = 'accord-entry';
+      row.innerHTML = `
+        <input type="text" placeholder="e.g. floral" value="${safeName}">
+        <input type="range" min="10" max="100" value="${clamp(Number(value) || 70, 10, 100)}">
+        <span class="accord-readout">${clamp(Number(value) || 70, 10, 100)}%</span>
+        <input type="color" value="${escapeAttr(nextColor)}">
+        <button class="accord-remove" type="button" aria-label="Remove accord">×</button>
+      `;
+
+      const range = row.querySelector('input[type="range"]');
+      const readout = row.querySelector('.accord-readout');
+      const removeButton = row.querySelector('.accord-remove');
+
+      range.addEventListener('input', () => {
+        readout.textContent = `${range.value}%`;
+      });
+
+      removeButton.addEventListener('click', () => row.remove());
+
+      builder.appendChild(row);
+    }
+
+    function replaceAccordRows(list = []) {
+      const builder = document.getElementById('accord-builder');
+      builder.innerHTML = '';
+      if (!list.length) {
+        addAccordRow();
+        return;
+      }
+      list.forEach((accord, index) => {
+        addAccordRow(accord.name, accord.value, accord.color || getAccordColor(accord.name, index));
+      });
+    }
+
+    function collectAccordsFromBuilder() {
+      return Array.from(document.querySelectorAll('.accord-entry'))
+        .map((row, index) => ({
+          name: row.querySelector('input[type="text"]').value.trim(),
+          value: clamp(Number(row.querySelector('input[type="range"]').value) || 0, 10, 100),
+          color: normalizeHex(row.querySelector('input[type="color"]').value) || getAccordColor(`accord-${index}`, index)
+        }))
+        .filter(accord => accord.name);
+    }
+
+    function saveFragrance() {
+      const name = document.getElementById('f-name').value.trim();
+      if (!name) {
+        alert('please enter a fragrance name');
+        return;
+      }
+
+      const targetShelf = document.getElementById('f-shelf-select').value;
+      const existing = editingIndex !== null ? getCurrentData()[editingShelf][editingIndex] : null;
+
+      const fragrance = normalizeFragrance({
+        brand: document.getElementById('f-brand').value.trim(),
+        name,
+        image: currentImageData,
+        top: document.getElementById('f-top').value.trim(),
+        mid: document.getElementById('f-mid').value.trim(),
+        base: document.getElementById('f-base').value.trim(),
+        accords: collectAccordsFromBuilder(),
+        rating: currentRating,
+        note: document.getElementById('f-note').value.trim(),
+        createdAt: existing?.createdAt || new Date().toISOString()
+      });
+
+      if (editingIndex !== null) {
+        if (editingShelf === targetShelf) {
+          getCurrentData()[targetShelf][editingIndex] = fragrance;
+        } else {
+          getCurrentData()[editingShelf].splice(editingIndex, 1);
+          getCurrentData()[targetShelf].push(fragrance);
+        }
+      } else {
+        getCurrentData()[targetShelf].push(fragrance);
+      }
+
+      persistApp();
+      renderAll();
+      closeModal();
+    }
+
+    function deleteFragrance(shelf, index) {
+      const fragrance = getCurrentData()[shelf][index];
+      const label = fragrance?.name ? `remove ${fragrance.name}?` : 'remove this fragrance?';
+      if (!confirm(label)) return;
+
+      getCurrentData()[shelf].splice(index, 1);
+      persistApp();
+      renderAll();
+    }
+
+    function exportJSON() {
+      const profile = getCurrentProfile();
+      const exportData = {
+        profile: {
+          id: profile.id,
+          name: profile.name,
+          tagline: profile.tagline
+        },
+        data: {
+          collection: profile.data.collection.map(item => ({ ...item, image: item.image ? '[image stored locally in this browser]' : null })),
+          wishlist: profile.data.wishlist.map(item => ({ ...item, image: item.image ? '[image stored locally in this browser]' : null }))
+        }
+      };
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${slugify(profile.name || 'fragrance-wall')}.json`;
+      link.click();
+    }
+
+    function updateExportNote() {
+      const profile = getCurrentProfile();
+      document.getElementById('export-note').textContent = `Download ${profile.name}'s current wall as JSON so you can keep a snapshot, move it later, or wire it into a future real sign-in system.`;
+    }
+
+    async function extractAccordsFromFragrantica() {
+      const urlInput = document.getElementById('f-fragrantica-url').value.trim();
+      if (!urlInput) {
+        setExtractStatus('Paste a Fragrantica perfume page first, then try again.', 'error');
+        return;
+      }
+
+      if (!/fragrantica\./i.test(urlInput)) {
+        setExtractStatus('That shortcut is meant for Fragrantica perfume pages. A screenshot upload will work for any source.', 'error');
+        return;
+      }
+
+      toggleExtractorButtons(true);
+      setExtractStatus('Trying a best-effort Fragrantica pull…', 'loading');
+
+      try {
+        const normalizedUrl = normalizeUrl(urlInput);
+        const response = await fetch(`https://r.jina.ai/${normalizedUrl}`);
+
+        if (!response.ok) {
+          throw new Error('The Fragrantica pull did not come through this time.');
+        }
+
+        const text = await response.text();
+        const accords = parseFragranticaAccords(text);
+
+        if (!accords.length) {
+          throw new Error('I could not confidently find the main accords in that page content.');
+        }
+
+        replaceAccordRows(accords);
+        setExtractStatus(`Pulled ${accords.length} accords from Fragrantica. If the strengths feel off, upload a cropped screenshot for a more visual read.`, 'success');
+      } catch (error) {
+        setExtractStatus(`${error.message} Uploading the accord screenshot is the most reliable fallback.`, 'error');
+      } finally {
+        toggleExtractorButtons(false);
+      }
+    }
+
+    function parseFragranticaAccords(text) {
+      const normalized = text
+        .replace(/\r/g, '\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .toLowerCase();
+
+      const markerIndex = normalized.indexOf('main accords');
+      const chunk = markerIndex >= 0
+        ? normalized.slice(markerIndex, markerIndex + 2200)
+        : normalized.slice(0, 2800);
+
+      const hits = ACCORD_KEYWORDS
+        .map(name => ({ name, index: chunk.indexOf(name) }))
+        .filter(item => item.index >= 0)
+        .sort((a, b) => a.index - b.index || b.name.length - a.name.length);
+
+      const uniqueHits = [];
+      hits.forEach(hit => {
+        const overlaps = uniqueHits.some(existing => Math.abs(existing.index - hit.index) < 5 || (existing.name.includes(hit.name) && Math.abs(existing.index - hit.index) < 18));
+        if (!overlaps) uniqueHits.push(hit);
+      });
+
+      const namedAccords = uniqueHits.slice(0, 8).map((hit, index) => ({
+        name: titleCase(hit.name),
+        value: clamp(100 - index * 12, 34, 100),
+        color: getAccordColor(hit.name, index)
+      }));
+
+      if (namedAccords.length >= 2) {
+        return namedAccords;
+      }
+
+      const lines = chunk.split('\n').map(line => normalizeAccordLabel(line)).filter(Boolean);
+      const fallback = [];
+
+      lines.forEach(line => {
+        if (fallback.length >= 6) return;
+        const match = findClosestAccord(line);
+        if (match && !fallback.some(item => item.name === titleCase(match))) {
+          fallback.push({
+            name: titleCase(match),
+            value: clamp(100 - fallback.length * 12, 34, 100),
+            color: getAccordColor(match, fallback.length)
+          });
+        }
+      });
+
+      return fallback;
+    }
+
+    async function extractAccordsFromImage() {
+      if (!currentAccordImageData) {
+        setExtractStatus('Upload a cropped screenshot of the accord bars first.', 'error');
+        return;
+      }
+
+      toggleExtractorButtons(true);
+
+      try {
+        const Tesseract = await ensureTesseract();
+        setExtractStatus('Reading the screenshot…', 'loading');
+        const result = await Tesseract.recognize(currentAccordImageData, 'eng', {
+          logger: message => {
+            if (message.status === 'recognizing text') {
+              setExtractStatus(`Reading the screenshot… ${Math.round(message.progress * 100)}%`, 'loading');
+            }
+          }
+        });
+
+        const accords = await buildAccordsFromOcr(currentAccordImageData, result.data?.words || []);
+
+        if (!accords.length) {
+          throw new Error('I could not confidently read accord bars from this image.');
+        }
+
+        replaceAccordRows(accords);
+        setExtractStatus(`Read ${accords.length} accords from the screenshot. You can still tweak any label, colour, or percentage by hand.`, 'success');
+      } catch (error) {
+        setExtractStatus(`${error.message} Cropping tighter around just the accord bars usually helps a lot.`, 'error');
+      } finally {
+        toggleExtractorButtons(false);
+      }
+    }
+
+    function toggleExtractorButtons(disabled) {
+      document.getElementById('fragrantica-btn').disabled = disabled;
+      document.getElementById('accord-image-btn').disabled = disabled;
+    }
+
+    function setExtractStatus(message, type = 'idle') {
+      const status = document.getElementById('extract-status');
+      status.textContent = message;
+      status.className = 'extract-status';
+      if (type && type !== 'idle') {
+        status.classList.add(type);
+      }
+    }
+
+    function ensureTesseract() {
+      if (window.Tesseract) return Promise.resolve(window.Tesseract);
+      if (ocrLoaderPromise) return ocrLoaderPromise;
+
+      ocrLoaderPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+        script.onload = () => resolve(window.Tesseract);
+        script.onerror = () => reject(new Error('The OCR helper failed to load.'));
+        document.head.appendChild(script);
+      });
+
+      return ocrLoaderPromise;
+    }
+
+    async function buildAccordsFromOcr(imageSrc, words) {
+      const image = await loadImage(imageSrc);
+      const canvas = document.createElement('canvas');
+      canvas.width = image.width;
+      canvas.height = image.height;
+
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(image, 0, 0);
+
+      const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      const rows = groupWordsIntoRows(words, canvas.height);
+      const accords = [];
+
+      rows.forEach((row, index) => {
+        const label = normalizeAccordLabel(row.words.map(word => word.text).join(' '));
+        if (!label) return;
+
+        const nearestAccord = findClosestAccord(label);
+        const name = titleCase(nearestAccord || label);
+        const scan = estimateAccordBar(pixels, canvas.width, canvas.height, row);
+        accords.push({
+          name,
+          rawWidth: scan.width,
+          color: scan.color ? rgbToHex(scan.color.r, scan.color.g, scan.color.b) : getAccordColor(name, index),
+          order: row.y
+        });
+      });
+
+      const uniqueAccords = [];
+      accords
+        .sort((a, b) => a.order - b.order)
+        .forEach((accord, index) => {
+          if (!uniqueAccords.some(existing => existing.name.toLowerCase() === accord.name.toLowerCase())) {
+            uniqueAccords.push({ ...accord, fallbackIndex: index });
+          }
+        });
+
+      if (!uniqueAccords.length) return [];
+
+      const maxWidth = Math.max(...uniqueAccords.map(accord => accord.rawWidth), 1);
+
+      return uniqueAccords.slice(0, 8).map((accord, index) => ({
+        name: accord.name,
+        value: clamp(Math.round((accord.rawWidth / maxWidth) * 100), 14, 100),
+        color: accord.color || getAccordColor(accord.name, accord.fallbackIndex ?? index)
+      }));
+    }
+
+    function groupWordsIntoRows(words, imageHeight) {
+      const filtered = words
+        .filter(word => {
+          const text = String(word.text || '').trim();
+          const confidence = Number(word.confidence) || 0;
+          return confidence >= 35 && /[a-z]/i.test(text);
+        })
+        .map(word => ({
+          text: String(word.text || '').trim(),
+          x0: word.bbox.x0,
+          x1: word.bbox.x1,
+          y0: word.bbox.y0,
+          y1: word.bbox.y1,
+          height: word.bbox.y1 - word.bbox.y0,
+          centerY: (word.bbox.y0 + word.bbox.y1) / 2
+        }))
+        .filter(word => word.centerY > imageHeight * 0.05 && word.centerY < imageHeight * 0.95)
+        .sort((a, b) => a.centerY - b.centerY || a.x0 - b.x0);
+
+      const rows = [];
+
+      filtered.forEach(word => {
+        const tolerance = Math.max(12, word.height * 0.75);
+        const existingRow = rows.find(row => Math.abs(row.centerY - word.centerY) <= tolerance);
+
+        if (existingRow) {
+          existingRow.words.push(word);
+          existingRow.centerY = (existingRow.centerY * (existingRow.words.length - 1) + word.centerY) / existingRow.words.length;
+          existingRow.x0 = Math.min(existingRow.x0, word.x0);
+          existingRow.x1 = Math.max(existingRow.x1, word.x1);
+          existingRow.y0 = Math.min(existingRow.y0, word.y0);
+          existingRow.y1 = Math.max(existingRow.y1, word.y1);
+        } else {
+          rows.push({
+            words: [word],
+            centerY: word.centerY,
+            x0: word.x0,
+            x1: word.x1,
+            y0: word.y0,
+            y1: word.y1
+          });
+        }
+      });
+
+      return rows
+        .map(row => ({
+          ...row,
+          words: row.words.sort((a, b) => a.x0 - b.x0),
+          y: row.centerY
+        }))
+        .filter(row => row.words.length > 0);
+    }
+
+    function estimateAccordBar(pixels, width, height, row) {
+      const bandTop = clamp(Math.floor(row.y0 - 4), 0, height - 1);
+      const bandBottom = clamp(Math.ceil(row.y1 + 4), 0, height - 1);
+      const baseColor = sampleDominantColor(pixels, width, height, row.x0, bandTop, row.x1, bandBottom);
+      const center = Math.floor((row.x0 + row.x1) / 2);
+      const columnScores = new Array(width).fill(0);
+
+      for (let x = 0; x < width; x += 1) {
+        let matches = 0;
+        let samples = 0;
+
+        for (let y = bandTop; y <= bandBottom; y += 2) {
+          const pixel = getPixel(pixels, width, x, y);
+          if (pixel.a < 20) continue;
+          samples += 1;
+
+          const dist = colorDistance(pixel, baseColor);
+          const hsl = rgbToHsl(pixel.r, pixel.g, pixel.b);
+          const colorful = hsl.s > 0.08 && hsl.l > 0.16 && hsl.l < 0.95;
+
+          if (dist < 74 || (colorful && dist < 118)) {
+            matches += 1;
+          }
+        }
+
+        columnScores[x] = samples ? matches / samples : 0;
+      }
+
+      let left = center;
+      while (left > 0 && columnScores[left] > 0.22) left -= 1;
+
+      let right = center;
+      while (right < width - 1 && columnScores[right] > 0.22) right += 1;
+
+      const rawWidth = Math.max((row.x1 - row.x0) + 20, right - left);
+      const refinedColor = sampleDominantColor(pixels, width, height, left, bandTop, right, bandBottom, baseColor);
+
+      return {
+        width: rawWidth,
+        color: refinedColor
+      };
+    }
+
+    function sampleDominantColor(pixels, width, height, x0, y0, x1, y1, fallback = null) {
+      const startX = clamp(Math.floor(Math.min(x0, x1)), 0, width - 1);
+      const endX = clamp(Math.ceil(Math.max(x0, x1)), 0, width - 1);
+      const startY = clamp(Math.floor(Math.min(y0, y1)), 0, height - 1);
+      const endY = clamp(Math.ceil(Math.max(y0, y1)), 0, height - 1);
+
+      let totalR = 0;
+      let totalG = 0;
+      let totalB = 0;
+      let count = 0;
+
+      for (let y = startY; y <= endY; y += 2) {
+        for (let x = startX; x <= endX; x += 2) {
+          const pixel = getPixel(pixels, width, x, y);
+          if (pixel.a < 20) continue;
+
+          const hsl = rgbToHsl(pixel.r, pixel.g, pixel.b);
+          const usable = hsl.l < 0.95 && (hsl.s > 0.05 || hsl.l < 0.7);
+          if (!usable) continue;
+
+          totalR += pixel.r;
+          totalG += pixel.g;
+          totalB += pixel.b;
+          count += 1;
+        }
+      }
+
+      if (!count) return fallback || { r: 215, g: 170, b: 150, a: 255 };
+
+      return {
+        r: Math.round(totalR / count),
+        g: Math.round(totalG / count),
+        b: Math.round(totalB / count),
+        a: 255
+      };
+    }
+
+    function getPixel(pixels, width, x, y) {
+      const index = (y * width + x) * 4;
+      return {
+        r: pixels[index],
+        g: pixels[index + 1],
+        b: pixels[index + 2],
+        a: pixels[index + 3]
+      };
+    }
+
+    function colorDistance(a, b) {
+      return Math.sqrt(
+        Math.pow(a.r - b.r, 2) +
+        Math.pow(a.g - b.g, 2) +
+        Math.pow(a.b - b.b, 2)
+      );
+    }
+
+    function findClosestAccord(value) {
+      const cleaned = normalizeAccordLabel(value);
+      if (!cleaned) return '';
+
+      const exact = ACCORD_KEYWORDS.find(keyword => keyword === cleaned);
+      if (exact) return exact;
+
+      const inclusive = ACCORD_KEYWORDS.find(keyword => keyword.includes(cleaned) || cleaned.includes(keyword));
+      if (inclusive) return inclusive;
+
+      let best = '';
+      let bestScore = Infinity;
+
+      ACCORD_KEYWORDS.forEach(keyword => {
+        const score = levenshtein(cleaned.replace(/\s+/g, ''), keyword.replace(/\s+/g, ''));
+        if (score < bestScore) {
+          bestScore = score;
+          best = keyword;
+        }
+      });
+
+      return bestScore <= 3 ? best : '';
+    }
+
+    function normalizeAccordLabel(value) {
+      return String(value || '')
+        .toLowerCase()
+        .replace(/[^a-z\s-]/g, ' ')
+        .replace(/\b0\b/g, 'o')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function getAccordColor(name, index = 0) {
+      const accord = String(name || '').toLowerCase();
+
+      if (accord.includes('rose') || accord.includes('floral')) return '#d98ca3';
+      if (accord.includes('powder')) return '#caa6cf';
+      if (accord.includes('amber') || accord.includes('honey') || accord.includes('warm spicy')) return '#c89b5b';
+      if (accord.includes('vanilla') || accord.includes('lactonic')) return '#d9b688';
+      if (accord.includes('woody') || accord.includes('patchouli') || accord.includes('earthy')) return '#9d856f';
+      if (accord.includes('musk') || accord.includes('animalic')) return '#b59d97';
+      if (accord.includes('citrus') || accord.includes('fresh')) return '#e0bf69';
+      if (accord.includes('marine') || accord.includes('aquatic') || accord.includes('ozonic')) return '#73a7c9';
+      if (accord.includes('green') || accord.includes('aromatic') || accord.includes('herbal')) return '#87a779';
+      if (accord.includes('sweet') || accord.includes('fruity') || accord.includes('cherry')) return '#d57b91';
+      if (accord.includes('smoky') || accord.includes('leather') || accord.includes('tobacco') || accord.includes('coffee') || accord.includes('boozy')) return '#8f6b58';
+
+      return FALLBACK_ACCORD_COLORS[index % FALLBACK_ACCORD_COLORS.length];
+    }
+
+    function summarizeAccords(items) {
+      const totals = new Map();
+
+      items.forEach(item => {
+        (item.accords || []).forEach(accord => {
+          const key = accord.name.toLowerCase();
+          totals.set(key, (totals.get(key) || 0) + (Number(accord.value) || 0));
+        });
+      });
+
+      if (!totals.size) {
+        return { name: 'none', note: 'add accord bars to see a signature' };
+      }
+
+      const [name, score] = Array.from(totals.entries()).sort((a, b) => b[1] - a[1])[0];
+      return {
+        name: titleCase(name),
+        note: `${Math.round(score)} total accord points across this wall`
+      };
+    }
+
+    function normalizeUrl(value) {
+      if (/^https?:\/\//i.test(value)) return value;
+      return `https://${value}`;
+    }
+
+    function makeUniqueProfileId(name) {
+      const base = slugify(name) || 'fragrance-wall';
+      let candidate = base;
+      let counter = 2;
+
+      while (appState.profiles[candidate]) {
+        candidate = `${base}-${counter}`;
+        counter += 1;
+      }
+
+      return candidate;
+    }
+
+    function makeMonogram(name) {
+      return String(name || 'F')
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(part => part[0]?.toUpperCase() || '')
+        .join('') || 'F';
+    }
+
+    function seededRange(seed, min, max) {
+      const hashed = hashString(seed);
+      const normalized = (hashed % 10000) / 9999;
+      return min + normalized * (max - min);
+    }
+
+    function hashString(value) {
+      let hash = 0;
+      const stringValue = String(value || '');
+      for (let i = 0; i < stringValue.length; i += 1) {
+        hash = ((hash << 5) - hash) + stringValue.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash);
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function slugify(value) {
+      return String(value || '')
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    function titleCase(value) {
+      return String(value || '')
+        .split(' ')
+        .filter(Boolean)
+        .map(part => part[0]?.toUpperCase() + part.slice(1))
+        .join(' ');
+    }
+
+    function normalizeHex(value) {
+      return /^#[0-9a-f]{6}$/i.test(String(value || '').trim()) ? String(value).trim() : '';
+    }
+
+    function rgbToHex(r, g, b) {
+      return `#${[r, g, b].map(part => clamp(Math.round(part), 0, 255).toString(16).padStart(2, '0')).join('')}`;
+    }
+
+    function hexToRgba(hex, alpha = 1) {
+      const cleaned = normalizeHex(hex).replace('#', '');
+      if (!cleaned) return `rgba(232, 196, 184, ${alpha})`;
+      const r = parseInt(cleaned.slice(0, 2), 16);
+      const g = parseInt(cleaned.slice(2, 4), 16);
+      const b = parseInt(cleaned.slice(4, 6), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function rgbToHsl(r, g, b) {
+      const rr = r / 255;
+      const gg = g / 255;
+      const bb = b / 255;
+      const max = Math.max(rr, gg, bb);
+      const min = Math.min(rr, gg, bb);
+      let h = 0;
+      let s = 0;
+      const l = (max + min) / 2;
+
+      if (max !== min) {
+        const delta = max - min;
+        s = l > 0.5 ? delta / (2 - max - min) : delta / (max + min);
+
+        if (max === rr) h = (gg - bb) / delta + (gg < bb ? 6 : 0);
+        else if (max === gg) h = (bb - rr) / delta + 2;
+        else h = (rr - gg) / delta + 4;
+
+        h /= 6;
+      }
+
+      return { h, s, l };
+    }
+
+    function levenshtein(a, b) {
+      const matrix = Array.from({ length: b.length + 1 }, () => []);
+
+      for (let i = 0; i <= b.length; i += 1) matrix[i][0] = i;
+      for (let j = 0; j <= a.length; j += 1) matrix[0][j] = j;
+
+      for (let i = 1; i <= b.length; i += 1) {
+        for (let j = 1; j <= a.length; j += 1) {
+          const cost = b[i - 1] === a[j - 1] ? 0 : 1;
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j - 1] + cost
+          );
+        }
+      }
+
+      return matrix[b.length][a.length];
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value);
+    }
+
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error('The image could not be loaded for extraction.'));
+        image.src = src;
+      });
+    }
+
+    loadApp();
+  </script>
 </body>
 </html>
