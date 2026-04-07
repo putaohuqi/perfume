@@ -1851,6 +1851,7 @@
     let currentShelf = 'collection';
     let editingIndex = null;
     let editingShelf = null;
+    let editingFragranceId = '';
     let currentRating = 0;
     let currentImageData = null;
     let currentBottleImageOriginal = null;
@@ -1919,6 +1920,7 @@
 
     function normalizeFragrance(raw = {}) {
       return {
+        id: raw.id || createFragranceId(),
         brand: String(raw.brand || '').trim(),
         name: String(raw.name || '').trim(),
         image: raw.image || null,
@@ -2323,6 +2325,7 @@
 
       const editing = index !== null;
       const existing = editing ? getCurrentData()[shelf][index] : null;
+      editingFragranceId = existing?.id || '';
 
       document.getElementById('modal-title').textContent = editing ? 'edit fragrance' : 'add fragrance';
       document.getElementById('modal-sub').textContent = editing
@@ -2361,6 +2364,9 @@
     }
 
     function closeModal() {
+      editingIndex = null;
+      editingShelf = null;
+      editingFragranceId = '';
       document.getElementById('modal-overlay').classList.remove('open');
     }
 
@@ -2754,9 +2760,12 @@
       }
 
       const targetShelf = document.getElementById('f-shelf-select').value;
-      const existing = editingIndex !== null ? getCurrentData()[editingShelf][editingIndex] : null;
+      const currentData = getCurrentData();
+      const existingLocation = editingFragranceId ? findFragranceLocation(editingFragranceId, currentData) : null;
+      const existing = existingLocation ? currentData[existingLocation.shelf][existingLocation.index] : null;
 
       const fragrance = normalizeFragrance({
+        id: existing?.id || editingFragranceId || createFragranceId(),
         brand: document.getElementById('f-brand').value.trim(),
         name,
         image: currentImageData,
@@ -2769,15 +2778,15 @@
         createdAt: existing?.createdAt || new Date().toISOString()
       });
 
-      if (editingIndex !== null) {
-        if (editingShelf === targetShelf) {
-          getCurrentData()[targetShelf][editingIndex] = fragrance;
+      if (existingLocation) {
+        if (existingLocation.shelf === targetShelf) {
+          currentData[targetShelf][existingLocation.index] = fragrance;
         } else {
-          getCurrentData()[editingShelf].splice(editingIndex, 1);
-          getCurrentData()[targetShelf].push(fragrance);
+          currentData[existingLocation.shelf].splice(existingLocation.index, 1);
+          currentData[targetShelf].push(fragrance);
         }
       } else {
-        getCurrentData()[targetShelf].push(fragrance);
+        currentData[targetShelf].push(fragrance);
       }
 
       persistApp();
@@ -3247,6 +3256,25 @@
     function normalizeUrl(value) {
       if (/^https?:\/\//i.test(value)) return value;
       return `https://${value}`;
+    }
+
+    function createFragranceId() {
+      if (window.crypto?.randomUUID) {
+        return window.crypto.randomUUID();
+      }
+
+      return `frag-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    }
+
+    function findFragranceLocation(fragranceId, data = getCurrentData()) {
+      for (const shelf of ['collection', 'wishlist']) {
+        const index = data[shelf].findIndex(item => item.id === fragranceId);
+        if (index >= 0) {
+          return { shelf, index };
+        }
+      }
+
+      return null;
     }
 
     function makeUniqueProfileId(name) {
