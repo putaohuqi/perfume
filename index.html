@@ -640,12 +640,31 @@
       width: 34px;
       height: 34px;
       border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background: rgba(255, 250, 246, 0.94);
       border: 1px solid rgba(216, 171, 157, 0.24);
       color: var(--ink-light);
       box-shadow: 0 12px 24px rgba(94, 58, 41, 0.08);
       cursor: pointer;
       transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .icon-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .icon-btn.edit-btn {
+      background: rgba(255, 245, 241, 0.98);
+      color: var(--rose);
+      border-color: rgba(216, 171, 157, 0.32);
     }
 
     .icon-btn:hover {
@@ -2143,7 +2162,13 @@
           style="--tilt:${tilt}deg; --card-rise:${rise}px; --card-scale:${scale}; --glow:${escapeAttr(hexToRgba(glow, 0.45))}; animation-delay:${(viewIndex + 1) * 0.05}s"
         >
           <div class="card-actions">
-            <button class="icon-btn" type="button" onclick="event.stopPropagation(); openModal('${shelf}', ${index})" aria-label="Edit fragrance">✎</button>
+            <button class="icon-btn edit-btn" type="button" onclick="event.stopPropagation(); openModal('${shelf}', ${index})" aria-label="Edit fragrance">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4.5 19.5l3.6-.7 9-9a1.8 1.8 0 0 0 0-2.5l-.4-.4a1.8 1.8 0 0 0-2.5 0l-9 9-.7 3.6z"></path>
+                <path d="M13.7 7.3l3 3"></path>
+                <path d="M4.5 19.5l2.6-2.6"></path>
+              </svg>
+            </button>
             <button class="icon-btn danger" type="button" onclick="event.stopPropagation(); deleteFragrance('${shelf}', ${index})" aria-label="Remove fragrance">×</button>
           </div>
           ${shelf === 'wishlist' ? '<div class="wishlist-badge">✦</div>' : ''}
