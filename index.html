@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>my fragrance shelf</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #faf6f1;
+      --blush: #e8c4b8;
+      --blush-light: #f2ddd6;
+      --blush-muted: #d4a99a;
+      --rose: #c47b6a;
+      --ink: #2a1f1a;
+      --ink-light: #6b5750;
+      --shelf-wood: #d9b89c;
+      --shelf-shadow: #b8957a;
+      --wishlist-bg: #f5efe8;
+      --wishlist-shelf: #cbbdad;
+      --card-w: 120px;
+      --card-h: 200px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
+
+    /* GRAIN OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* HEADER */
+    header {
+      text-align: center;
+      padding: 60px 20px 20px;
+    }
+
+    header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      color: var(--ink);
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+    }
+
+    header p {
+      margin-top: 8px;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+    }
+
+    /* SECTION TITLES */
+    .section-label {
+      text-align: center;
+      margin: 50px 0 0;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+    }
+
+    /* SHELF */
+    .shelf-wrapper {
+      position: relative;
+      padding: 30px 40px 0;
+      overflow-x: auto;
+    }
+
+    .shelf-row {
+      display: flex;
+      gap: 28px;
+      align-items: flex-end;
+      padding-bottom: 0;
+      min-height: calc(var(--card-h) + 20px);
+      flex-wrap: nowrap;
+      min-width: max-content;
+    }
+
+    /* SHELF PLANK */
+    .shelf-plank {
+      height: 14px;
+      background: linear-gradient(180deg, var(--shelf-wood) 0%, var(--shelf-shadow) 100%);
+      border-radius: 2px;
+      margin: 0 20px;
+      box-shadow: 0 6px 20px rgba(120,80,50,0.18), 0 2px 4px rgba(120,80,50,0.12);
+      position: relative;
+    }
+
+    .shelf-plank::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px 2px 0 0;
+    }
+
+    /* BOTTLE CARD */
+    .bottle-card {
+      position: relative;
+      width: var(--card-w);
+      flex-shrink: 0;
+      cursor: pointer;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .bottle-card:nth-child(1) { animation-delay: 0.05s; }
+    .bottle-card:nth-child(2) { animation-delay: 0.10s; }
+    .bottle-card:nth-child(3) { animation-delay: 0.15s; }
+    .bottle-card:nth-child(4) { animation-delay: 0.20s; }
+    .bottle-card:nth-child(5) { animation-delay: 0.25s; }
+    .bottle-card:nth-child(6) { animation-delay: 0.30s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .bottle-img-wrap {
+      width: var(--card-w);
+      height: var(--card-h);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      transition: transform 0.3s cubic-bezier(.22,.68,0,1.2);
+    }
+
+    .bottle-card:hover .bottle-img-wrap {
+      transform: translateY(-10px);
+    }
+
+    .bottle-img-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 16px rgba(60,30,20,0.18));
+      transition: filter 0.3s;
+    }
+
+    .bottle-card:hover .bottle-img-wrap img {
+      filter: drop-shadow(0 16px 28px rgba(60,30,20,0.25));
+    }
+
+    /* Placeholder for missing images */
+    .bottle-placeholder {
+      width: 70px;
+      height: var(--card-h);
+      background: linear-gradient(160deg, var(--blush-light), var(--blush));
+      border-radius: 8px 8px 4px 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      box-shadow: 0 4px 16px rgba(180,100,80,0.12);
+    }
+
+    .bottle-name {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--ink-light);
+      line-height: 1.4;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .bottle-name strong {
+      display: block;
+      font-weight: 500;
+      color: var(--ink);
+      font-size: 0.72rem;
+    }
+
+    /* HOVER POPUP */
+    .popup {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 14px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 220px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(60,30,20,0.18), 0 2px 8px rgba(60,30,20,0.08);
+      padding: 16px;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .popup::after {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px; height: 14px;
+      background: white;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+
+    .bottle-card:hover .popup {
+      display: block;
+      animation: popIn 0.18s ease;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    .popup-brand {
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 2px;
+    }
+
+    .popup-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .popup-rating {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 10px;
+    }
+
+    .star { color: var(--blush-muted); font-size: 0.75rem; }
+    .star.filled { color: var(--rose); }
+
+    .notes-section {
+      margin-bottom: 8px;
+    }
+
+    .notes-label {
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 4px;
+    }
+
+    .notes-list {
+      font-size: 0.72rem;
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    /* ACCORD BARS */
+    .accords {
+      margin-top: 8px;
+    }
+
+    .accord-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+      gap: 6px;
+    }
+
+    .accord-bar-wrap {
+      flex: 1;
+      height: 18px;
+      background: #f5f0ee;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .accord-bar {
+      height: 100%;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding-left: 7px;
+      font-size: 0.6rem;
+      font-weight: 500;
+      color: white;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+
+    .popup-personal-note {
+      margin-top: 8px;
+      font-size: 0.68rem;
+      font-style: italic;
+      color: var(--ink-light);
+      border-top: 1px solid #f0e8e4;
+      padding-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* WISHLIST SECTION */
+    .wishlist-section {
+      background: var(--wishlist-bg);
+      margin-top: 60px;
+      padding-top: 10px;
+      padding-bottom: 60px;
+      border-top: 1px solid #e8ddd4;
+    }
+
+    .wishlist-section .shelf-plank {
+      background: linear-gradient(180deg, var(--wishlist-shelf) 0%, #b0a090 100%);
+    }
+
+    .wishlist-section .bottle-img-wrap img {
+      filter: drop-shadow(0 8px 16px rgba(60,30,20,0.12)) saturate(0.7);
+      opacity: 0.85;
+    }
+
+    .wishlist-section .bottle-card:hover .bottle-img-wrap img {
+      filter: drop-shadow(0 16px 28px rgba(60,30,20,0.2)) saturate(0.85);
+      opacity: 1;
+    }
+
+    .wishlist-section .bottle-placeholder {
+      background: linear-gradient(160deg, #e4dbd3, #cfc4ba);
+      border: 2px dashed #b5a89a;
+    }
+
+    /* WISHLIST DASHED OVERLAY */
+    .wishlist-badge {
+      position: absolute;
+      top: 8px;
+      right: 6px;
+      width: 18px;
+      height: 18px;
+      background: var(--blush-light);
+      border: 1.5px solid var(--blush-muted);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+    }
+
+    /* ADD BUTTON */
+    .add-btn {
+      width: var(--card-w);
+      height: var(--card-h);
+      border: 2px dashed var(--blush-muted);
+      border-radius: 8px;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: var(--blush-muted);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .add-btn:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+      background: rgba(196,123,106,0.04);
+    }
+
+    .add-btn span { font-size: 1.5rem; line-height: 1; }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(42,31,26,0.45);
+      backdrop-filter: blur(4px);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 36px 32px;
+      width: 480px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 64px rgba(42,31,26,0.22);
+      animation: slideUp 0.25s cubic-bezier(.22,.68,0,1.1);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to   { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: 1.6rem;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .modal-sub {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+    }
+
+    input, textarea, select {
+      border: 1.5px solid #e8ddd8;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      color: var(--ink);
+      background: #fdfaf8;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--blush-muted);
+    }
+
+    textarea { resize: vertical; min-height: 70px; }
+
+    /* ACCORDS BUILDER */
+    .accord-builder {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .accord-entry {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .accord-entry input[type="text"] { flex: 1; }
+    .accord-entry input[type="range"] { flex: 1; accent-color: var(--rose); }
+    .accord-entry input[type="color"] {
+      width: 32px; height: 32px;
+      border-radius: 6px; padding: 2px; cursor: pointer;
+    }
+
+    .accord-remove {
+      background: none;
+      border: none;
+      color: var(--blush-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0 2px;
+      transition: color 0.2s;
+    }
+    .accord-remove:hover { color: var(--rose); }
+
+    .add-accord-btn {
+      align-self: flex-start;
+      background: none;
+      border: 1.5px dashed var(--blush-muted);
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      color: var(--ink-light);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .add-accord-btn:hover { border-color: var(--rose); color: var(--rose); }
+
+    /* RATING INPUT */
+    .rating-input { display: flex; gap: 4px; }
+    .rating-star {
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #ddd;
+      transition: color 0.15s;
+      user-select: none;
+    }
+    .rating-star.active { color: var(--rose); }
+
+    /* IMAGE UPLOAD */
+    .img-upload-area {
+      border: 2px dashed #e0d4ce;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .img-upload-area:hover { border-color: var(--blush-muted); background: #fdf8f6; }
+    .img-upload-area input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; border: none; padding: 0;
+    }
+    .img-upload-area p { font-size: 0.72rem; color: var(--ink-light); pointer-events: none; }
+    .img-preview { max-height: 80px; max-width: 80px; object-fit: contain; margin-bottom: 6px; display: none; }
+
+    /* MODAL BUTTONS */
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+      justify-content: flex-end;
+    }
+
+    .btn-cancel {
+      background: none;
+      border: 1.5px solid #e0d4ce;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      color: var(--ink-light);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-cancel:hover { border-color: var(--ink-light); }
+
+    .btn-save {
+      background: var(--rose);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-save:hover { background: var(--blush-muted); }
+
+    /* JSON EXPORT */
+    .export-section {
+      margin-top: 60px;
+      text-align: center;
+      padding-bottom: 60px;
+    }
+
+    .export-btn {
+      background: none;
+      border: 1.5px solid var(--blush-muted);
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .export-btn:hover { border-color: var(--rose); color: var(--rose); }
+
+    .export-note {
+      margin-top: 8px;
+      font-size: 0.65rem;
+      color: var(--ink-light);
+      letter-spacing: 0.06em;
+    }
+
+    /* SCROLLBAR */
+    .shelf-wrapper::-webkit-scrollbar { height: 4px; }
+    .shelf-wrapper::-webkit-scrollbar-track { background: transparent; }
+    .shelf-wrapper::-webkit-scrollbar-thumb { background: var(--blush); border-radius: 4px; }
+
+    /* EMPTY STATE */
+    .empty-note {
+      text-align: center;
+      padding: 30px;
+      font-size: 0.8rem;
+      color: var(--ink-light);
+      font-style: italic;
+    }
+
+    /* DELETE BUTTON */
+    .delete-btn {
+      position: absolute;
+      top: -6px;
+      left: -6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--rose);
+      border: none;
+      color: white;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .bottle-card:hover .delete-btn { display: flex; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>my fragrance shelf</h1>
+  <p>a curated collection</p>
+</header>
+
+<!-- OWNED SHELF -->
+<p class="section-label">the collection</p>
+<div class="shelf-wrapper" id="collection-wrapper">
+  <div class="shelf-row" id="collection-shelf">
+    <!-- bottles rendered here -->
+    <button class="add-btn" onclick="openModal('collection')">
+      <span>+</span>add
+    </button>
+  </div>
+</div>
+<div class="shelf-plank" id="collection-plank"></div>
+
+<!-- WISHLIST SHELF -->
+<div class="wishlist-section">
+  <p class="section-label">the wishlist</p>
+  <div class="shelf-wrapper" id="wishlist-wrapper">
+    <div class="shelf-row" id="wishlist-shelf">
+      <button class="add-btn" onclick="openModal('wishlist')">
+        <span>+</span>add
+      </button>
+    </div>
+  </div>
+  <div class="shelf-plank" id="wishlist-plank"></div>
+</div>
+
+<!-- EXPORT -->
+<div class="export-section">
+  <button class="export-btn" onclick="exportJSON()">↓ export fragrances.json</button>
+  <p class="export-note">save & upload to github to keep your collection</p>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h2 id="modal-title">add fragrance</h2>
+    <p class="modal-sub" id="modal-sub">to the collection</p>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Brand</label>
+        <input type="text" id="f-brand" placeholder="e.g. Jo Malone">
+      </div>
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="f-name" placeholder="e.g. Peony & Blush Suede">
+      </div>
+      <div class="form-group full">
+        <label>Bottle Image</label>
+        <div class="img-upload-area" id="upload-area">
+          <img class="img-preview" id="img-preview" src="" alt="">
+          <p id="upload-label">click to upload bottle image</p>
+          <input type="file" accept="image/*" id="f-image" onchange="handleImageUpload(event)">
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label>Top Notes</label>
+        <input type="text" id="f-top" placeholder="e.g. bergamot, lemon, pink pepper">
+      </div>
+      <div class="form-group full">
+        <label>Middle / Heart Notes</label>
+        <input type="text" id="f-mid" placeholder="e.g. rose, peony, jasmine">
+      </div>
+      <div class="form-group full">
+        <label>Base Notes</label>
+        <input type="text" id="f-base" placeholder="e.g. musk, sandalwood, amber">
+      </div>
+
+      <div class="form-group full">
+        <label>Main Accords</label>
+        <div class="accord-builder" id="accord-builder"></div>
+        <button class="add-accord-btn" onclick="addAccordRow()">+ add accord</button>
+      </div>
+
+      <div class="form-group full">
+        <label>My Rating</label>
+        <div class="rating-input" id="rating-input">
+          <span class="rating-star" data-v="1" onclick="setRating(1)">★</span>
+          <span class="rating-star" data-v="2" onclick="setRating(2)">★</span>
+          <span class="rating-star" data-v="3" onclick="setRating(3)">★</span>
+          <span class="rating-star" data-v="4" onclick="setRating(4)">★</span>
+          <span class="rating-star" data-v="5" onclick="setRating(5)">★</span>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label>Personal Note</label>
+        <textarea id="f-note" placeholder="how does this one make you feel?"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">cancel</button>
+      <button class="btn-save" onclick="saveFragrance()">save to shelf</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // STATE
+  let data = { collection: [], wishlist: [] };
+  let currentShelf = 'collection';
+  let currentRating = 0;
+  let currentImageData = null;
+  let editingIndex = null;
+
+  const ACCORD_COLORS = [
+    '#e05c4a','#e8947a','#6db36d','#c5a46e','#8eccd4',
+    '#d4b8d4','#f2c96e','#7ab5d4','#d47a8c','#9ab87a'
+  ];
+
+  // LOAD from localStorage
+  function loadData() {
+    const saved = localStorage.getItem('fragranceShelf');
+    if (saved) data = JSON.parse(saved);
+    renderAll();
+  }
+
+  function saveData() {
+    localStorage.setItem('fragranceShelf', JSON.stringify(data));
+  }
+
+  function renderAll() {
+    renderShelf('collection');
+    renderShelf('wishlist');
+  }
+
+  function renderShelf(shelf) {
+    const container = document.getElementById(shelf + '-shelf');
+    const addBtn = `<button class="add-btn" onclick="openModal('${shelf}')"><span>+</span>add</button>`;
+
+    const cards = data[shelf].map((f, i) => buildCard(f, i, shelf)).join('');
+    container.innerHTML = cards + addBtn;
+  }
+
+  function buildCard(f, index, shelf) {
+    const imgHtml = f.image
+      ? `<img src="${f.image}" alt="${f.name}">`
+      : `<div class="bottle-placeholder">🌸</div>`;
+
+    const starsHtml = [1,2,3,4,5].map(n =>
+      `<span class="star ${n <= (f.rating||0) ? 'filled' : ''}">★</span>`
+    ).join('');
+
+    const accordsHtml = (f.accords||[]).map(a => `
+      <div class="accord-row">
+        <div class="accord-bar-wrap">
+          <div class="accord-bar" style="width:${a.value}%;background:${a.color};">${a.name}</div>
+        </div>
+      </div>
+    `).join('');
+
+    const wishBadge = shelf === 'wishlist' ? `<div class="wishlist-badge">✦</div>` : '';
+    const notesSection = (f.top || f.mid || f.base) ? `
+      <div class="notes-section">
+        ${f.top ? `<div class="notes-label">top</div><div class="notes-list">${f.top}</div>` : ''}
+        ${f.mid ? `<div class="notes-label" style="margin-top:4px">heart</div><div class="notes-list">${f.mid}</div>` : ''}
+        ${f.base ? `<div class="notes-label" style="margin-top:4px">base</div><div class="notes-list">${f.base}</div>` : ''}
+      </div>
+    ` : '';
+
+    const personalNote = f.note ? `<div class="popup-personal-note">"${f.note}"</div>` : '';
+
+    return `
+      <div class="bottle-card" style="animation-delay:${index * 0.05}s">
+        <button class="delete-btn" onclick="deleteFragrance('${shelf}', ${index})" title="remove">×</button>
+        ${wishBadge}
+        <div class="popup">
+          <div class="popup-brand">${f.brand || ''}</div>
+          <div class="popup-name">${f.name}</div>
+          <div class="popup-rating">${starsHtml}</div>
+          ${notesSection}
+          ${accordsHtml ? `<div class="accords">${accordsHtml}</div>` : ''}
+          ${personalNote}
+        </div>
+        <div class="bottle-img-wrap">${imgHtml}</div>
+        <div class="bottle-name"><strong>${f.name}</strong>${f.brand}</div>
+      </div>
+    `;
+  }
+
+  // MODAL
+  function openModal(shelf) {
+    currentShelf = shelf;
+    editingIndex = null;
+    currentRating = 0;
+    currentImageData = null;
+    document.getElementById('modal-title').textContent = 'add fragrance';
+    document.getElementById('modal-sub').textContent = shelf === 'wishlist' ? 'to the wishlist' : 'to the collection';
+    document.getElementById('f-brand').value = '';
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-top').value = '';
+    document.getElementById('f-mid').value = '';
+    document.getElementById('f-base').value = '';
+    document.getElementById('f-note').value = '';
+    document.getElementById('img-preview').style.display = 'none';
+    document.getElementById('upload-label').textContent = 'click to upload bottle image';
+    document.getElementById('accord-builder').innerHTML = '';
+    updateStars(0);
+    addAccordRow();
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+
+  document.getElementById('modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // RATING
+  function setRating(val) {
+    currentRating = val;
+    updateStars(val);
+  }
+
+  function updateStars(val) {
+    document.querySelectorAll('.rating-star').forEach(s => {
+      s.classList.toggle('active', parseInt(s.dataset.v) <= val);
+    });
+  }
+
+  // IMAGE
+  function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      currentImageData = ev.target.result;
+      document.getElementById('img-preview').src = currentImageData;
+      document.getElementById('img-preview').style.display = 'block';
+      document.getElementById('upload-label').textContent = file.name;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ACCORDS
+  function addAccordRow(name='', value=70, color=null) {
+    const builder = document.getElementById('accord-builder');
+    const idx = builder.children.length;
+    const c = color || ACCORD_COLORS[idx % ACCORD_COLORS.length];
+    const row = document.createElement('div');
+    row.className = 'accord-entry';
+    row.innerHTML = `
+      <input type="text" placeholder="e.g. floral" value="${name}" style="flex:1.2">
+      <input type="range" min="20" max="100" value="${value}">
+      <input type="color" value="${c}">
+      <button class="accord-remove" onclick="this.parentElement.remove()">×</button>
+    `;
+    builder.appendChild(row);
+  }
+
+  // SAVE
+  function saveFragrance() {
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) { alert('please enter a fragrance name'); return; }
+
+    const accords = [...document.querySelectorAll('.accord-entry')].map(row => ({
+      name: row.querySelector('input[type="text"]').value.trim(),
+      value: row.querySelector('input[type="range"]').value,
+      color: row.querySelector('input[type="color"]').value
+    })).filter(a => a.name);
+
+    const frag = {
+      brand: document.getElementById('f-brand').value.trim(),
+      name,
+      image: currentImageData,
+      top: document.getElementById('f-top').value.trim(),
+      mid: document.getElementById('f-mid').value.trim(),
+      base: document.getElementById('f-base').value.trim(),
+      accords,
+      rating: currentRating,
+      note: document.getElementById('f-note').value.trim()
+    };
+
+    data[currentShelf].push(frag);
+    saveData();
+    renderAll();
+    closeModal();
+  }
+
+  // DELETE
+  function deleteFragrance(shelf, index) {
+    if (!confirm('remove this fragrance?')) return;
+    data[shelf].splice(index, 1);
+    saveData();
+    renderAll();
+  }
+
+  // EXPORT JSON
+  function exportJSON() {
+    // Strip image data for clean JSON (images are large base64 strings)
+    const exportData = {
+      collection: data.collection.map(f => ({...f, image: f.image ? '[image stored locally]' : null})),
+      wishlist: data.wishlist.map(f => ({...f, image: f.image ? '[image stored locally]' : null}))
+    };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'fragrances.json';
+    a.click();
+  }
+
+  // INIT
+  loadData();
+</script>
+</body>
+</html>
