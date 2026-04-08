@@ -679,15 +679,15 @@
 
     .latest-addition-body {
       display: grid;
-      grid-template-columns: 74px minmax(0, 1fr);
-      gap: 12px;
+      grid-template-columns: 64px minmax(0, 1fr);
+      gap: 10px;
       align-items: start;
     }
 
     .latest-addition-figure {
-      width: 74px;
-      height: 90px;
-      border-radius: 22px;
+      width: 64px;
+      height: 82px;
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -728,7 +728,7 @@
 
     .latest-addition-name {
       font-family: var(--display-serif);
-      font-size: 1.2rem;
+      font-size: 1.14rem;
       font-weight: 500;
       line-height: 1;
       color: var(--ink);
@@ -744,9 +744,12 @@
     }
 
     .latest-addition-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: max-content;
+      gap: 6px;
+      align-items: center;
+      justify-content: start;
     }
 
     .latest-addition-copy .latest-addition-meta {
@@ -757,13 +760,13 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 28px;
-      padding: 7px 10px;
+      min-height: 24px;
+      padding: 5px 8px;
       border-radius: 999px;
       background: color-mix(in srgb, var(--button-bg) 84%, var(--paper-strong) 16%);
       border: 1px solid color-mix(in srgb, var(--blush-muted) 18%, transparent);
-      font-size: 0.62rem;
-      letter-spacing: 0.08em;
+      font-size: 0.54rem;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--ink-soft);
       white-space: nowrap;
