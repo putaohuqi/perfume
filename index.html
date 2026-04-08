@@ -10,52 +10,52 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --cream: #fbf6f0;
-      --paper: rgba(255, 251, 247, 0.86);
-      --paper-strong: rgba(255, 251, 248, 0.96);
-      --blush: #ebc9bc;
-      --blush-light: #f5dfd6;
-      --blush-muted: #d8ab9d;
-      --rose: #bf7665;
-      --rose-deep: #985646;
-      --ink: #2d201a;
-      --ink-light: #6c5951;
-      --ink-soft: #917b72;
-      --gold: #d8b37a;
-      --sage: #8ea78a;
-      --shelf-wood: #d9b89c;
-      --shelf-shadow: #b58f75;
-      --wishlist-bg: linear-gradient(180deg, rgba(245, 237, 231, 0.92) 0%, rgba(241, 229, 220, 0.82) 100%);
-      --wishlist-shelf: #ccb7aa;
-      --line: rgba(165, 120, 96, 0.16);
+      --cream: #f4f6f0;
+      --paper: rgba(245, 247, 241, 0.92);
+      --paper-strong: rgba(250, 253, 248, 0.98);
+      --blush: #ffd3d4;
+      --blush-light: #f9e6e6;
+      --blush-muted: #d5ebe4;
+      --rose: #9b7771;
+      --rose-deep: #775c56;
+      --ink: #4d3e3a;
+      --ink-light: #766964;
+      --ink-soft: #998c88;
+      --gold: #f8f4e8;
+      --sage: #d5ebe4;
+      --shelf-wood: #dcbcad;
+      --shelf-shadow: #a78779;
+      --wishlist-bg: linear-gradient(180deg, rgba(249, 236, 236, 0.92) 0%, rgba(213, 235, 228, 0.84) 100%);
+      --wishlist-shelf: #baa9a3;
+      --line: rgba(119, 92, 86, 0.13);
       --card-w: clamp(182px, 18vw, 222px);
       --card-h: clamp(312px, 31vw, 386px);
       --page-max: 1380px;
       --shadow-soft: 0 18px 40px rgba(94, 58, 41, 0.08);
       --shadow-card: 0 24px 60px rgba(94, 58, 41, 0.14);
       --display-serif: 'Cormorant Garamond', 'Noto Serif SC', 'Songti SC', 'STSong', serif;
-      --page-glow-left: rgba(255, 225, 214, 0.86);
-      --page-glow-right: rgba(244, 211, 198, 0.62);
-      --page-glow-bottom: rgba(243, 208, 188, 0.28);
-      --page-base-top: #fff9f4;
-      --page-base-mid: var(--cream);
-      --page-base-bottom: #f8f0e8;
-      --hero-sparkle: rgba(245, 218, 204, 0.8);
-      --panel-bg: rgba(255, 253, 250, 0.86);
-      --section-bg: rgba(255, 252, 248, 0.72);
-      --section-highlight: rgba(243, 208, 188, 0.22);
+      --page-glow-left: rgba(255, 211, 212, 0.94);
+      --page-glow-right: rgba(213, 235, 228, 0.84);
+      --page-glow-bottom: rgba(213, 235, 228, 0.42);
+      --page-base-top: #fffaf9;
+      --page-base-mid: #eef5f0;
+      --page-base-bottom: #e1ebe3;
+      --hero-sparkle: rgba(255, 214, 220, 0.92);
+      --panel-bg: rgba(238, 245, 241, 0.92);
+      --section-bg: rgba(241, 246, 242, 0.84);
+      --section-highlight: rgba(255, 211, 212, 0.34);
       --section-sheen: rgba(255, 255, 255, 0.38);
-      --modal-bg: rgba(255, 253, 250, 0.98);
-      --button-bg: rgba(255, 251, 248, 0.95);
-      --paper-card: rgba(255, 252, 249, 0.92);
-      --paper-card-soft: rgba(249, 241, 235, 0.82);
-      --upload-bg: rgba(255, 249, 244, 0.72);
-      --upload-hover-bg: rgba(255, 247, 241, 0.92);
-      --extractor-bg: linear-gradient(180deg, rgba(255, 248, 243, 0.96) 0%, rgba(253, 246, 240, 0.92) 100%);
-      --badge-start: rgba(232, 196, 184, 0.95);
-      --badge-end: rgba(214, 171, 157, 0.95);
-      --popup-bg: rgba(255, 255, 255, 0.98);
-      --overlay-bg: rgba(42, 31, 26, 0.46);
+      --modal-bg: rgba(248, 251, 247, 0.98);
+      --button-bg: rgba(238, 245, 241, 0.95);
+      --paper-card: rgba(255, 235, 240, 0.94);
+      --paper-card-soft: rgba(225, 242, 236, 0.88);
+      --upload-bg: rgba(241, 247, 243, 0.8);
+      --upload-hover-bg: rgba(247, 251, 249, 0.94);
+      --extractor-bg: linear-gradient(180deg, rgba(248, 242, 246, 0.97) 0%, rgba(228, 242, 237, 0.94) 100%);
+      --badge-start: #ffd3d4;
+      --badge-end: #775c56;
+      --popup-bg: rgba(248, 251, 247, 0.98);
+      --overlay-bg: rgba(65, 55, 52, 0.42);
     }
 
     * {
@@ -129,8 +129,8 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
-      gap: 20px;
+      grid-template-columns: minmax(0, 1.02fr) minmax(430px, 0.98fr);
+      gap: 22px;
       align-items: start;
       padding: 22px 0 18px;
     }
@@ -1257,7 +1257,12 @@
       overflow-y: auto;
       padding: 28px;
       border-radius: 28px;
-      background: var(--modal-bg);
+      background: linear-gradient(
+        160deg,
+        color-mix(in srgb, var(--modal-bg) 82%, var(--paper-card) 18%) 0%,
+        color-mix(in srgb, var(--modal-bg) 76%, var(--paper-card-soft) 24%) 100%
+      );
+      border: 1px solid color-mix(in srgb, var(--blush-muted) 22%, transparent);
       box-shadow: 0 26px 80px color-mix(in srgb, var(--ink) 28%, transparent);
       animation: slideUp 0.24s cubic-bezier(.22, .68, 0, 1.1);
     }
@@ -1289,7 +1294,7 @@
     }
 
     .modal-close:hover {
-      background: white;
+      background: color-mix(in srgb, var(--button-bg) 72%, var(--blush-light) 28%);
       color: var(--rose-deep);
     }
 
@@ -1327,7 +1332,7 @@
     }
 
     .img-upload-area:hover {
-      border-color: rgba(191, 118, 101, 0.42);
+      border-color: color-mix(in srgb, var(--rose) 42%, transparent);
       background: var(--upload-hover-bg);
       transform: translateY(-1px);
     }
@@ -1389,8 +1394,12 @@
       gap: 14px;
       padding: 18px;
       border-radius: 22px;
-      background: var(--extractor-bg);
-      border: 1px solid rgba(216, 171, 157, 0.22);
+      background: linear-gradient(
+        160deg,
+        color-mix(in srgb, var(--paper-card) 72%, var(--blush-light) 28%) 0%,
+        color-mix(in srgb, var(--paper-card-soft) 72%, var(--sage) 28%) 100%
+      );
+      border: 1px solid color-mix(in srgb, var(--blush-muted) 24%, transparent);
     }
 
     .profile-customize-grid {
@@ -1410,7 +1419,7 @@
       max-height: 132px;
       border-radius: 24px;
       object-fit: cover;
-      box-shadow: 0 18px 34px rgba(94, 58, 41, 0.14);
+      box-shadow: 0 18px 34px color-mix(in srgb, var(--ink) 16%, transparent);
     }
 
     .theme-stack {
@@ -1438,11 +1447,17 @@
     }
 
     .theme-option {
+      position: relative;
+      overflow: hidden;
       width: 100%;
       padding: 12px;
       border-radius: 18px;
-      border: 1.5px solid color-mix(in srgb, var(--blush-muted) 24%, transparent);
-      background: color-mix(in srgb, var(--paper-card) 88%, white 12%);
+      border: 1.5px solid color-mix(in srgb, var(--option-blush-muted, var(--blush-muted)) 24%, transparent);
+      background: linear-gradient(
+        160deg,
+        color-mix(in srgb, var(--option-paper, var(--paper-card)) 72%, var(--option-blush-light, var(--blush-light)) 28%) 0%,
+        color-mix(in srgb, var(--option-paper-soft, var(--paper-card-soft)) 72%, var(--option-sage, var(--sage)) 28%) 100%
+      );
       display: grid;
       gap: 8px;
       text-align: left;
@@ -1450,15 +1465,31 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
+    .theme-option::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 88% 14%, color-mix(in srgb, var(--option-blush-light, var(--blush-light)) 74%, white 26%), transparent 28%),
+        linear-gradient(180deg, transparent, color-mix(in srgb, var(--option-rose, var(--rose)) 10%, transparent));
+      pointer-events: none;
+      opacity: 0.85;
+    }
+
+    .theme-option > * {
+      position: relative;
+      z-index: 1;
+    }
+
     .theme-option:hover {
       transform: translateY(-1px);
-      border-color: color-mix(in srgb, var(--rose) 34%, transparent);
+      border-color: color-mix(in srgb, var(--option-rose, var(--rose)) 34%, transparent);
       box-shadow: 0 14px 28px color-mix(in srgb, var(--ink) 9%, transparent);
     }
 
     .theme-option.is-selected {
-      border-color: color-mix(in srgb, var(--rose) 52%, transparent);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--blush) 22%, transparent);
+      border-color: color-mix(in srgb, var(--option-rose, var(--rose)) 52%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--option-blush, var(--blush)) 22%, transparent);
     }
 
     .theme-swatches {
@@ -1477,13 +1508,13 @@
       font-family: var(--display-serif);
       font-size: 1.02rem;
       line-height: 1;
-      color: var(--ink);
+      color: var(--option-ink, var(--ink));
     }
 
     .theme-description {
       font-size: 0.74rem;
       line-height: 1.45;
-      color: var(--ink-light);
+      color: var(--option-ink-light, var(--ink-light));
     }
 
     .extractor-card p {
@@ -2384,56 +2415,50 @@
       mimeType: 'image/webp',
       quality: 0.84
     };
-    const DEFAULT_THEME_KEY = 'soft-petals';
+    const DEFAULT_THEME_KEY = 'melon-cream';
     const BASE_THEME_VARS = {
-      '--cream': '#fbf6f0',
-      '--paper': 'rgba(255, 251, 247, 0.86)',
-      '--paper-strong': 'rgba(255, 251, 248, 0.96)',
-      '--blush': '#ebc9bc',
-      '--blush-light': '#f5dfd6',
-      '--blush-muted': '#d8ab9d',
-      '--rose': '#bf7665',
-      '--rose-deep': '#985646',
-      '--ink': '#2d201a',
-      '--ink-light': '#6c5951',
-      '--ink-soft': '#917b72',
-      '--gold': '#d8b37a',
-      '--sage': '#8ea78a',
-      '--shelf-wood': '#d9b89c',
-      '--shelf-shadow': '#b58f75',
-      '--wishlist-bg': 'linear-gradient(180deg, rgba(245, 237, 231, 0.92) 0%, rgba(241, 229, 220, 0.82) 100%)',
-      '--wishlist-shelf': '#ccb7aa',
-      '--line': 'rgba(165, 120, 96, 0.16)',
-      '--page-glow-left': 'rgba(255, 225, 214, 0.86)',
-      '--page-glow-right': 'rgba(244, 211, 198, 0.62)',
-      '--page-glow-bottom': 'rgba(243, 208, 188, 0.28)',
-      '--page-base-top': '#fff9f4',
-      '--page-base-mid': '#fbf6f0',
-      '--page-base-bottom': '#f8f0e8',
-      '--hero-sparkle': 'rgba(245, 218, 204, 0.8)',
-      '--panel-bg': 'rgba(255, 253, 250, 0.86)',
-      '--section-bg': 'rgba(255, 252, 248, 0.72)',
-      '--section-highlight': 'rgba(243, 208, 188, 0.22)',
+      '--cream': '#f4f6f0',
+      '--paper': 'rgba(245, 247, 241, 0.92)',
+      '--paper-strong': 'rgba(250, 253, 248, 0.98)',
+      '--blush': '#ffd3d4',
+      '--blush-light': '#f9e6e6',
+      '--blush-muted': '#d5ebe4',
+      '--rose': '#9b7771',
+      '--rose-deep': '#775c56',
+      '--ink': '#4d3e3a',
+      '--ink-light': '#766964',
+      '--ink-soft': '#998c88',
+      '--gold': '#f8f4e8',
+      '--sage': '#d5ebe4',
+      '--shelf-wood': '#dcbcad',
+      '--shelf-shadow': '#a78779',
+      '--wishlist-bg': 'linear-gradient(180deg, rgba(249, 236, 236, 0.92) 0%, rgba(213, 235, 228, 0.84) 100%)',
+      '--wishlist-shelf': '#baa9a3',
+      '--line': 'rgba(119, 92, 86, 0.13)',
+      '--page-glow-left': 'rgba(255, 211, 212, 0.94)',
+      '--page-glow-right': 'rgba(213, 235, 228, 0.84)',
+      '--page-glow-bottom': 'rgba(213, 235, 228, 0.42)',
+      '--page-base-top': '#fffaf9',
+      '--page-base-mid': '#eef5f0',
+      '--page-base-bottom': '#e1ebe3',
+      '--hero-sparkle': 'rgba(255, 214, 220, 0.92)',
+      '--panel-bg': 'rgba(238, 245, 241, 0.92)',
+      '--section-bg': 'rgba(241, 246, 242, 0.84)',
+      '--section-highlight': 'rgba(255, 211, 212, 0.34)',
       '--section-sheen': 'rgba(255, 255, 255, 0.38)',
-      '--modal-bg': 'rgba(255, 253, 250, 0.98)',
-      '--button-bg': 'rgba(255, 251, 248, 0.95)',
-      '--paper-card': 'rgba(255, 252, 249, 0.92)',
-      '--paper-card-soft': 'rgba(249, 241, 235, 0.82)',
-      '--upload-bg': 'rgba(255, 249, 244, 0.72)',
-      '--upload-hover-bg': 'rgba(255, 247, 241, 0.92)',
-      '--extractor-bg': 'linear-gradient(180deg, rgba(255, 248, 243, 0.96) 0%, rgba(253, 246, 240, 0.92) 100%)',
-      '--badge-start': 'rgba(232, 196, 184, 0.95)',
-      '--badge-end': 'rgba(214, 171, 157, 0.95)',
-      '--popup-bg': 'rgba(255, 255, 255, 0.98)',
-      '--overlay-bg': 'rgba(42, 31, 26, 0.46)'
+      '--modal-bg': 'rgba(248, 251, 247, 0.98)',
+      '--button-bg': 'rgba(238, 245, 241, 0.95)',
+      '--paper-card': 'rgba(255, 235, 240, 0.94)',
+      '--paper-card-soft': 'rgba(225, 242, 236, 0.88)',
+      '--upload-bg': 'rgba(241, 247, 243, 0.8)',
+      '--upload-hover-bg': 'rgba(247, 251, 249, 0.94)',
+      '--extractor-bg': 'linear-gradient(180deg, rgba(248, 242, 246, 0.97) 0%, rgba(228, 242, 237, 0.94) 100%)',
+      '--badge-start': '#ffd3d4',
+      '--badge-end': '#775c56',
+      '--popup-bg': 'rgba(248, 251, 247, 0.98)',
+      '--overlay-bg': 'rgba(65, 55, 52, 0.42)'
     };
     const THEME_PRESETS = {
-      'soft-petals': {
-        name: 'soft petals',
-        description: 'your original rosy vanity glow',
-        swatches: ['#ebc9bc', '#f5dfd6', '#fbf6f0', '#bf7665'],
-        vars: {}
-      },
       'silent-depth': {
         name: 'silent depth',
         description: 'jellyfish blues and cool powder light',
@@ -2618,7 +2643,8 @@
           '--section-sheen': 'rgba(255, 255, 255, 0.34)',
           '--badge-start': '#ffd3d4',
           '--badge-end': '#775c56',
-          '--popup-bg': 'rgba(248, 251, 247, 0.98)'
+          '--popup-bg': 'rgba(248, 251, 247, 0.98)',
+          '--overlay-bg': 'rgba(65, 55, 52, 0.42)'
         }
       },
       'gelato-date': {
@@ -2664,7 +2690,57 @@
           '--section-sheen': 'rgba(255, 255, 255, 0.32)',
           '--badge-start': '#dfa0aa',
           '--badge-end': '#845f4a',
-          '--popup-bg': 'rgba(254, 249, 240, 0.98)'
+          '--popup-bg': 'rgba(254, 249, 240, 0.98)',
+          '--overlay-bg': 'rgba(74, 54, 45, 0.44)'
+        }
+      },
+      'chrome-noir': {
+        name: 'chrome noir',
+        description: 'liquid silver, graphite, and black mirror shine',
+        swatches: ['#707072', '#cdcfd2', '#fcfcfe', '#818286', '#0a0a0a'],
+        vars: {
+          '--cream': '#d7d9de',
+          '--paper': 'rgba(210, 214, 220, 0.9)',
+          '--paper-strong': 'rgba(246, 247, 250, 0.98)',
+          '--blush': '#cdcfd2',
+          '--blush-light': '#fcfcfe',
+          '--blush-muted': '#818286',
+          '--rose': '#5a5d63',
+          '--rose-deep': '#0a0a0a',
+          '--ink': '#101114',
+          '--ink-light': '#4d5057',
+          '--ink-soft': '#747880',
+          '--gold': '#e7e8ec',
+          '--sage': '#a8adb5',
+          '--shelf-wood': '#707072',
+          '--shelf-shadow': '#0a0a0a',
+          '--wishlist-bg': 'linear-gradient(180deg, rgba(229, 232, 238, 0.84) 0%, rgba(112, 112, 114, 0.68) 100%)',
+          '--wishlist-shelf': '#4d5057',
+          '--line': 'rgba(10, 10, 10, 0.14)',
+          '--page-glow-left': 'rgba(252, 252, 254, 0.82)',
+          '--page-glow-right': 'rgba(205, 207, 210, 0.78)',
+          '--page-glow-bottom': 'rgba(129, 130, 134, 0.42)',
+          '--page-base-top': '#f5f6fa',
+          '--page-base-mid': '#d6d9df',
+          '--page-base-bottom': '#a1a5ad',
+          '--hero-sparkle': 'rgba(252, 252, 254, 0.96)',
+          '--panel-bg': 'rgba(224, 228, 234, 0.92)',
+          '--section-bg': 'rgba(214, 218, 224, 0.84)',
+          '--section-highlight': 'rgba(252, 252, 254, 0.44)',
+          '--section-sheen': 'rgba(255, 255, 255, 0.56)',
+          '--modal-bg': 'rgba(237, 240, 245, 0.98)',
+          '--button-bg': 'rgba(228, 232, 238, 0.96)',
+          '--paper-card': 'rgba(242, 244, 248, 0.95)',
+          '--paper-card-soft': 'rgba(186, 191, 198, 0.9)',
+          '--upload-bg': 'rgba(228, 231, 237, 0.84)',
+          '--upload-hover-bg': 'rgba(241, 243, 247, 0.96)',
+          '--extractor-bg': 'linear-gradient(145deg, rgba(248, 249, 251, 0.98) 0%, rgba(190, 194, 201, 0.92) 52%, rgba(235, 238, 243, 0.96) 100%)',
+          '--badge-start': '#fcfcfe',
+          '--badge-end': '#0a0a0a',
+          '--popup-bg': 'rgba(241, 243, 247, 0.98)',
+          '--overlay-bg': 'rgba(10, 10, 10, 0.56)',
+          '--shadow-soft': '0 18px 40px rgba(10, 10, 10, 0.18)',
+          '--shadow-card': '0 24px 60px rgba(10, 10, 10, 0.24)'
         }
       },
       'midnight-library': {
@@ -4015,6 +4091,29 @@
       setProfileAvatarPreview(null, '');
     }
 
+    function buildThemeOptionStyle(theme) {
+      const mergedThemeVars = {
+        ...BASE_THEME_VARS,
+        ...(theme?.vars || {})
+      };
+
+      const previewVars = {
+        '--option-paper': mergedThemeVars['--paper-card'],
+        '--option-paper-soft': mergedThemeVars['--paper-card-soft'],
+        '--option-ink': mergedThemeVars['--ink'],
+        '--option-ink-light': mergedThemeVars['--ink-light'],
+        '--option-rose': mergedThemeVars['--rose'],
+        '--option-blush': mergedThemeVars['--blush'],
+        '--option-blush-light': mergedThemeVars['--blush-light'],
+        '--option-blush-muted': mergedThemeVars['--blush-muted'],
+        '--option-sage': mergedThemeVars['--sage']
+      };
+
+      return Object.entries(previewVars)
+        .map(([name, value]) => `${name}:${escapeAttr(value)}`)
+        .join(';');
+    }
+
     function renderThemePicker(selectedThemeKey = DEFAULT_THEME_KEY) {
       const picker = document.getElementById('theme-picker');
       if (!picker) return;
@@ -4026,6 +4125,7 @@
             type="button"
             onclick="selectProfileTheme('${escapeAttr(key)}')"
             aria-pressed="${key === selectedThemeKey ? 'true' : 'false'}"
+            style="${buildThemeOptionStyle(theme)}"
           >
             <div class="theme-swatches">
               ${theme.swatches.map(swatch => `<span class="theme-swatch" style="background:${escapeAttr(swatch)}"></span>`).join('')}
