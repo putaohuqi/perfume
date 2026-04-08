@@ -670,6 +670,130 @@
       gap: 10px;
     }
 
+    .shelf-mix-card {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+      padding: 16px 18px 18px;
+      border-radius: 24px;
+      background: linear-gradient(
+        160deg,
+        color-mix(in srgb, var(--paper-card) 74%, var(--blush-light) 26%) 0%,
+        color-mix(in srgb, var(--paper-card-soft) 74%, var(--sage) 26%) 100%
+      );
+      border: 1px solid color-mix(in srgb, var(--blush-muted) 22%, transparent);
+      box-shadow: 0 14px 26px color-mix(in srgb, var(--ink) 8%, transparent);
+      overflow: hidden;
+    }
+
+    .shelf-mix-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .shelf-mix-sub {
+      font-size: 0.72rem;
+      line-height: 1.5;
+      color: var(--ink-soft);
+    }
+
+    .shelf-mix-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    .shelf-mix-item {
+      min-width: 0;
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .shelf-mix-item.is-wishlist {
+      opacity: 0.82;
+    }
+
+    .shelf-mix-figure {
+      width: 100%;
+      min-height: 96px;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      padding-inline: 4px;
+    }
+
+    .shelf-mix-image {
+      max-width: 100%;
+      max-height: 96px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 14px color-mix(in srgb, var(--shelf-shadow) 22%, transparent));
+    }
+
+    .shelf-mix-fallback {
+      width: 54px;
+      height: 72px;
+      border-radius: 16px 16px 12px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--paper-strong) 68%, white 32%) 0%, color-mix(in srgb, var(--button-bg) 72%, var(--paper-card) 28%) 100%);
+      border: 1px solid color-mix(in srgb, var(--blush-muted) 26%, transparent);
+      color: var(--ink-light);
+      font-family: var(--display-serif);
+      font-size: 1.1rem;
+      box-shadow: 0 10px 18px color-mix(in srgb, var(--ink) 9%, transparent);
+    }
+
+    .shelf-mix-copy {
+      min-width: 0;
+      display: grid;
+      gap: 3px;
+    }
+
+    .shelf-mix-name {
+      font-family: var(--display-serif);
+      font-size: 0.92rem;
+      font-weight: 500;
+      line-height: 1.05;
+      color: var(--ink);
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+
+    .shelf-mix-brand {
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .shelf-mix-empty {
+      grid-column: 1 / -1;
+      font-size: 0.8rem;
+      line-height: 1.55;
+      color: var(--ink-light);
+      text-align: center;
+    }
+
+    .shelf-mix-plank {
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--shelf-wood) 86%, white 14%) 0%, color-mix(in srgb, var(--shelf-shadow) 56%, var(--shelf-wood) 44%) 100%);
+      box-shadow: inset 0 1px 0 color-mix(in srgb, white 42%, transparent), 0 10px 18px color-mix(in srgb, var(--shelf-shadow) 20%, transparent);
+    }
+
     .stat-card {
       min-height: 92px;
       padding: 14px 16px;
@@ -2076,6 +2200,10 @@
         grid-template-columns: 1fr 1fr;
       }
 
+      .shelf-mix-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .section-top,
       .shelf-wrapper,
       .shelf-plank,
@@ -2093,6 +2221,10 @@
     @media (max-width: 640px) {
       .stats-grid {
         grid-template-columns: 1fr;
+      }
+
+      .shelf-mix-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .hero-ribbon,
@@ -2163,6 +2295,15 @@
             <strong id="stat-accord">none</strong>
             <span id="stat-accord-note">your loudest scent signature</span>
           </div>
+        </div>
+
+        <div class="shelf-mix-card">
+          <div class="shelf-mix-head">
+            <div class="mini-label">shelf mix</div>
+            <span class="shelf-mix-sub" id="shelf-mix-sub">latest additions across your wall</span>
+          </div>
+          <div class="shelf-mix-row" id="shelf-mix-row"></div>
+          <div class="shelf-mix-plank" aria-hidden="true"></div>
         </div>
       </div>
 
@@ -3327,6 +3468,7 @@
       renderSaveUi();
       renderWallGlanceUi();
       renderStats();
+      renderShelfMix();
       renderShelfVisibility();
       getVisibleShelves().forEach(renderShelf);
       updateExportNote();
@@ -3475,6 +3617,51 @@
       document.getElementById('stat-wishlist-note').textContent = wishlist.length === 1 ? 'future crush waiting' : 'future crushes queued up';
       document.getElementById('stat-rating-note').textContent = ratedCollection.length ? `${ratedCollection.length} rated fragrance${ratedCollection.length === 1 ? '' : 's'} in the collection` : 'add collection ratings to see the average';
       document.getElementById('stat-accord-note').textContent = accordSummary.note;
+    }
+
+    function renderShelfMix() {
+      const row = document.getElementById('shelf-mix-row');
+      const sub = document.getElementById('shelf-mix-sub');
+      if (!row || !sub) return;
+
+      const items = getShelfMixItems();
+      if (!items.length) {
+        row.innerHTML = `<div class="shelf-mix-empty">Add a few fragrances and this little ledge will start showing your latest bottles.</div>`;
+        sub.textContent = 'latest additions across your wall';
+        return;
+      }
+
+      row.innerHTML = items.map(buildShelfMixItem).join('');
+      sub.textContent = items.length === 1 ? '1 newest bottle on display' : `${items.length} newest bottles on display`;
+    }
+
+    function getShelfMixItems(limit = 4) {
+      return ['collection', 'wishlist']
+        .flatMap(shelf => getCurrentData()[shelf].map(item => ({ ...item, shelf })))
+        .sort((a, b) => {
+          const timeA = Date.parse(a.createdAt || 0) || 0;
+          const timeB = Date.parse(b.createdAt || 0) || 0;
+          if (timeA !== timeB) return timeB - timeA;
+          return a.name.localeCompare(b.name);
+        })
+        .slice(0, limit);
+    }
+
+    function buildShelfMixItem(item) {
+      const hasImage = Boolean(item.image);
+      const figure = hasImage
+        ? `<img class="shelf-mix-image" src="${escapeAttr(item.image)}" alt="${escapeAttr(item.name || 'Fragrance bottle')}">`
+        : `<div class="shelf-mix-fallback">${escapeHtml(makeMonogram(item.name || item.brand || 'F'))}</div>`;
+
+      return `
+        <div class="shelf-mix-item ${item.shelf === 'wishlist' ? 'is-wishlist' : ''}">
+          <div class="shelf-mix-figure">${figure}</div>
+          <div class="shelf-mix-copy">
+            <div class="shelf-mix-name">${escapeHtml(item.name || 'Untitled fragrance')}</div>
+            <div class="shelf-mix-brand">${escapeHtml(item.brand || 'Unknown brand')}</div>
+          </div>
+        </div>
+      `;
     }
 
     function renderShelf(shelf) {
