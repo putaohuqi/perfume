@@ -34,6 +34,28 @@
       --shadow-soft: 0 18px 40px rgba(94, 58, 41, 0.08);
       --shadow-card: 0 24px 60px rgba(94, 58, 41, 0.14);
       --display-serif: 'Cormorant Garamond', 'Noto Serif SC', 'Songti SC', 'STSong', serif;
+      --page-glow-left: rgba(255, 225, 214, 0.86);
+      --page-glow-right: rgba(244, 211, 198, 0.62);
+      --page-glow-bottom: rgba(243, 208, 188, 0.28);
+      --page-base-top: #fff9f4;
+      --page-base-mid: var(--cream);
+      --page-base-bottom: #f8f0e8;
+      --hero-sparkle: rgba(245, 218, 204, 0.8);
+      --panel-bg: rgba(255, 253, 250, 0.86);
+      --section-bg: rgba(255, 252, 248, 0.72);
+      --section-highlight: rgba(243, 208, 188, 0.22);
+      --section-sheen: rgba(255, 255, 255, 0.38);
+      --modal-bg: rgba(255, 253, 250, 0.98);
+      --button-bg: rgba(255, 251, 248, 0.95);
+      --paper-card: rgba(255, 252, 249, 0.92);
+      --paper-card-soft: rgba(249, 241, 235, 0.82);
+      --upload-bg: rgba(255, 249, 244, 0.72);
+      --upload-hover-bg: rgba(255, 247, 241, 0.92);
+      --extractor-bg: linear-gradient(180deg, rgba(255, 248, 243, 0.96) 0%, rgba(253, 246, 240, 0.92) 100%);
+      --badge-start: rgba(232, 196, 184, 0.95);
+      --badge-end: rgba(214, 171, 157, 0.95);
+      --popup-bg: rgba(255, 255, 255, 0.98);
+      --overlay-bg: rgba(42, 31, 26, 0.46);
     }
 
     * {
@@ -52,9 +74,9 @@
       font-family: 'Jost', sans-serif;
       font-weight: 300;
       background:
-        radial-gradient(circle at top left, rgba(255, 225, 214, 0.86) 0%, rgba(255, 225, 214, 0) 34%),
-        radial-gradient(circle at top right, rgba(244, 211, 198, 0.62) 0%, rgba(244, 211, 198, 0) 28%),
-        linear-gradient(180deg, #fff9f4 0%, var(--cream) 42%, #f8f0e8 100%);
+        radial-gradient(circle at top left, var(--page-glow-left) 0%, rgba(255, 225, 214, 0) 34%),
+        radial-gradient(circle at top right, var(--page-glow-right) 0%, rgba(244, 211, 198, 0) 28%),
+        linear-gradient(180deg, var(--page-base-top) 0%, var(--page-base-mid) 42%, var(--page-base-bottom) 100%);
       overflow-x: hidden;
     }
 
@@ -75,8 +97,8 @@
     body::after {
       background:
         radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.64) 0%, rgba(255, 255, 255, 0) 22%),
-        radial-gradient(circle at 82% 26%, rgba(255, 235, 228, 0.72) 0%, rgba(255, 235, 228, 0) 18%),
-        radial-gradient(circle at 68% 70%, rgba(243, 208, 188, 0.28) 0%, rgba(243, 208, 188, 0) 24%);
+        radial-gradient(circle at 82% 26%, color-mix(in srgb, var(--blush-light) 82%, white 18%) 0%, rgba(255, 235, 228, 0) 18%),
+        radial-gradient(circle at 68% 70%, var(--page-glow-bottom) 0%, rgba(243, 208, 188, 0) 24%);
       z-index: 0;
     }
 
@@ -116,7 +138,7 @@
       position: relative;
       padding: 28px 30px 24px;
       border-radius: 34px;
-      background: linear-gradient(135deg, rgba(255, 252, 249, 0.92) 0%, rgba(250, 240, 233, 0.82) 100%);
+      background: linear-gradient(135deg, var(--paper-card) 0%, var(--paper-card-soft) 100%);
       border: 1px solid rgba(200, 151, 127, 0.15);
       box-shadow: var(--shadow-soft);
       overflow: hidden;
@@ -130,7 +152,7 @@
       width: 180px;
       height: 180px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(245, 218, 204, 0.8) 0%, rgba(245, 218, 204, 0) 72%);
+      background: radial-gradient(circle, var(--hero-sparkle) 0%, rgba(245, 218, 204, 0) 72%);
       opacity: 0.9;
     }
 
@@ -215,13 +237,19 @@
       border-color: rgba(191, 118, 101, 0.24);
     }
 
+    .hero-copy .stats-grid {
+      position: relative;
+      z-index: 1;
+      margin-top: 22px;
+    }
+
     .hero-panel {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px 14px;
       padding: 18px;
       border-radius: 30px;
-      background: rgba(255, 253, 250, 0.86);
+      background: var(--panel-bg);
       border: 1px solid rgba(165, 120, 96, 0.12);
       box-shadow: var(--shadow-soft);
       backdrop-filter: blur(14px);
@@ -235,7 +263,7 @@
       align-items: center;
       padding: 14px 16px;
       border-radius: 24px;
-      background: linear-gradient(135deg, rgba(252, 244, 238, 0.96) 0%, rgba(255, 251, 247, 0.92) 100%);
+      background: linear-gradient(135deg, color-mix(in srgb, var(--blush-light) 22%, white 78%) 0%, color-mix(in srgb, var(--paper-strong) 86%, white 14%) 100%);
       border: 1px solid rgba(212, 169, 154, 0.22);
     }
 
@@ -246,11 +274,32 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(160deg, rgba(232, 196, 184, 0.95), rgba(214, 171, 157, 0.95));
+      background: linear-gradient(160deg, var(--badge-start), var(--badge-end));
       color: white;
+      box-shadow: 0 14px 24px rgba(191, 118, 101, 0.2);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .profile-badge.has-photo {
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 14px 30px rgba(94, 58, 41, 0.18);
+    }
+
+    .profile-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .badge-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-family: var(--display-serif);
       font-size: 1.7rem;
-      box-shadow: 0 14px 24px rgba(191, 118, 101, 0.2);
     }
 
     .mini-label,
@@ -297,7 +346,7 @@
       margin-top: 14px;
       padding: 18px;
       border-radius: 28px;
-      background: rgba(255, 251, 248, 0.82);
+      background: color-mix(in srgb, var(--paper) 88%, white 12%);
       border: 1px solid rgba(165, 120, 96, 0.12);
       box-shadow: var(--shadow-soft);
       backdrop-filter: blur(16px);
@@ -323,7 +372,7 @@
       border: 1.5px solid rgba(216, 171, 157, 0.26);
       border-radius: 14px;
       padding: 12px 14px;
-      background: rgba(255, 251, 248, 0.96);
+      background: color-mix(in srgb, var(--button-bg) 92%, white 8%);
       color: var(--ink);
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
@@ -369,7 +418,7 @@
     .btn-cancel {
       padding: 11px 16px;
       border: 1.5px solid rgba(216, 171, 157, 0.3);
-      background: rgba(255, 251, 248, 0.95);
+      background: var(--button-bg);
       color: var(--ink-light);
     }
 
@@ -382,6 +431,18 @@
       border-color: rgba(191, 118, 101, 0.34);
       box-shadow: 0 14px 28px rgba(120, 80, 50, 0.08);
       color: var(--rose-deep);
+    }
+
+    .btn-secondary:disabled,
+    .sort-direction-btn:disabled,
+    .text-pill:disabled,
+    .btn-cancel:disabled,
+    .export-btn:disabled {
+      cursor: default;
+      opacity: 0.58;
+      box-shadow: none;
+      transform: none;
+      color: var(--ink-soft);
     }
 
     .hero-panel .btn-secondary {
@@ -413,7 +474,7 @@
       gap: 8px;
       padding: 14px 16px;
       border-radius: 24px;
-      background: linear-gradient(180deg, rgba(255, 251, 248, 0.94), rgba(251, 243, 237, 0.88));
+      background: linear-gradient(180deg, color-mix(in srgb, var(--paper-strong) 90%, white 10%), color-mix(in srgb, var(--blush-light) 22%, white 78%));
       border: 1px solid rgba(216, 171, 157, 0.18);
       box-shadow: 0 14px 26px rgba(94, 58, 41, 0.06);
       align-content: start;
@@ -481,7 +542,6 @@
     }
 
     .stats-grid {
-      grid-column: 1 / -1;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
@@ -491,7 +551,7 @@
       min-height: 92px;
       padding: 14px 16px;
       border-radius: 22px;
-      background: linear-gradient(180deg, rgba(255, 252, 249, 0.92), rgba(249, 241, 235, 0.82));
+      background: linear-gradient(180deg, var(--paper-card), var(--paper-card-soft));
       border: 1px solid rgba(216, 171, 157, 0.18);
       display: flex;
       flex-direction: column;
@@ -518,7 +578,7 @@
       margin-top: 26px;
       padding: 26px 0 34px;
       border-radius: 38px;
-      background: rgba(255, 252, 248, 0.72);
+      background: var(--section-bg);
       border: 1px solid rgba(216, 171, 157, 0.16);
       box-shadow: var(--shadow-soft);
       overflow: hidden;
@@ -529,8 +589,8 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at 94% 0%, rgba(243, 208, 188, 0.22), transparent 26%),
-        radial-gradient(circle at 6% 4%, rgba(255, 255, 255, 0.38), transparent 20%);
+        radial-gradient(circle at 94% 0%, var(--section-highlight), transparent 26%),
+        radial-gradient(circle at 6% 4%, var(--section-sheen), transparent 20%);
       pointer-events: none;
     }
 
@@ -635,6 +695,36 @@
       cursor: pointer;
       flex-shrink: 0;
       animation: fadeUp 0.55s ease both;
+    }
+
+    .bottle-card.is-draggable .bottle-img-wrap {
+      cursor: grab;
+    }
+
+    .bottle-card.is-dragging {
+      opacity: 0.35;
+    }
+
+    .bottle-card.drop-before .bottle-img-wrap::before,
+    .bottle-card.drop-after .bottle-img-wrap::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      bottom: 24px;
+      width: 4px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(191, 118, 101, 0.9), rgba(216, 171, 157, 0.92));
+      box-shadow: 0 0 0 5px rgba(255, 247, 241, 0.86);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .bottle-card.drop-before .bottle-img-wrap::before {
+      left: -18px;
+    }
+
+    .bottle-card.drop-after .bottle-img-wrap::after {
+      right: -18px;
     }
 
     .bottle-card:focus-visible {
@@ -798,6 +888,11 @@
       border-color: rgba(216, 171, 157, 0.32);
     }
 
+    .icon-btn.drag-handle {
+      background: rgba(255, 248, 244, 0.98);
+      color: var(--ink-soft);
+    }
+
     .icon-btn:hover {
       transform: translateY(-1px);
       background: white;
@@ -909,7 +1004,7 @@
       width: 268px;
       padding: 18px;
       border-radius: 18px;
-      background: rgba(255, 255, 255, 0.98);
+      background: var(--popup-bg);
       border: 1px solid rgba(216, 171, 157, 0.18);
       box-shadow: 0 22px 54px rgba(60, 30, 20, 0.18), 0 4px 10px rgba(60, 30, 20, 0.08);
       backdrop-filter: blur(16px);
@@ -1064,7 +1159,7 @@
       margin-top: 26px;
       padding: 24px 28px;
       border-radius: 30px;
-      background: rgba(255, 252, 248, 0.82);
+      background: color-mix(in srgb, var(--paper) 92%, white 8%);
       border: 1px solid rgba(216, 171, 157, 0.16);
       box-shadow: var(--shadow-soft);
       display: flex;
@@ -1096,7 +1191,7 @@
     .export-btn {
       padding: 12px 22px;
       border: 1.5px solid rgba(216, 171, 157, 0.28);
-      background: rgba(255, 251, 248, 0.95);
+      background: var(--button-bg);
       color: var(--ink-light);
     }
 
@@ -1108,7 +1203,7 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background: rgba(42, 31, 26, 0.46);
+      background: var(--overlay-bg);
       backdrop-filter: blur(7px);
     }
 
@@ -1123,7 +1218,7 @@
       overflow-y: auto;
       padding: 28px;
       border-radius: 28px;
-      background: rgba(255, 253, 250, 0.98);
+      background: var(--modal-bg);
       box-shadow: 0 26px 80px rgba(42, 31, 26, 0.28);
       animation: slideUp 0.24s cubic-bezier(.22, .68, 0, 1.1);
     }
@@ -1179,7 +1274,7 @@
       position: relative;
       border-radius: 18px;
       border: 1.6px dashed rgba(216, 171, 157, 0.34);
-      background: rgba(255, 249, 244, 0.72);
+      background: var(--upload-bg);
       padding: 20px;
       min-height: 110px;
       display: flex;
@@ -1194,7 +1289,7 @@
 
     .img-upload-area:hover {
       border-color: rgba(191, 118, 101, 0.42);
-      background: rgba(255, 247, 241, 0.92);
+      background: var(--upload-hover-bg);
       transform: translateY(-1px);
     }
 
@@ -1255,8 +1350,101 @@
       gap: 14px;
       padding: 18px;
       border-radius: 22px;
-      background: linear-gradient(180deg, rgba(255, 248, 243, 0.96) 0%, rgba(253, 246, 240, 0.92) 100%);
+      background: var(--extractor-bg);
       border: 1px solid rgba(216, 171, 157, 0.22);
+    }
+
+    .profile-customize-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .profile-photo-upload {
+      min-height: 188px;
+    }
+
+    .profile-photo-upload .img-preview {
+      width: 100%;
+      max-width: 132px;
+      max-height: 132px;
+      border-radius: 24px;
+      object-fit: cover;
+      box-shadow: 0 18px 34px rgba(94, 58, 41, 0.14);
+    }
+
+    .theme-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .theme-copy {
+      display: grid;
+      gap: 4px;
+    }
+
+    .theme-copy strong {
+      font-family: var(--display-serif);
+      font-size: 1.2rem;
+      font-weight: 500;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .theme-picker {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .theme-option {
+      width: 100%;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1.5px solid rgba(216, 171, 157, 0.22);
+      background: rgba(255, 252, 248, 0.88);
+      display: grid;
+      gap: 8px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .theme-option:hover {
+      transform: translateY(-1px);
+      border-color: rgba(191, 118, 101, 0.34);
+      box-shadow: 0 14px 28px rgba(94, 58, 41, 0.08);
+    }
+
+    .theme-option.is-selected {
+      border-color: rgba(191, 118, 101, 0.52);
+      box-shadow: 0 0 0 3px rgba(232, 196, 184, 0.18);
+    }
+
+    .theme-swatches {
+      display: flex;
+      gap: 6px;
+    }
+
+    .theme-swatch {
+      flex: 1 1 0;
+      height: 16px;
+      border-radius: 999px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.42);
+    }
+
+    .theme-name {
+      font-family: var(--display-serif);
+      font-size: 1.02rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .theme-description {
+      font-size: 0.74rem;
+      line-height: 1.45;
+      color: var(--ink-light);
     }
 
     .extractor-card p {
@@ -1659,6 +1847,11 @@
         grid-template-columns: 1fr;
       }
 
+      .profile-customize-grid,
+      .theme-picker {
+        grid-template-columns: 1fr;
+      }
+
       .crop-controls {
         grid-template-columns: 1fr;
       }
@@ -1728,44 +1921,6 @@
           <span id="active-profile-pill">local wall</span>
           <span id="storage-mode-pill">guest mode · this device</span>
         </div>
-      </div>
-
-      <aside class="hero-panel">
-        <div class="profile-card">
-          <div class="profile-badge" id="profile-badge">M</div>
-          <div>
-            <div class="mini-label">active wall</div>
-            <h2 id="profile-name-display">my fragrance wall</h2>
-            <p id="profile-tagline-display">soft petals, sweet woods, and a little chaos.</p>
-          </div>
-        </div>
-
-        <div class="profile-actions">
-          <div class="control-field">
-            <label for="profile-select">Switch Wall</label>
-            <select id="profile-select" onchange="switchProfile(this.value)"></select>
-          </div>
-          <div class="button-row">
-            <button class="btn-secondary" type="button" onclick="openProfileModal()">new wall</button>
-            <button class="btn-secondary" type="button" onclick="openProfileModal(true)">edit profile</button>
-            <button class="btn-secondary" type="button" onclick="openCloudModal()">account</button>
-          </div>
-          <p class="profile-note" id="profile-note-text">Guest mode saves this wall on this device and browser. Sign in if you want your shelf to sync across devices too.</p>
-        </div>
-
-        <div class="save-card">
-          <div class="save-status-line">
-            <div>
-              <div class="mini-label">save status</div>
-              <strong class="save-status-title" id="save-status-title">guest auto-save on</strong>
-            </div>
-            <span class="save-status-badge" id="save-status-badge">device</span>
-          </div>
-          <p class="save-status-detail" id="save-status-detail">Every wall change is stored on this device and browser. Sign in if you want the same wall to sync across devices.</p>
-          <div class="button-row">
-            <button class="btn-secondary" id="save-now-btn" type="button" onclick="saveNow()">save now</button>
-          </div>
-        </div>
 
         <div class="stats-grid">
           <div class="stat-card">
@@ -1789,6 +1944,52 @@
             <span id="stat-accord-note">your loudest scent signature</span>
           </div>
         </div>
+      </div>
+
+      <aside class="hero-panel">
+        <div class="profile-card">
+          <div class="profile-badge" id="profile-badge">M</div>
+          <div>
+            <div class="mini-label">active wall</div>
+            <h2 id="profile-name-display">my fragrance wall</h2>
+            <p id="profile-tagline-display">soft petals, sweet woods, and a little chaos.</p>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <div class="control-field">
+            <label for="profile-select">Switch Wall</label>
+            <select id="profile-select" onchange="switchProfile(this.value)"></select>
+          </div>
+          <div class="control-field">
+            <label for="shelf-view-select">View Shelf</label>
+            <select id="shelf-view-select" onchange="setShelfView(this.value)">
+              <option value="both">both shelves</option>
+              <option value="collection">collection only</option>
+              <option value="wishlist">wishlist only</option>
+            </select>
+          </div>
+          <div class="button-row">
+            <button class="btn-secondary" type="button" onclick="openProfileModal()">new wall</button>
+            <button class="btn-secondary" type="button" onclick="openProfileModal(true)">edit profile</button>
+            <button class="btn-secondary" type="button" onclick="openCloudModal()">account</button>
+          </div>
+          <p class="profile-note" id="profile-note-text">Guest mode saves this wall on this device and browser. Sign in if you want your shelf to sync across devices too.</p>
+        </div>
+
+        <div class="save-card">
+          <div class="save-status-line">
+            <div>
+              <div class="mini-label">save status</div>
+              <strong class="save-status-title" id="save-status-title">guest auto-save on</strong>
+            </div>
+            <span class="save-status-badge" id="save-status-badge">device</span>
+          </div>
+          <p class="save-status-detail" id="save-status-detail">Every wall change is stored on this device and browser. Sign in if you want the same wall to sync across devices.</p>
+          <div class="button-row">
+            <button class="btn-secondary" id="save-now-btn" type="button" onclick="saveNow()">save now</button>
+          </div>
+        </div>
       </aside>
     </header>
 
@@ -1800,6 +2001,7 @@
       <div class="control-field compact">
         <label for="sort-select">Sort By</label>
         <select id="sort-select" onchange="setSort(this.value)">
+          <option value="custom">custom order</option>
           <option value="added">recently added</option>
           <option value="name">name</option>
           <option value="brand">brand</option>
@@ -1811,7 +2013,7 @@
       <button class="btn-secondary" type="button" onclick="clearFilters()">clear filters</button>
     </section>
 
-    <section class="section-block">
+    <section class="section-block" id="collection-section">
       <div class="section-top">
         <div>
           <p class="section-label">the collection</p>
@@ -1824,7 +2026,7 @@
       <div class="shelf-plank" id="collection-plank"></div>
     </section>
 
-    <section class="section-block wishlist">
+    <section class="section-block wishlist" id="wishlist-section">
       <div class="section-top">
         <div>
           <p class="section-label">the wishlist</p>
@@ -1980,6 +2182,30 @@
           <input type="text" id="p-tagline" placeholder="e.g. airy florals, skin musks, bedtime vanilla">
         </div>
         <div class="form-group full">
+          <label>Wall Look</label>
+          <div class="profile-customize-grid">
+            <div>
+              <div class="img-upload-area profile-photo-upload">
+                <img class="img-preview" id="profile-avatar-preview" src="" alt="">
+                <p id="profile-avatar-label">upload a photo for the wall badge</p>
+                <input type="file" accept="image/*" id="p-avatar" onchange="handleProfileImageUpload(event)">
+              </div>
+              <div class="image-tools" id="profile-avatar-tools" hidden>
+                <button class="btn-secondary" type="button" onclick="removeProfilePhoto()">remove photo</button>
+                <span class="tool-hint">No photo is required. If you skip it, the wall keeps its initials instead.</span>
+              </div>
+            </div>
+            <div class="extractor-card theme-stack">
+              <div class="theme-copy">
+                <span class="mini-label">theme</span>
+                <strong>pick a wall palette</strong>
+              </div>
+              <p>Each wall can keep its own color mood, so your cozy vanillas do not need to live in the same palette as your moody incense shelf.</p>
+              <div class="theme-picker" id="theme-picker"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group full">
           <label>How it works</label>
           <div class="extractor-card">
             <p>Each wall always keeps a local browser copy first, so nobody loses their shelf if the connection flakes out. Signing in simply adds cloud sync on top of that for cross-device access.</p>
@@ -2012,15 +2238,6 @@
             <div class="button-row">
               <button class="btn-cancel" type="button" onclick="closeCloudModal()">keep using guest mode</button>
             </div>
-          </div>
-        </div>
-
-        <div class="form-group full" hidden>
-          <label for="firebase-config-input">Firebase Web Config (optional override)</label>
-          <textarea id="firebase-config-input" class="config-textarea" spellcheck="false"></textarea>
-          <div class="button-row">
-            <button class="btn-secondary" type="button" onclick="saveFirebaseConfig()">save override config</button>
-            <button class="btn-cancel" type="button" onclick="clearFirebaseConfig()">reset to site config</button>
           </div>
         </div>
 
@@ -2087,7 +2304,6 @@
     const APP_STORAGE_KEY = 'perfumeWallAppV2';
     const LEGACY_STORAGE_KEY = 'fragranceShelf';
     const SAVE_META_STORAGE_KEY = APP_STORAGE_KEY + ':save-meta';
-    const FIREBASE_CONFIG_STORAGE_KEY = APP_STORAGE_KEY + ':firebase-config';
     const FIREBASE_SDK_VERSION = '12.11.0';
     const DEFAULT_FIREBASE_CONFIG = {
       apiKey: 'AIzaSyA6Yh6hp3TjI92Iy6pELwRZzHcDH2mzQg4',
@@ -2124,9 +2340,291 @@
       quality: 0.88
     };
     const BOTTLE_IMAGE_VERSION = 2;
+    const PROFILE_AVATAR_EXPORT = {
+      size: 320,
+      mimeType: 'image/webp',
+      quality: 0.84
+    };
+    const DEFAULT_THEME_KEY = 'soft-petals';
+    const BASE_THEME_VARS = {
+      '--cream': '#fbf6f0',
+      '--paper': 'rgba(255, 251, 247, 0.86)',
+      '--paper-strong': 'rgba(255, 251, 248, 0.96)',
+      '--blush': '#ebc9bc',
+      '--blush-light': '#f5dfd6',
+      '--blush-muted': '#d8ab9d',
+      '--rose': '#bf7665',
+      '--rose-deep': '#985646',
+      '--ink': '#2d201a',
+      '--ink-light': '#6c5951',
+      '--ink-soft': '#917b72',
+      '--gold': '#d8b37a',
+      '--sage': '#8ea78a',
+      '--shelf-wood': '#d9b89c',
+      '--shelf-shadow': '#b58f75',
+      '--wishlist-bg': 'linear-gradient(180deg, rgba(245, 237, 231, 0.92) 0%, rgba(241, 229, 220, 0.82) 100%)',
+      '--wishlist-shelf': '#ccb7aa',
+      '--line': 'rgba(165, 120, 96, 0.16)',
+      '--page-glow-left': 'rgba(255, 225, 214, 0.86)',
+      '--page-glow-right': 'rgba(244, 211, 198, 0.62)',
+      '--page-glow-bottom': 'rgba(243, 208, 188, 0.28)',
+      '--page-base-top': '#fff9f4',
+      '--page-base-mid': '#fbf6f0',
+      '--page-base-bottom': '#f8f0e8',
+      '--hero-sparkle': 'rgba(245, 218, 204, 0.8)',
+      '--panel-bg': 'rgba(255, 253, 250, 0.86)',
+      '--section-bg': 'rgba(255, 252, 248, 0.72)',
+      '--section-highlight': 'rgba(243, 208, 188, 0.22)',
+      '--section-sheen': 'rgba(255, 255, 255, 0.38)',
+      '--modal-bg': 'rgba(255, 253, 250, 0.98)',
+      '--button-bg': 'rgba(255, 251, 248, 0.95)',
+      '--paper-card': 'rgba(255, 252, 249, 0.92)',
+      '--paper-card-soft': 'rgba(249, 241, 235, 0.82)',
+      '--upload-bg': 'rgba(255, 249, 244, 0.72)',
+      '--upload-hover-bg': 'rgba(255, 247, 241, 0.92)',
+      '--extractor-bg': 'linear-gradient(180deg, rgba(255, 248, 243, 0.96) 0%, rgba(253, 246, 240, 0.92) 100%)',
+      '--badge-start': 'rgba(232, 196, 184, 0.95)',
+      '--badge-end': 'rgba(214, 171, 157, 0.95)',
+      '--popup-bg': 'rgba(255, 255, 255, 0.98)',
+      '--overlay-bg': 'rgba(42, 31, 26, 0.46)'
+    };
+    const THEME_PRESETS = {
+      'soft-petals': {
+        name: 'soft petals',
+        description: 'your original rosy vanity glow',
+        swatches: ['#ebc9bc', '#f5dfd6', '#fbf6f0', '#bf7665'],
+        vars: {}
+      },
+      'silent-depth': {
+        name: 'silent depth',
+        description: 'jellyfish blues and cool powder light',
+        swatches: ['#01162b', '#00385a', '#6a90b4', '#d2dbeb'],
+        vars: {
+          '--cream': '#eef3fa',
+          '--paper': 'rgba(243, 248, 255, 0.86)',
+          '--paper-strong': 'rgba(248, 251, 255, 0.97)',
+          '--blush': '#94a2bf',
+          '--blush-light': '#d2dbeb',
+          '--blush-muted': '#6a90b4',
+          '--rose': '#3f6284',
+          '--rose-deep': '#01162b',
+          '--ink': '#01162b',
+          '--ink-light': '#385170',
+          '--ink-soft': '#6f85a4',
+          '--gold': '#6a90b4',
+          '--sage': '#94a2bf',
+          '--shelf-wood': '#6a90b4',
+          '--shelf-shadow': '#00385a',
+          '--wishlist-bg': 'linear-gradient(180deg, rgba(210, 219, 235, 0.92) 0%, rgba(148, 162, 191, 0.82) 100%)',
+          '--wishlist-shelf': '#5a7393',
+          '--line': 'rgba(1, 22, 43, 0.12)',
+          '--page-glow-left': 'rgba(210, 219, 235, 0.82)',
+          '--page-glow-right': 'rgba(148, 162, 191, 0.52)',
+          '--page-glow-bottom': 'rgba(106, 144, 180, 0.22)',
+          '--page-base-top': '#f8fbff',
+          '--page-base-mid': '#eef3fa',
+          '--page-base-bottom': '#dfe8f5',
+          '--hero-sparkle': 'rgba(210, 219, 235, 0.86)',
+          '--panel-bg': 'rgba(248, 251, 255, 0.9)',
+          '--section-bg': 'rgba(245, 249, 255, 0.76)',
+          '--section-highlight': 'rgba(106, 144, 180, 0.2)',
+          '--badge-start': '#6a90b4',
+          '--badge-end': '#00385a',
+          '--popup-bg': 'rgba(248, 251, 255, 0.98)',
+          '--overlay-bg': 'rgba(1, 22, 43, 0.5)'
+        }
+      },
+      'mint-truffle': {
+        name: 'mint truffle',
+        description: 'powder blue, cream, and soft cocoa',
+        swatches: ['#c7d3db', '#a79a8a', '#fcf7df', '#3e3630'],
+        vars: {
+          '--cream': '#f6f3e8',
+          '--paper': 'rgba(252, 248, 233, 0.88)',
+          '--paper-strong': 'rgba(255, 251, 239, 0.97)',
+          '--blush': '#c7d3db',
+          '--blush-light': '#e4ebee',
+          '--blush-muted': '#a79a8a',
+          '--rose': '#7f7265',
+          '--rose-deep': '#3e3630',
+          '--ink': '#3e3630',
+          '--ink-light': '#6c6158',
+          '--ink-soft': '#92877a',
+          '--gold': '#fcf7df',
+          '--sage': '#c7d3db',
+          '--shelf-wood': '#a79a8a',
+          '--shelf-shadow': '#3e3630',
+          '--wishlist-bg': 'linear-gradient(180deg, rgba(240, 244, 246, 0.92) 0%, rgba(199, 211, 219, 0.82) 100%)',
+          '--wishlist-shelf': '#968a7d',
+          '--line': 'rgba(62, 54, 48, 0.14)',
+          '--page-glow-left': 'rgba(252, 247, 223, 0.82)',
+          '--page-glow-right': 'rgba(199, 211, 219, 0.5)',
+          '--page-glow-bottom': 'rgba(167, 154, 138, 0.2)',
+          '--page-base-top': '#fdfbf0',
+          '--page-base-mid': '#f6f3e8',
+          '--page-base-bottom': '#ebe6d7',
+          '--hero-sparkle': 'rgba(252, 247, 223, 0.86)',
+          '--badge-start': '#c7d3db',
+          '--badge-end': '#a79a8a',
+          '--overlay-bg': 'rgba(62, 54, 48, 0.48)'
+        }
+      },
+      'berry-matcha': {
+        name: 'berry matcha',
+        description: 'strawberry milk with mossy matcha depth',
+        swatches: ['#ddd3c9', '#ecc4c3', '#928e5e', '#575527'],
+        vars: {
+          '--cream': '#f6efe5',
+          '--paper': 'rgba(251, 244, 236, 0.88)',
+          '--paper-strong': 'rgba(255, 248, 241, 0.97)',
+          '--blush': '#ecc4c3',
+          '--blush-light': '#f4dddd',
+          '--blush-muted': '#b97d7b',
+          '--rose': '#9c6866',
+          '--rose-deep': '#575527',
+          '--ink': '#4b4339',
+          '--ink-light': '#73675c',
+          '--ink-soft': '#94897c',
+          '--gold': '#ddd3c9',
+          '--sage': '#928e5e',
+          '--shelf-wood': '#b97d7b',
+          '--shelf-shadow': '#575527',
+          '--wishlist-bg': 'linear-gradient(180deg, rgba(247, 231, 231, 0.94) 0%, rgba(221, 211, 201, 0.82) 100%)',
+          '--wishlist-shelf': '#8f8b5c',
+          '--line': 'rgba(87, 85, 39, 0.14)',
+          '--page-glow-left': 'rgba(236, 196, 195, 0.74)',
+          '--page-glow-right': 'rgba(221, 211, 201, 0.58)',
+          '--page-glow-bottom': 'rgba(146, 142, 94, 0.22)',
+          '--page-base-top': '#fdf6ef',
+          '--page-base-mid': '#f6efe5',
+          '--page-base-bottom': '#ebe0d2',
+          '--hero-sparkle': 'rgba(244, 221, 221, 0.86)',
+          '--badge-start': '#ecc4c3',
+          '--badge-end': '#928e5e',
+          '--overlay-bg': 'rgba(87, 85, 39, 0.44)'
+        }
+      },
+      'melon-cream': {
+        name: 'melon cream',
+        description: 'pastel pink, iced mint, and soft cafe brown',
+        swatches: ['#ffd3d4', '#d5ebe4', '#f8f4e8', '#775c56'],
+        vars: {
+          '--cream': '#f9f7ef',
+          '--paper': 'rgba(252, 251, 245, 0.9)',
+          '--paper-strong': 'rgba(255, 255, 250, 0.97)',
+          '--blush': '#ffd3d4',
+          '--blush-light': '#f9e6e6',
+          '--blush-muted': '#d5ebe4',
+          '--rose': '#9b7771',
+          '--rose-deep': '#775c56',
+          '--ink': '#4d3e3a',
+          '--ink-light': '#766964',
+          '--ink-soft': '#998c88',
+          '--gold': '#f8f4e8',
+          '--sage': '#d5ebe4',
+          '--shelf-wood': '#dcbcad',
+          '--shelf-shadow': '#a78779',
+          '--wishlist-bg': 'linear-gradient(180deg, rgba(249, 236, 236, 0.92) 0%, rgba(213, 235, 228, 0.84) 100%)',
+          '--wishlist-shelf': '#baa9a3',
+          '--line': 'rgba(119, 92, 86, 0.13)',
+          '--page-glow-left': 'rgba(255, 211, 212, 0.72)',
+          '--page-glow-right': 'rgba(213, 235, 228, 0.58)',
+          '--page-glow-bottom': 'rgba(248, 244, 232, 0.28)',
+          '--page-base-top': '#fffdf7',
+          '--page-base-mid': '#f9f7ef',
+          '--page-base-bottom': '#f3ede2',
+          '--hero-sparkle': 'rgba(255, 231, 232, 0.88)',
+          '--badge-start': '#ffd3d4',
+          '--badge-end': '#775c56'
+        }
+      },
+      'gelato-date': {
+        name: 'gelato date',
+        description: 'neapolitan cream, stone, coffee, and pink',
+        swatches: ['#f0eddc', '#b9ac8c', '#845f4a', '#dfa0aa'],
+        vars: {
+          '--cream': '#f5f0df',
+          '--paper': 'rgba(251, 247, 236, 0.88)',
+          '--paper-strong': 'rgba(255, 251, 242, 0.97)',
+          '--blush': '#dfa0aa',
+          '--blush-light': '#f0ccd2',
+          '--blush-muted': '#b9ac8c',
+          '--rose': '#9b6f72',
+          '--rose-deep': '#845f4a',
+          '--ink': '#4a362d',
+          '--ink-light': '#6e5a51',
+          '--ink-soft': '#94857b',
+          '--gold': '#f0eddc',
+          '--sage': '#b9ac8c',
+          '--shelf-wood': '#b9ac8c',
+          '--shelf-shadow': '#845f4a',
+          '--wishlist-bg': 'linear-gradient(180deg, rgba(246, 232, 235, 0.92) 0%, rgba(240, 237, 220, 0.84) 100%)',
+          '--wishlist-shelf': '#a98f80',
+          '--line': 'rgba(132, 95, 74, 0.14)',
+          '--page-glow-left': 'rgba(223, 160, 170, 0.68)',
+          '--page-glow-right': 'rgba(240, 237, 220, 0.54)',
+          '--page-glow-bottom': 'rgba(185, 172, 140, 0.24)',
+          '--page-base-top': '#fefcf5',
+          '--page-base-mid': '#f5f0df',
+          '--page-base-bottom': '#ece2d6',
+          '--hero-sparkle': 'rgba(240, 237, 220, 0.84)',
+          '--badge-start': '#dfa0aa',
+          '--badge-end': '#845f4a'
+        }
+      },
+      'midnight-library': {
+        name: 'midnight library',
+        description: 'ash, bark, and black coffee shelves',
+        swatches: ['#b7b4ae', '#726e68', '#33312f', '#0a0a0a'],
+        vars: {
+          '--cream': '#171414',
+          '--paper': 'rgba(35, 31, 31, 0.9)',
+          '--paper-strong': 'rgba(42, 37, 37, 0.97)',
+          '--blush': '#726e68',
+          '--blush-light': '#b7b4ae',
+          '--blush-muted': '#5d5651',
+          '--rose': '#b7b4ae',
+          '--rose-deep': '#371e1e',
+          '--ink': '#f0ede8',
+          '--ink-light': '#d6d0ca',
+          '--ink-soft': '#aea7a0',
+          '--gold': '#b7b4ae',
+          '--sage': '#726e68',
+          '--shelf-wood': '#371e1e',
+          '--shelf-shadow': '#0a0a0a',
+          '--wishlist-bg': 'linear-gradient(180deg, rgba(42, 37, 37, 0.94) 0%, rgba(20, 18, 18, 0.88) 100%)',
+          '--wishlist-shelf': '#1d1515',
+          '--line': 'rgba(255, 255, 255, 0.08)',
+          '--page-glow-left': 'rgba(183, 180, 174, 0.14)',
+          '--page-glow-right': 'rgba(55, 30, 30, 0.3)',
+          '--page-glow-bottom': 'rgba(10, 10, 10, 0.58)',
+          '--page-base-top': '#191616',
+          '--page-base-mid': '#141212',
+          '--page-base-bottom': '#090909',
+          '--hero-sparkle': 'rgba(114, 110, 104, 0.38)',
+          '--panel-bg': 'rgba(28, 24, 24, 0.92)',
+          '--section-bg': 'rgba(24, 20, 20, 0.78)',
+          '--section-highlight': 'rgba(114, 110, 104, 0.18)',
+          '--section-sheen': 'rgba(255, 255, 255, 0.08)',
+          '--modal-bg': 'rgba(26, 23, 23, 0.98)',
+          '--button-bg': 'rgba(38, 34, 34, 0.95)',
+          '--paper-card': 'rgba(31, 27, 27, 0.95)',
+          '--paper-card-soft': 'rgba(40, 35, 35, 0.86)',
+          '--upload-bg': 'rgba(34, 29, 29, 0.84)',
+          '--upload-hover-bg': 'rgba(42, 37, 37, 0.94)',
+          '--extractor-bg': 'linear-gradient(180deg, rgba(33, 29, 29, 0.96) 0%, rgba(24, 21, 21, 0.92) 100%)',
+          '--badge-start': '#726e68',
+          '--badge-end': '#0a0a0a',
+          '--popup-bg': 'rgba(31, 27, 27, 0.98)',
+          '--overlay-bg': 'rgba(0, 0, 0, 0.62)',
+          '--shadow-soft': '0 18px 40px rgba(0, 0, 0, 0.28)',
+          '--shadow-card': '0 24px 60px rgba(0, 0, 0, 0.34)'
+        }
+      }
+    };
 
     let appState = createDefaultAppState();
-    let uiState = { search: '', sortBy: 'added', sortDir: 'desc' };
+    let uiState = { search: '', sortBy: 'added', sortDir: 'desc', shelfView: 'both' };
     let saveMeta = createDefaultSaveMeta();
     let currentShelf = 'collection';
     let editingIndex = null;
@@ -2137,6 +2635,8 @@
     let currentBottleImageOriginal = null;
     let currentAccordImageData = null;
     let currentAccordImageOriginal = null;
+    let currentProfileAvatarData = null;
+    let currentProfileThemeKey = DEFAULT_THEME_KEY;
     let editingProfileMode = false;
     let ocrLoaderPromise = null;
     let cropState = createEmptyCropState();
@@ -2147,6 +2647,7 @@
     let activePopupCard = null;
     let popupRepositionFrame = null;
     let shelfLayoutRefreshTimer = null;
+    let dragReorderState = createEmptyReorderState();
     let cloudState = createDefaultCloudState();
 
     const globalPopup = document.getElementById('global-popup');
@@ -2179,6 +2680,17 @@
         startY: 0,
         startOffsetX: 0,
         startOffsetY: 0
+      };
+    }
+
+    function createEmptyReorderState() {
+      return {
+        armedId: '',
+        armedShelf: '',
+        draggingId: '',
+        draggingShelf: '',
+        targetId: '',
+        dropAfter: false
       };
     }
 
@@ -2219,12 +2731,14 @@
       };
     }
 
-    function createProfile(id, name, tagline, data = emptyData()) {
+    function createProfile(id, name, tagline, data = emptyData(), options = {}) {
       return {
         id,
         name: name || 'my fragrance wall',
         tagline: tagline || 'soft petals, sweet woods, and a little chaos.',
-        createdAt: new Date().toISOString(),
+        themeKey: normalizeThemeKey(options.themeKey),
+        avatarImage: normalizeProfileAvatarImage(options.avatarImage),
+        createdAt: options.createdAt || new Date().toISOString(),
         data: normalizeData(data)
       };
     }
@@ -2293,8 +2807,9 @@
           const parsed = JSON.parse(savedUi);
           uiState = {
             search: String(parsed.search || ''),
-            sortBy: ['added', 'name', 'brand', 'rating', 'accords'].includes(parsed.sortBy) ? parsed.sortBy : 'added',
-            sortDir: parsed.sortDir === 'asc' ? 'asc' : 'desc'
+            sortBy: ['custom', 'added', 'name', 'brand', 'rating', 'accords'].includes(parsed.sortBy) ? parsed.sortBy : 'added',
+            sortDir: parsed.sortDir === 'asc' ? 'asc' : 'desc',
+            shelfView: ['both', 'collection', 'wishlist'].includes(parsed.shelfView) ? parsed.shelfView : 'both'
           };
         } catch (error) {
           console.warn('Could not restore UI state.', error);
@@ -2340,7 +2855,12 @@
           id,
           profile.name || 'fragrance wall',
           profile.tagline || 'soft petals, sweet woods, and a little chaos.',
-          profile.data || emptyData()
+          profile.data || emptyData(),
+          {
+            createdAt: profile.createdAt || null,
+            themeKey: profile.themeKey,
+            avatarImage: profile.avatarImage
+          }
         );
       });
 
@@ -2420,8 +2940,8 @@
       renderAccountUi();
       renderSaveUi();
       renderStats();
-      renderShelf('collection');
-      renderShelf('wishlist');
+      renderShelfVisibility();
+      getVisibleShelves().forEach(renderShelf);
       updateExportNote();
       queueBottleNormalization();
     }
@@ -2433,12 +2953,25 @@
         .map(profileOption => `<option value="${escapeAttr(profileOption.id)}" ${profileOption.id === profile.id ? 'selected' : ''}>${escapeHtml(profileOption.name)}</option>`)
         .join('');
 
+      applyTheme(profile.themeKey);
       document.getElementById('profile-select').innerHTML = options;
       document.getElementById('profile-name-display').textContent = profile.name;
       document.getElementById('profile-tagline-display').textContent = profile.tagline;
-      document.getElementById('profile-badge').textContent = makeMonogram(profile.name);
+      renderProfileBadge(profile);
       document.getElementById('active-profile-pill').textContent = profile.name;
       document.getElementById('hero-subtitle').textContent = `A plush little vanity for ${profile.tagline}`;
+    }
+
+    function getVisibleShelves() {
+      return uiState.shelfView === 'both' ? ['collection', 'wishlist'] : [uiState.shelfView];
+    }
+
+    function renderShelfVisibility() {
+      const collectionSection = document.getElementById('collection-section');
+      const wishlistSection = document.getElementById('wishlist-section');
+
+      collectionSection.hidden = uiState.shelfView === 'wishlist';
+      wishlistSection.hidden = uiState.shelfView === 'collection';
     }
 
     function renderAccountUi() {
@@ -2532,6 +3065,7 @@
       const container = document.getElementById(`${shelf}-shelf`);
       const visibleItems = getVisibleItems(shelf);
       const totalItems = getCurrentData()[shelf].length;
+      container.dataset.shelf = shelf;
       const addButton = `
         <button class="add-btn" type="button" onclick="openModal('${shelf}')">
           <span>+</span>
@@ -2574,7 +3108,20 @@
         card.addEventListener('mouseenter', () => openPopupForCard(card));
         card.addEventListener('mousemove', clearPopupHideTimer);
         card.addEventListener('mouseleave', scheduleHidePopup);
+        card.addEventListener('dragstart', handleCardDragStart);
+        card.addEventListener('dragover', handleCardDragOver);
+        card.addEventListener('drop', handleCardDrop);
+        card.addEventListener('dragend', handleCardDragEnd);
+
+        const dragHandle = card.querySelector('.drag-handle');
+        if (dragHandle) {
+          dragHandle.addEventListener('pointerdown', event => armCardReorder(event, card.dataset.shelf, card.dataset.fragranceId));
+          dragHandle.addEventListener('click', event => event.stopPropagation());
+        }
       });
+
+      container.ondragover = handleShelfDragOver;
+      container.ondrop = handleShelfDrop;
 
       const shownText = visibleItems.length === totalItems
         ? `${totalItems} ${totalItems === 1 ? 'fragrance' : 'fragrances'}`
@@ -2627,6 +3174,10 @@
         ? items.filter(({ item }) => matchesSearch(item, search))
         : items;
 
+      if (uiState.sortBy === 'custom') {
+        return filtered;
+      }
+
       return filtered.sort((a, b) => compareFragrances(a.item, b.item, a.index, b.index));
     }
 
@@ -2674,15 +3225,18 @@
       const rise = seededRange(`${tiltSeed}-rise`, -6, 8).toFixed(2);
       const scale = seededRange(`${tiltSeed}-scale`, 0.96, 1.05).toFixed(3);
       const glow = item.accords?.[0]?.color || getAccordColor(item.name || item.brand || 'default', index);
+      const customOrderMode = uiState.sortBy === 'custom';
       const imageMarkup = item.image
         ? `<img src="${escapeAttr(item.image)}" alt="${escapeAttr(item.name || 'fragrance bottle')}">`
         : `<div class="bottle-placeholder">✿</div>`;
 
       return `
         <article
-          class="bottle-card"
+          class="bottle-card ${customOrderMode ? 'is-draggable' : ''}"
           data-shelf="${escapeAttr(shelf)}"
           data-index="${index}"
+          data-fragrance-id="${escapeAttr(item.id)}"
+          draggable="${customOrderMode ? 'true' : 'false'}"
           role="button"
           tabindex="0"
           aria-label="Edit ${escapeAttr(item.name || 'fragrance')} by ${escapeAttr(item.brand || 'this brand')}"
@@ -2691,6 +3245,18 @@
           style="--tilt:${tilt}deg; --card-rise:${rise}px; --card-scale:${scale}; --glow:${escapeAttr(hexToRgba(glow, 0.45))}; animation-delay:${(viewIndex + 1) * 0.05}s"
         >
           <div class="card-actions">
+            ${customOrderMode ? `
+              <button class="icon-btn drag-handle" type="button" aria-label="Drag to reorder" title="Drag to reorder">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="9" cy="7" r="1.35" fill="currentColor" stroke="none"></circle>
+                  <circle cx="15" cy="7" r="1.35" fill="currentColor" stroke="none"></circle>
+                  <circle cx="9" cy="12" r="1.35" fill="currentColor" stroke="none"></circle>
+                  <circle cx="15" cy="12" r="1.35" fill="currentColor" stroke="none"></circle>
+                  <circle cx="9" cy="17" r="1.35" fill="currentColor" stroke="none"></circle>
+                  <circle cx="15" cy="17" r="1.35" fill="currentColor" stroke="none"></circle>
+                </svg>
+              </button>
+            ` : ''}
             <button class="icon-btn edit-btn" type="button" onclick="event.stopPropagation(); openModal('${shelf}', ${index})" aria-label="Edit fragrance">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4.5 19.5l3.6-.7 9-9a1.8 1.8 0 0 0 0-2.5l-.4-.4a1.8 1.8 0 0 0-2.5 0l-9 9-.7 3.6z"></path>
@@ -2711,6 +3277,170 @@
       if (event.key !== 'Enter' && event.key !== ' ') return;
       event.preventDefault();
       openModal(shelf, index);
+    }
+
+    function armCardReorder(event, shelf, fragranceId) {
+      event.stopPropagation();
+      dragReorderState.armedShelf = shelf;
+      dragReorderState.armedId = fragranceId;
+    }
+
+    function clearCardReorderArm() {
+      dragReorderState.armedShelf = '';
+      dragReorderState.armedId = '';
+    }
+
+    function clearCardDropMarkers() {
+      document.querySelectorAll('.bottle-card.drop-before, .bottle-card.drop-after, .bottle-card.is-dragging').forEach(card => {
+        card.classList.remove('drop-before', 'drop-after', 'is-dragging');
+      });
+      dragReorderState.targetId = '';
+      dragReorderState.dropAfter = false;
+    }
+
+    function finishCardReorder() {
+      clearCardDropMarkers();
+      dragReorderState.draggingId = '';
+      dragReorderState.draggingShelf = '';
+      clearCardReorderArm();
+    }
+
+    function updateCardDropMarker(card, clientX) {
+      clearCardDropMarkers();
+      const rect = card.getBoundingClientRect();
+      const dropAfter = clientX > rect.left + rect.width / 2;
+
+      card.classList.add(dropAfter ? 'drop-after' : 'drop-before');
+      dragReorderState.targetId = card.dataset.fragranceId || '';
+      dragReorderState.dropAfter = dropAfter;
+    }
+
+    function reorderFragranceInShelf(shelf, movingId, targetId, dropAfter = false) {
+      const items = getCurrentData()[shelf];
+      const fromIndex = items.findIndex(item => item.id === movingId);
+      const targetIndex = items.findIndex(item => item.id === targetId);
+      if (fromIndex === -1 || targetIndex === -1 || fromIndex === targetIndex) return false;
+
+      const [moved] = items.splice(fromIndex, 1);
+      let insertAt = targetIndex;
+      if (fromIndex < targetIndex) insertAt -= 1;
+      if (dropAfter) insertAt += 1;
+      insertAt = clamp(insertAt, 0, items.length);
+      items.splice(insertAt, 0, moved);
+      return true;
+    }
+
+    function moveFragranceToShelfEnd(shelf, movingId) {
+      const items = getCurrentData()[shelf];
+      const fromIndex = items.findIndex(item => item.id === movingId);
+      if (fromIndex === -1 || fromIndex === items.length - 1) return false;
+
+      const [moved] = items.splice(fromIndex, 1);
+      items.push(moved);
+      return true;
+    }
+
+    function commitCardReorder(shelf, targetId, dropAfter = false) {
+      if (dragReorderState.draggingShelf !== shelf || !dragReorderState.draggingId || !targetId) {
+        finishCardReorder();
+        return;
+      }
+
+      const changed = reorderFragranceInShelf(shelf, dragReorderState.draggingId, targetId, dropAfter);
+      finishCardReorder();
+      if (!changed) return;
+
+      if (persistApp()) {
+        renderAll();
+        syncControls();
+      }
+    }
+
+    function handleCardDragStart(event) {
+      const card = event.currentTarget;
+      const shelf = card.dataset.shelf;
+      const fragranceId = card.dataset.fragranceId;
+
+      if (uiState.sortBy !== 'custom' || dragReorderState.armedShelf !== shelf || dragReorderState.armedId !== fragranceId) {
+        event.preventDefault();
+        clearCardReorderArm();
+        return;
+      }
+
+      dragReorderState.draggingShelf = shelf;
+      dragReorderState.draggingId = fragranceId;
+      dragReorderState.targetId = '';
+      dragReorderState.dropAfter = false;
+      clearPopupHideTimer();
+      hidePopup();
+
+      card.classList.add('is-dragging');
+      if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', fragranceId);
+      }
+    }
+
+    function handleCardDragOver(event) {
+      const card = event.currentTarget;
+      const shelf = card.dataset.shelf;
+      const targetId = card.dataset.fragranceId;
+
+      if (!dragReorderState.draggingId || dragReorderState.draggingShelf !== shelf || dragReorderState.draggingId === targetId) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      updateCardDropMarker(card, event.clientX);
+      if (event.dataTransfer) {
+        event.dataTransfer.dropEffect = 'move';
+      }
+    }
+
+    function handleCardDrop(event) {
+      const card = event.currentTarget;
+      const shelf = card.dataset.shelf;
+      const targetId = card.dataset.fragranceId;
+
+      if (!dragReorderState.draggingId || dragReorderState.draggingShelf !== shelf || dragReorderState.draggingId === targetId) {
+        finishCardReorder();
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      updateCardDropMarker(card, event.clientX);
+      commitCardReorder(shelf, targetId, dragReorderState.dropAfter);
+    }
+
+    function handleCardDragEnd() {
+      finishCardReorder();
+    }
+
+    function handleShelfDragOver(event) {
+      const shelf = event.currentTarget.dataset.shelf;
+      if (!dragReorderState.draggingId || dragReorderState.draggingShelf !== shelf) return;
+      event.preventDefault();
+      if (event.dataTransfer) {
+        event.dataTransfer.dropEffect = 'move';
+      }
+    }
+
+    function handleShelfDrop(event) {
+      const shelf = event.currentTarget.dataset.shelf;
+      if (!dragReorderState.draggingId || dragReorderState.draggingShelf !== shelf) return;
+      if (event.target instanceof Element && event.target.closest('.bottle-card')) return;
+
+      event.preventDefault();
+      const changed = moveFragranceToShelfEnd(shelf, dragReorderState.draggingId);
+      finishCardReorder();
+      if (!changed) return;
+
+      if (persistApp()) {
+        renderAll();
+        syncControls();
+      }
     }
 
     function buildPopupContent(item, shelf = 'collection') {
@@ -2846,8 +3576,7 @@
       shelfLayoutRefreshTimer = window.setTimeout(() => {
         shelfLayoutRefreshTimer = null;
         hidePopup();
-        renderShelf('collection');
-        renderShelf('wishlist');
+        getVisibleShelves().forEach(renderShelf);
       }, 120);
     }
 
@@ -2879,11 +3608,16 @@
     window.addEventListener('scroll', schedulePopupReposition, true);
     window.addEventListener('resize', schedulePopupReposition);
     window.addEventListener('resize', scheduleShelfLayoutRefresh);
+    document.addEventListener('pointerup', clearCardReorderArm);
+    window.addEventListener('blur', finishCardReorder);
 
     function syncControls() {
       document.getElementById('search-input').value = uiState.search;
       document.getElementById('sort-select').value = uiState.sortBy;
-      document.getElementById('sort-direction-btn').textContent = describeDirectionLabel();
+      document.getElementById('shelf-view-select').value = uiState.shelfView;
+      const sortDirectionButton = document.getElementById('sort-direction-btn');
+      sortDirectionButton.textContent = describeDirectionLabel();
+      sortDirectionButton.disabled = uiState.sortBy === 'custom';
     }
 
     function setSearch(value) {
@@ -2892,14 +3626,25 @@
       renderAll();
     }
 
+    function setShelfView(value) {
+      uiState.shelfView = ['both', 'collection', 'wishlist'].includes(value) ? value : 'both';
+      persistUiState();
+      renderAll();
+      syncControls();
+    }
+
     function setSort(value) {
       uiState.sortBy = value;
+      if (value === 'custom') {
+        uiState.sortDir = 'asc';
+      }
       persistUiState();
       renderAll();
       syncControls();
     }
 
     function toggleSortDirection() {
+      if (uiState.sortBy === 'custom') return;
       uiState.sortDir = uiState.sortDir === 'asc' ? 'desc' : 'asc';
       persistUiState();
       renderAll();
@@ -2917,6 +3662,7 @@
 
     function describeSort() {
       const map = {
+        custom: 'arranged by your custom shelf order · drag bottles to rearrange',
         added: 'sorted by newest bottles',
         name: 'sorted by fragrance name',
         brand: 'sorted by brand',
@@ -2928,6 +3674,9 @@
 
     function describeDirectionLabel() {
       const ascending = uiState.sortDir === 'asc';
+      if (uiState.sortBy === 'custom') {
+        return 'drag to reorder';
+      }
       if (uiState.sortBy === 'rating' || uiState.sortBy === 'accords') {
         return ascending ? 'lowest first' : 'highest first';
       }
@@ -2993,6 +3742,7 @@
     function openProfileModal(editCurrent = false) {
       editingProfileMode = editCurrent;
       const profile = getCurrentProfile();
+      const selectedTheme = normalizeThemeKey(profile.themeKey);
 
       document.getElementById('profile-modal-title').textContent = editCurrent ? 'edit wall' : 'new wall';
       document.getElementById('profile-modal-sub').textContent = editCurrent
@@ -3000,12 +3750,21 @@
         : 'create another wall for this browser';
       document.getElementById('p-name').value = editCurrent ? profile.name : '';
       document.getElementById('p-tagline').value = editCurrent ? profile.tagline : '';
+      currentProfileAvatarData = editCurrent ? (profile.avatarImage || null) : null;
+      currentProfileThemeKey = selectedTheme;
+      document.getElementById('p-avatar').value = '';
+      setProfileAvatarPreview(currentProfileAvatarData, currentProfileAvatarData ? 'custom wall photo selected' : '');
+      renderThemePicker(currentProfileThemeKey);
+      applyTheme(currentProfileThemeKey);
 
       document.getElementById('profile-overlay').classList.add('open');
     }
 
     function closeProfileModal() {
       document.getElementById('profile-overlay').classList.remove('open');
+      currentProfileAvatarData = null;
+      currentProfileThemeKey = DEFAULT_THEME_KEY;
+      applyTheme(getCurrentProfile().themeKey);
     }
 
     function openCloudModal() {
@@ -3050,6 +3809,9 @@
     function saveProfileModal() {
       const name = document.getElementById('p-name').value.trim();
       const tagline = document.getElementById('p-tagline').value.trim();
+      const nextTagline = tagline || 'soft petals, sweet woods, and a little chaos.';
+      const nextThemeKey = normalizeThemeKey(currentProfileThemeKey);
+      const nextAvatarImage = normalizeProfileAvatarImage(currentProfileAvatarData);
 
       if (!name) {
         alert('please give this wall a display name');
@@ -3058,20 +3820,47 @@
 
       if (editingProfileMode) {
         const profile = getCurrentProfile();
+        const previousProfile = {
+          name: profile.name,
+          tagline: profile.tagline,
+          themeKey: profile.themeKey,
+          avatarImage: profile.avatarImage
+        };
+
         profile.name = name;
-        profile.tagline = tagline || 'soft petals, sweet woods, and a little chaos.';
+        profile.tagline = nextTagline;
+        profile.themeKey = nextThemeKey;
+        profile.avatarImage = nextAvatarImage;
+
+        if (!persistApp()) {
+          profile.name = previousProfile.name;
+          profile.tagline = previousProfile.tagline;
+          profile.themeKey = previousProfile.themeKey;
+          profile.avatarImage = previousProfile.avatarImage;
+          return;
+        }
       } else {
         const id = makeUniqueProfileId(name);
+        const previousActiveProfileId = appState.activeProfileId;
         appState.profiles[id] = createProfile(
           id,
           name,
-          tagline || 'soft petals, sweet woods, and a little chaos.',
-          emptyData()
+          nextTagline,
+          emptyData(),
+          {
+            themeKey: nextThemeKey,
+            avatarImage: nextAvatarImage
+          }
         );
         appState.activeProfileId = id;
+
+        if (!persistApp()) {
+          delete appState.profiles[id];
+          appState.activeProfileId = previousActiveProfileId;
+          return;
+        }
       }
 
-      persistApp();
       renderAll();
       closeProfileModal();
     }
@@ -3084,16 +3873,105 @@
     }
 
     function syncCloudModal() {
-      const configInput = document.getElementById('firebase-config-input');
       const emailInput = document.getElementById('cloud-email');
-
-      if (configInput) {
-        configInput.value = cloudState.config ? JSON.stringify(cloudState.config, null, 2) : '';
-      }
 
       if (emailInput && cloudState.user?.email) {
         emailInput.value = cloudState.user.email;
       }
+    }
+
+    async function handleProfileImageUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async loadEvent => {
+        try {
+          currentProfileAvatarData = await prepareProfileAvatarForStorage(loadEvent.target.result);
+          setProfileAvatarPreview(currentProfileAvatarData, file.name);
+        } catch (error) {
+          console.warn('Could not prepare the uploaded profile photo.', error);
+          alert('I could not prep that photo for the wall badge just now. Try a different image or a slightly smaller one.');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function setProfileAvatarPreview(src, label) {
+      const preview = document.getElementById('profile-avatar-preview');
+      const uploadLabel = document.getElementById('profile-avatar-label');
+      const tools = document.getElementById('profile-avatar-tools');
+
+      if (src) {
+        preview.src = src;
+        preview.style.display = 'block';
+        uploadLabel.textContent = label || 'wall photo selected';
+        tools.hidden = false;
+      } else {
+        preview.src = '';
+        preview.style.display = 'none';
+        uploadLabel.textContent = 'upload a photo for the wall badge';
+        tools.hidden = true;
+      }
+    }
+
+    function removeProfilePhoto() {
+      currentProfileAvatarData = null;
+      document.getElementById('p-avatar').value = '';
+      setProfileAvatarPreview(null, '');
+    }
+
+    function renderThemePicker(selectedThemeKey = DEFAULT_THEME_KEY) {
+      const picker = document.getElementById('theme-picker');
+      if (!picker) return;
+
+      picker.innerHTML = Object.entries(THEME_PRESETS)
+        .map(([key, theme]) => `
+          <button
+            class="theme-option ${key === selectedThemeKey ? 'is-selected' : ''}"
+            type="button"
+            onclick="selectProfileTheme('${escapeAttr(key)}')"
+            aria-pressed="${key === selectedThemeKey ? 'true' : 'false'}"
+          >
+            <div class="theme-swatches">
+              ${theme.swatches.map(swatch => `<span class="theme-swatch" style="background:${escapeAttr(swatch)}"></span>`).join('')}
+            </div>
+            <div class="theme-name">${escapeHtml(theme.name)}</div>
+            <div class="theme-description">${escapeHtml(theme.description)}</div>
+          </button>
+        `)
+        .join('');
+    }
+
+    function selectProfileTheme(themeKey) {
+      currentProfileThemeKey = normalizeThemeKey(themeKey);
+      renderThemePicker(currentProfileThemeKey);
+      applyTheme(currentProfileThemeKey);
+    }
+
+    function applyTheme(themeKey = DEFAULT_THEME_KEY) {
+      const normalizedThemeKey = normalizeThemeKey(themeKey);
+      const theme = THEME_PRESETS[normalizedThemeKey] || THEME_PRESETS[DEFAULT_THEME_KEY];
+      const themeVars = {
+        ...BASE_THEME_VARS,
+        ...(theme?.vars || {})
+      };
+
+      Object.entries(themeVars).forEach(([name, value]) => {
+        document.documentElement.style.setProperty(name, value);
+      });
+
+      document.documentElement.dataset.theme = normalizedThemeKey;
+    }
+
+    function renderProfileBadge(profile) {
+      const badge = document.getElementById('profile-badge');
+      if (!badge) return;
+
+      const avatarImage = normalizeProfileAvatarImage(profile.avatarImage);
+      badge.classList.toggle('has-photo', Boolean(avatarImage));
+      badge.innerHTML = avatarImage
+        ? `<img src="${escapeAttr(avatarImage)}" alt="${escapeAttr(profile.name)} wall badge photo">`
+        : `<span class="badge-fallback">${escapeHtml(makeMonogram(profile.name))}</span>`;
     }
 
     function shouldUseCloudSync() {
@@ -3147,77 +4025,7 @@
     function readStoredFirebaseConfig() {
       const windowConfig = sanitizeFirebaseConfig(window.PERFUME_WALL_FIREBASE_CONFIG);
       if (windowConfig) return windowConfig;
-
-      const raw = localStorage.getItem(FIREBASE_CONFIG_STORAGE_KEY);
-      if (!raw) return sanitizeFirebaseConfig(DEFAULT_FIREBASE_CONFIG);
-
-      try {
-        return sanitizeFirebaseConfig(JSON.parse(raw)) || sanitizeFirebaseConfig(DEFAULT_FIREBASE_CONFIG);
-      } catch (error) {
-        console.warn('Could not read stored Firebase config.', error);
-        return sanitizeFirebaseConfig(DEFAULT_FIREBASE_CONFIG);
-      }
-    }
-
-    async function saveFirebaseConfig() {
-      const input = document.getElementById('firebase-config-input');
-      const parsed = parseFirebaseConfigInput(input.value);
-
-      if (!parsed) {
-        setCloudStatus('That Firebase config did not parse cleanly yet.', 'error');
-        return;
-      }
-
-      cloudState.config = parsed;
-      localStorage.setItem(FIREBASE_CONFIG_STORAGE_KEY, JSON.stringify(parsed));
-      syncCloudModal();
-      renderAccountUi();
-      renderSaveUi();
-      setCloudStatus('Override config saved. Loading Firebase now…');
-      await initializeFirebaseFromStoredConfig(true);
-    }
-
-    async function clearFirebaseConfig() {
-      if (cloudState.user) {
-        await signOutCloud({ keepModalOpen: true });
-      }
-
-      if (cloudState.saveTimer) {
-        window.clearTimeout(cloudState.saveTimer);
-      }
-
-      if (cloudState.unsubscribeAuth) {
-        cloudState.unsubscribeAuth();
-      }
-
-      if (cloudState.app && cloudState.sdk?.deleteApp) {
-        try {
-          await cloudState.sdk.deleteApp(cloudState.app);
-        } catch (error) {
-          console.warn('Could not fully tear down Firebase app.', error);
-        }
-      }
-
-      const fallbackConfig = sanitizeFirebaseConfig(DEFAULT_FIREBASE_CONFIG);
-      cloudState = {
-        ...createDefaultCloudState(),
-        config: fallbackConfig
-      };
-
-      localStorage.removeItem(FIREBASE_CONFIG_STORAGE_KEY);
-      if (saveMeta.phase === 'saved-cloud' || saveMeta.phase === 'saving') {
-        saveMeta.phase = saveMeta.lastLocalSavedAt ? 'saved-local' : 'idle';
-        persistSaveMeta();
-      }
-
-      syncCloudModal();
-      renderAll();
-      setCloudStatus(fallbackConfig
-        ? 'Override cleared. This browser is back on the site’s built-in Firebase project.'
-        : 'Firebase config cleared.');
-      if (fallbackConfig) {
-        await initializeFirebaseFromStoredConfig(true);
-      }
+      return sanitizeFirebaseConfig(DEFAULT_FIREBASE_CONFIG);
     }
 
     async function initializeFirebaseFromStoredConfig(forceReset = false) {
@@ -3540,6 +4348,9 @@
         rawProfiles[profileDoc.id] = {
           name: profileData.name || 'my fragrance wall',
           tagline: profileData.tagline || 'soft petals, sweet woods, and a little chaos.',
+          themeKey: normalizeThemeKey(profileData.themeKey),
+          avatarImage: normalizeProfileAvatarImage(profileData.avatarImage),
+          createdAt: profileData.createdAt || null,
           data: profileWall
         };
       }
@@ -3576,6 +4387,8 @@
           id: profileId,
           name: profile.name,
           tagline: profile.tagline,
+          themeKey: normalizeThemeKey(profile.themeKey),
+          avatarImage: normalizeProfileAvatarImage(profile.avatarImage),
           createdAt: profile.createdAt || null,
           updatedAtMs: now
         }, { merge: true });
@@ -3637,7 +4450,7 @@
       const password = document.getElementById('cloud-password').value;
 
       if (!cloudState.config) {
-        setCloudStatus('Save your Firebase config first so the sign-in buttons know where to connect.', 'error');
+        setCloudStatus('Cloud sign-in is not ready just yet. Give the page a quick refresh and try again.', 'error');
         return null;
       }
 
@@ -4128,7 +4941,9 @@
         profile: {
           id: profile.id,
           name: profile.name,
-          tagline: profile.tagline
+          tagline: profile.tagline,
+          themeKey: normalizeThemeKey(profile.themeKey),
+          avatarImage: normalizeProfileAvatarImage(profile.avatarImage)
         },
         data: {
           collection: profile.data.collection.map(item => ({ ...item, image: item.image ? '[image stored locally in this browser]' : null })),
@@ -4147,7 +4962,7 @@
       const profile = getCurrentProfile();
       document.getElementById('export-note').textContent = cloudState.user
         ? `Download ${profile.name}'s current wall as a local JSON backup even though it already syncs to Firebase.`
-        : `Download ${profile.name}'s current wall as JSON so you can keep a snapshot, move it later, or keep a backup before turning Firebase on.`;
+        : `Download ${profile.name}'s current wall as JSON so you can keep a snapshot, move it later, or keep a backup before signing in on another device.`;
     }
 
     async function extractAccordsFromFragrantica() {
@@ -5386,6 +6201,16 @@
         .join('') || 'F';
     }
 
+    function normalizeThemeKey(value) {
+      const candidate = String(value || '').trim();
+      return THEME_PRESETS[candidate] ? candidate : DEFAULT_THEME_KEY;
+    }
+
+    function normalizeProfileAvatarImage(value) {
+      const candidate = String(value || '').trim();
+      return /^data:image\//i.test(candidate) ? candidate : null;
+    }
+
     function seededRange(seed, min, max) {
       const hashed = hashString(seed);
       const normalized = (hashed % 10000) / 9999;
@@ -5476,6 +6301,11 @@
       return normalizeBottleImageData(src, BOTTLE_IMAGE_EXPORT);
     }
 
+    async function prepareProfileAvatarForStorage(src) {
+      if (!src) return null;
+      return normalizeProfileAvatarImageData(src, PROFILE_AVATAR_EXPORT);
+    }
+
     async function optimizeImageData(src, options = {}) {
       const image = await loadImage(src);
       const maxWidth = options.maxWidth || image.naturalWidth;
@@ -5540,6 +6370,34 @@
       const y = Math.round(outputHeight - drawHeight - bottomPadding);
 
       context.drawImage(trimmedCanvas, x, y, drawWidth, drawHeight);
+
+      try {
+        return canvas.toDataURL(mimeType, quality);
+      } catch (error) {
+        console.warn(`Could not encode ${mimeType}, falling back to PNG.`, error);
+        return canvas.toDataURL('image/png');
+      }
+    }
+
+    async function normalizeProfileAvatarImageData(src, options = {}) {
+      const image = await loadImage(src);
+      const size = options.size || 320;
+      const mimeType = options.mimeType || 'image/png';
+      const quality = options.quality ?? 0.9;
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = size;
+      canvas.height = size;
+      context.clearRect(0, 0, size, size);
+
+      const scale = Math.max(size / image.naturalWidth, size / image.naturalHeight);
+      const drawWidth = Math.max(1, Math.round(image.naturalWidth * scale));
+      const drawHeight = Math.max(1, Math.round(image.naturalHeight * scale));
+      const x = Math.round((size - drawWidth) / 2);
+      const y = Math.round((size - drawHeight) / 2);
+
+      context.drawImage(image, x, y, drawWidth, drawHeight);
 
       try {
         return canvas.toDataURL(mimeType, quality);
