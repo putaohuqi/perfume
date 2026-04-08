@@ -567,6 +567,10 @@
       color: var(--ink-light);
     }
 
+    .btn-secondary.manage-trigger {
+      letter-spacing: 0.03em;
+    }
+
     .save-status-detail strong {
       color: var(--ink);
       font-weight: 500;
@@ -1432,6 +1436,46 @@
       gap: 10px;
     }
 
+    .manage-modal {
+      width: min(560px, 94vw);
+    }
+
+    .manage-card {
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+      border-radius: 24px;
+      background: linear-gradient(
+        160deg,
+        color-mix(in srgb, var(--paper-card) 70%, var(--blush-light) 30%) 0%,
+        color-mix(in srgb, var(--paper-card-soft) 70%, var(--sage) 30%) 100%
+      );
+      border: 1px solid color-mix(in srgb, var(--blush-muted) 24%, transparent);
+    }
+
+    .manage-card strong {
+      display: block;
+      margin-top: 4px;
+      font-family: var(--display-serif);
+      font-size: 1.55rem;
+      font-weight: 400;
+      line-height: 1.05;
+      color: var(--ink);
+    }
+
+    .manage-card p {
+      margin-top: 8px;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: var(--ink-light);
+    }
+
+    .manage-hint {
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
     .theme-copy {
       display: grid;
       gap: 4px;
@@ -2046,8 +2090,9 @@
             </select>
           </div>
           <div class="button-row">
-            <button class="btn-secondary" type="button" onclick="openProfileModal()">new wall</button>
+            <button class="btn-secondary" type="button" onclick="openProfileModal()">+ wall</button>
             <button class="btn-secondary" type="button" onclick="openProfileModal(true)">edit profile</button>
+            <button class="btn-secondary manage-trigger" type="button" onclick="openManageModal()">manage</button>
             <button class="btn-secondary" type="button" onclick="openCloudModal()">account</button>
           </div>
           <p class="profile-note" id="profile-note-text">Guest mode saves this wall on this device and browser. Sign in if you want your shelf to sync across devices too.</p>
@@ -2242,7 +2287,7 @@
     <div class="modal">
       <div class="modal-head">
         <div>
-          <h2 id="profile-modal-title">new wall</h2>
+          <h2 id="profile-modal-title">add wall</h2>
           <p class="modal-sub" id="profile-modal-sub">create another wall for this browser</p>
         </div>
         <button class="modal-close" type="button" onclick="closeProfileModal()" aria-label="Close profile editor">×</button>
@@ -2342,6 +2387,35 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="manage-overlay">
+    <div class="modal manage-modal">
+      <div class="modal-head">
+        <div>
+          <h2>manage wall</h2>
+          <p class="modal-sub">keep extras tidy without turning the controls into a danger zone</p>
+        </div>
+        <button class="modal-close" type="button" onclick="closeManageModal()" aria-label="Close manage wall modal">×</button>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Current wall</label>
+          <div class="manage-card">
+            <div>
+              <span class="mini-label">active shelf</span>
+              <strong id="manage-wall-name">my fragrance wall</strong>
+              <p id="manage-wall-copy">This wall is staying put for now.</p>
+            </div>
+            <div class="button-row">
+              <button class="btn-secondary" id="manage-delete-btn" type="button" onclick="deleteCurrentWall()">remove wall</button>
+            </div>
+            <p class="manage-hint" id="manage-wall-hint">The starter wall stays as the one built-in shelf every account begins with.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="crop-overlay">
     <div class="modal crop-modal">
       <div class="modal-head">
@@ -2381,6 +2455,9 @@
     const LEGACY_STORAGE_KEY = 'fragranceShelf';
     const SAVE_META_STORAGE_KEY = APP_STORAGE_KEY + ':save-meta';
     const FIREBASE_SDK_VERSION = '12.11.0';
+    const DEFAULT_PROFILE_ID = 'my-fragrance-wall';
+    const DEFAULT_PROFILE_NAME = 'my fragrance wall';
+    const DEFAULT_PROFILE_TAGLINE = 'soft petals, sweet woods, and a little chaos.';
     const DEFAULT_FIREBASE_CONFIG = {
       apiKey: 'AIzaSyA6Yh6hp3TjI92Iy6pELwRZzHcDH2mzQg4',
       authDomain: 'perfume-f30c6.firebaseapp.com',
@@ -2899,11 +2976,16 @@
     }
 
     function createDefaultAppState(initialData = emptyData()) {
-      const profileId = 'my-fragrance-wall';
       return {
-        activeProfileId: profileId,
+        activeProfileId: DEFAULT_PROFILE_ID,
         profiles: {
-          [profileId]: createProfile(profileId, 'my fragrance wall', 'soft petals, sweet woods, and a little chaos.', initialData)
+          [DEFAULT_PROFILE_ID]: createProfile(
+            DEFAULT_PROFILE_ID,
+            DEFAULT_PROFILE_NAME,
+            DEFAULT_PROFILE_TAGLINE,
+            initialData,
+            { isLocked: true }
+          )
         }
       };
     }
@@ -2911,10 +2993,11 @@
     function createProfile(id, name, tagline, data = emptyData(), options = {}) {
       return {
         id,
-        name: name || 'my fragrance wall',
-        tagline: tagline || 'soft petals, sweet woods, and a little chaos.',
+        name: name || DEFAULT_PROFILE_NAME,
+        tagline: tagline || DEFAULT_PROFILE_TAGLINE,
         themeKey: normalizeThemeKey(options.themeKey),
         avatarImage: normalizeProfileAvatarImage(options.avatarImage),
+        isLocked: Boolean(options.isLocked),
         createdAt: options.createdAt || new Date().toISOString(),
         data: normalizeData(data)
       };
@@ -3031,12 +3114,13 @@
         profiles[id] = createProfile(
           id,
           profile.name || 'fragrance wall',
-          profile.tagline || 'soft petals, sweet woods, and a little chaos.',
+          profile.tagline || DEFAULT_PROFILE_TAGLINE,
           profile.data || emptyData(),
           {
             createdAt: profile.createdAt || null,
             themeKey: profile.themeKey,
-            avatarImage: profile.avatarImage
+            avatarImage: profile.avatarImage,
+            isLocked: profile.isLocked ?? id === DEFAULT_PROFILE_ID
           }
         );
       });
@@ -3108,6 +3192,12 @@
       return appState.profiles[appState.activeProfileId];
     }
 
+    function canDeleteProfile(profileId) {
+      const profile = appState.profiles[profileId];
+      if (!profile) return false;
+      return Object.keys(appState.profiles).length > 1 && !profile.isLocked;
+    }
+
     function getCurrentData() {
       return getCurrentProfile().data;
     }
@@ -3137,6 +3227,7 @@
       renderProfileBadge(profile);
       document.getElementById('active-profile-pill').textContent = profile.name;
       document.getElementById('hero-subtitle').textContent = `A plush little vanity for ${profile.tagline}`;
+      renderManageModal();
     }
 
     function getVisibleShelves() {
@@ -3921,7 +4012,7 @@
       const profile = getCurrentProfile();
       const selectedTheme = normalizeThemeKey(profile.themeKey);
 
-      document.getElementById('profile-modal-title').textContent = editCurrent ? 'edit wall' : 'new wall';
+      document.getElementById('profile-modal-title').textContent = editCurrent ? 'edit wall' : 'add wall';
       document.getElementById('profile-modal-sub').textContent = editCurrent
         ? 'tune the active wall details'
         : 'create another wall for this browser';
@@ -3942,6 +4033,79 @@
       currentProfileAvatarData = null;
       currentProfileThemeKey = DEFAULT_THEME_KEY;
       applyTheme(getCurrentProfile().themeKey);
+    }
+
+    function renderManageModal() {
+      const profile = getCurrentProfile();
+      const deleteButton = document.getElementById('manage-delete-btn');
+      const wallName = document.getElementById('manage-wall-name');
+      const wallCopy = document.getElementById('manage-wall-copy');
+      const wallHint = document.getElementById('manage-wall-hint');
+
+      if (!deleteButton || !wallName || !wallCopy || !wallHint || !profile) return;
+
+      const deletable = canDeleteProfile(profile.id);
+      wallName.textContent = profile.name;
+
+      if (deletable) {
+        deleteButton.disabled = false;
+        deleteButton.textContent = 'remove wall';
+        wallCopy.textContent = 'If you remove this wall, its bottles and wishlist entries disappear from this browser and your synced account too.';
+        wallHint.textContent = 'You will land on another wall right away, so nothing feels stranded after the cleanup.';
+        return;
+      }
+
+      deleteButton.disabled = true;
+      deleteButton.textContent = profile.isLocked ? 'default wall' : 'keep this wall';
+      wallCopy.textContent = profile.isLocked
+        ? 'This is the starter wall that stays as the built-in shelf every account begins with.'
+        : 'You need at least one wall to keep the shelf experience anchored in this browser.';
+      wallHint.textContent = profile.isLocked
+        ? 'Create extra walls whenever you want. Those extra shelves can be removed later from here.'
+        : 'Add another wall first if you want something you can tidy away later.';
+    }
+
+    function openManageModal() {
+      renderManageModal();
+      document.getElementById('manage-overlay').classList.add('open');
+    }
+
+    function closeManageModal() {
+      document.getElementById('manage-overlay').classList.remove('open');
+    }
+
+    function deleteCurrentWall() {
+      const profile = getCurrentProfile();
+      if (!profile || !canDeleteProfile(profile.id)) {
+        renderManageModal();
+        return;
+      }
+
+      const confirmed = confirm(`Remove "${profile.name}"? This clears that wall and its perfumes from this browser and your synced account.`);
+      if (!confirmed) return;
+
+      const previousProfiles = appState.profiles;
+      const previousActiveProfileId = appState.activeProfileId;
+      const nextProfiles = { ...appState.profiles };
+      delete nextProfiles[profile.id];
+
+      const nextActiveProfileId = nextProfiles[DEFAULT_PROFILE_ID]
+        ? DEFAULT_PROFILE_ID
+        : Object.keys(nextProfiles)[0];
+
+      appState.profiles = nextProfiles;
+      appState.activeProfileId = nextActiveProfileId;
+
+      if (!persistApp()) {
+        appState.profiles = previousProfiles;
+        appState.activeProfileId = previousActiveProfileId;
+        renderManageModal();
+        return;
+      }
+
+      closeManageModal();
+      renderAll();
+      syncControls();
     }
 
     function openCloudModal() {
@@ -3965,6 +4129,10 @@
       if (event.target === event.currentTarget) closeCloudModal();
     });
 
+    document.getElementById('manage-overlay').addEventListener('click', event => {
+      if (event.target === event.currentTarget) closeManageModal();
+    });
+
     cropOverlay.addEventListener('click', event => {
       if (event.target === event.currentTarget) closeCropper();
     });
@@ -3979,6 +4147,7 @@
         closeModal();
         closeProfileModal();
         closeCloudModal();
+        closeManageModal();
         closeCropper();
       }
     });
@@ -3986,7 +4155,7 @@
     function saveProfileModal() {
       const name = document.getElementById('p-name').value.trim();
       const tagline = document.getElementById('p-tagline').value.trim();
-      const nextTagline = tagline || 'soft petals, sweet woods, and a little chaos.';
+      const nextTagline = tagline || DEFAULT_PROFILE_TAGLINE;
       const nextThemeKey = normalizeThemeKey(currentProfileThemeKey);
       const nextAvatarImage = normalizeProfileAvatarImage(currentProfileAvatarData);
 
@@ -4547,10 +4716,11 @@
         });
 
         rawProfiles[profileDoc.id] = {
-          name: profileData.name || 'my fragrance wall',
-          tagline: profileData.tagline || 'soft petals, sweet woods, and a little chaos.',
+          name: profileData.name || DEFAULT_PROFILE_NAME,
+          tagline: profileData.tagline || DEFAULT_PROFILE_TAGLINE,
           themeKey: normalizeThemeKey(profileData.themeKey),
           avatarImage: normalizeProfileAvatarImage(profileData.avatarImage),
+          isLocked: profileData.isLocked ?? profileDoc.id === DEFAULT_PROFILE_ID,
           createdAt: profileData.createdAt || null,
           data: profileWall
         };
@@ -4590,6 +4760,7 @@
           tagline: profile.tagline,
           themeKey: normalizeThemeKey(profile.themeKey),
           avatarImage: normalizeProfileAvatarImage(profile.avatarImage),
+          isLocked: Boolean(profile.isLocked),
           createdAt: profile.createdAt || null,
           updatedAtMs: now
         }, { merge: true });
