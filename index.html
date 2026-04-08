@@ -115,6 +115,10 @@
       background: none;
     }
 
+    [hidden] {
+      display: none !important;
+    }
+
     img {
       display: block;
     }
@@ -5379,7 +5383,13 @@
     function updateRatingVisibility(shelf) {
       const ratingGroup = document.getElementById('rating-group');
       if (!ratingGroup) return;
-      ratingGroup.hidden = shelf === 'wishlist';
+      const hideRating = shelf === 'wishlist';
+      if (hideRating) {
+        currentRating = 0;
+        updateStars(0);
+      }
+      ratingGroup.hidden = hideRating;
+      ratingGroup.style.display = hideRating ? 'none' : '';
     }
 
     function updateStars(value) {
