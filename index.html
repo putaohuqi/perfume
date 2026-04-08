@@ -558,17 +558,36 @@
       width: 100%;
       margin-top: 18px;
       padding: 20px 28px 0;
-      overflow-x: auto;
+      overflow-x: hidden;
       overflow-y: visible;
+    }
+
+    .shelf-stack {
+      display: grid;
+      gap: 28px;
+    }
+
+    .shelf-tier {
+      display: grid;
+      gap: 12px;
     }
 
     .shelf-row {
       display: flex;
       gap: 34px;
       align-items: flex-end;
+      justify-content: center;
       min-height: calc(var(--card-h) + 42px);
-      min-width: max-content;
       padding-bottom: 12px;
+    }
+
+    .shelf-tier .shelf-plank {
+      margin: 0;
+    }
+
+    .shelf-row-empty {
+      flex-wrap: wrap;
+      align-items: center;
     }
 
     .shelf-plank {
@@ -1822,7 +1841,7 @@
       <div class="form-grid">
         <div class="form-group">
           <label for="f-shelf-select">Shelf</label>
-          <select id="f-shelf-select">
+          <select id="f-shelf-select" onchange="updateRatingVisibility(this.value)">
             <option value="collection">collection</option>
             <option value="wishlist">wishlist</option>
           </select>
@@ -1897,7 +1916,7 @@
           <button class="add-accord-btn" type="button" onclick="addAccordRow()">+ add accord</button>
         </div>
 
-        <div class="form-group full">
+        <div class="form-group full" id="rating-group">
           <label>My Rating</label>
           <div class="rating-input" id="rating-input">
             <span class="rating-star" data-v="1" onclick="setRating(1)">★</span>
@@ -2105,6 +2124,7 @@
     let activePopupKey = '';
     let activePopupCard = null;
     let popupRepositionFrame = null;
+    let shelfLayoutRefreshTimer = null;
     let cloudState = createDefaultCloudState();
 
     const globalPopup = document.getElementById('global-popup');
@@ -2470,8 +2490,8 @@
     function renderStats() {
       const { collection, wishlist } = getCurrentData();
       const all = [...collection, ...wishlist];
-      const rated = all.filter(item => item.rating);
-      const averageRating = rated.length ? (rated.reduce((sum, item) => sum + item.rating, 0) / rated.length).toFixed(1) : '0.0';
+      const ratedCollection = collection.filter(item => item.rating);
+      const averageRating = ratedCollection.length ? (ratedCollection.reduce((sum, item) => sum + item.rating, 0) / ratedCollection.length).toFixed(1) : '0.0';
       const accordSummary = summarizeAccords(all);
 
       document.getElementById('stat-collection').textContent = collection.length;
@@ -2480,7 +2500,7 @@
       document.getElementById('stat-accord').textContent = accordSummary.name;
       document.getElementById('stat-collection-note').textContent = collection.length === 1 ? 'bottle resting on the shelf' : 'bottles resting on the shelf';
       document.getElementById('stat-wishlist-note').textContent = wishlist.length === 1 ? 'future crush waiting' : 'future crushes queued up';
-      document.getElementById('stat-rating-note').textContent = rated.length ? `${rated.length} rated fragrance${rated.length === 1 ? '' : 's'}` : 'add ratings to see the average';
+      document.getElementById('stat-rating-note').textContent = ratedCollection.length ? `${ratedCollection.length} rated fragrance${ratedCollection.length === 1 ? '' : 's'} in the collection` : 'add collection ratings to see the average';
       document.getElementById('stat-accord-note').textContent = accordSummary.note;
     }
 
@@ -2495,11 +2515,36 @@
         </button>
       `;
 
-      const cards = visibleItems.length
-        ? visibleItems.map(({ item, index }, viewIndex) => buildCard(item, index, shelf, viewIndex)).join('')
-        : `<div class="empty-note">${uiState.search ? 'No fragrances match this search yet. Try a softer filter or add a new bottle.' : 'This shelf is waiting for its next bottle.'}</div>`;
+      if (!visibleItems.length) {
+        const emptyNote = `<div class="empty-note">${uiState.search ? 'No fragrances match this search yet. Try a softer filter or add a new bottle.' : 'This shelf is waiting for its next bottle.'}</div>`;
+        container.innerHTML = `
+          <div class="shelf-stack">
+            <div class="shelf-tier">
+              <div class="shelf-row shelf-row-empty">
+                ${emptyNote}
+                ${addButton}
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        const entries = visibleItems.map(({ item, index }, viewIndex) => buildCard(item, index, shelf, viewIndex));
+        entries.push(addButton);
 
-      container.innerHTML = cards + addButton;
+        const rowCapacity = getShelfRowCapacity(container);
+        const rows = distributeShelfEntries(entries, rowCapacity);
+
+        container.innerHTML = `
+          <div class="shelf-stack">
+            ${rows.map((row, rowIndex) => `
+              <div class="shelf-tier">
+                <div class="shelf-row">${row.join('')}</div>
+                ${rowIndex < rows.length - 1 ? '<div class="shelf-plank"></div>' : ''}
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
 
       container.querySelectorAll('.bottle-card').forEach(card => {
         card.addEventListener('mouseenter', () => openPopupForCard(card));
@@ -2513,6 +2558,42 @@
       const sortText = describeSort();
 
       document.getElementById(`${shelf}-meta`).textContent = `${shownText} · ${sortText}`;
+    }
+
+    function getShelfRowCapacity(container) {
+      const containerWidth = container.clientWidth || container.parentElement?.clientWidth || window.innerWidth || 1;
+      const cardWidth = measureShelfCardWidth(container);
+      const gap = 34;
+      return Math.max(1, Math.floor((containerWidth + gap) / (cardWidth + gap)));
+    }
+
+    function measureShelfCardWidth(container) {
+      const probe = document.createElement('div');
+      probe.style.position = 'absolute';
+      probe.style.visibility = 'hidden';
+      probe.style.pointerEvents = 'none';
+      probe.style.width = 'var(--card-w)';
+      probe.style.height = '0';
+      probe.style.padding = '0';
+      probe.style.border = '0';
+      container.appendChild(probe);
+      const width = probe.getBoundingClientRect().width || 210;
+      probe.remove();
+      return width;
+    }
+
+    function distributeShelfEntries(entries, rowCapacity) {
+      if (!entries.length) return [];
+
+      const rowsNeeded = Math.max(1, Math.ceil(entries.length / Math.max(1, rowCapacity)));
+      const balancedRowSize = Math.max(1, Math.ceil(entries.length / rowsNeeded));
+      const rows = [];
+
+      for (let start = 0; start < entries.length; start += balancedRowSize) {
+        rows.push(entries.slice(start, start + balancedRowSize));
+      }
+
+      return rows;
     }
 
     function getVisibleItems(shelf) {
@@ -2608,10 +2689,11 @@
       openModal(shelf, index);
     }
 
-    function buildPopupContent(item) {
+    function buildPopupContent(item, shelf = 'collection') {
       const stars = [1, 2, 3, 4, 5]
         .map(value => `<span class="star ${value <= (item.rating || 0) ? 'filled' : ''}">★</span>`)
         .join('');
+      const showRating = shelf !== 'wishlist';
 
       const accordRows = (item.accords || [])
         .map(accord => `
@@ -2642,7 +2724,7 @@
       return `
         <div class="popup-brand">${escapeHtml(item.brand || '')}</div>
         <div class="popup-name">${escapeHtml(item.name || '')}</div>
-        <div class="popup-rating">${stars}</div>
+        ${showRating ? `<div class="popup-rating">${stars}</div>` : ''}
         ${notesBlocks ? `<div class="notes-section">${notesBlocks}</div>` : ''}
         ${accordRows ? `<div class="accords">${accordRows}</div>` : ''}
         ${noteMarkup}
@@ -2664,13 +2746,13 @@
 
       activePopupKey = popupKey;
       activePopupCard = card;
-      showPopup(card, item);
+      showPopup(card, item, shelfName);
     }
 
-    function showPopup(card, item) {
+    function showPopup(card, item, shelf = 'collection') {
       clearPopupHideTimer();
       activePopupCard = card;
-      globalPopup.innerHTML = buildPopupContent(item);
+      globalPopup.innerHTML = buildPopupContent(item, shelf);
       globalPopup.classList.remove('flipped', 'clamped');
       globalPopup.classList.add('visible');
       globalPopup.style.maxHeight = `${Math.min(window.innerHeight - 24, 520)}px`;
@@ -2732,6 +2814,19 @@
       });
     }
 
+    function scheduleShelfLayoutRefresh() {
+      if (shelfLayoutRefreshTimer) {
+        window.clearTimeout(shelfLayoutRefreshTimer);
+      }
+
+      shelfLayoutRefreshTimer = window.setTimeout(() => {
+        shelfLayoutRefreshTimer = null;
+        hidePopup();
+        renderShelf('collection');
+        renderShelf('wishlist');
+      }, 120);
+    }
+
     function scheduleHidePopup() {
       clearPopupHideTimer();
       popupHideTimer = window.setTimeout(() => {
@@ -2759,6 +2854,7 @@
 
     window.addEventListener('scroll', schedulePopupReposition, true);
     window.addEventListener('resize', schedulePopupReposition);
+    window.addEventListener('resize', scheduleShelfLayoutRefresh);
 
     function syncControls() {
       document.getElementById('search-input').value = uiState.search;
@@ -2845,6 +2941,7 @@
 
       currentRating = existing?.rating || 0;
       updateStars(currentRating);
+      updateRatingVisibility(shelf);
 
       currentBottleImageOriginal = existing?.image || null;
       currentImageData = existing?.image || null;
@@ -3607,6 +3704,12 @@
       updateStars(value);
     }
 
+    function updateRatingVisibility(shelf) {
+      const ratingGroup = document.getElementById('rating-group');
+      if (!ratingGroup) return;
+      ratingGroup.hidden = shelf === 'wishlist';
+    }
+
     function updateStars(value) {
       document.querySelectorAll('.rating-star').forEach(star => {
         star.classList.toggle('active', Number(star.dataset.v) <= value);
@@ -3956,7 +4059,7 @@
           mid: document.getElementById('f-mid').value.trim(),
           base: document.getElementById('f-base').value.trim(),
           accords: collectAccordsFromBuilder(),
-          rating: currentRating,
+          rating: targetShelf === 'wishlist' ? 0 : currentRating,
           note: document.getElementById('f-note').value.trim(),
           createdAt: existing?.createdAt || new Date().toISOString()
         });
