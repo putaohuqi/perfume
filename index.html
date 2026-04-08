@@ -519,6 +519,7 @@
 
     .save-card {
       display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
       gap: 8px;
       padding: 14px 16px;
       border-radius: 24px;
@@ -531,6 +532,43 @@
       box-shadow: 0 14px 26px color-mix(in srgb, var(--ink) 8%, transparent);
       align-content: start;
       grid-row: span 2;
+    }
+
+    .save-snapshot {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid color-mix(in srgb, var(--blush-muted) 18%, transparent);
+    }
+
+    .save-snapshot-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 28px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--button-bg) 84%, var(--paper-strong) 16%);
+      border: 1px solid color-mix(in srgb, var(--blush-muted) 18%, transparent);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      white-space: nowrap;
+    }
+
+    .save-snapshot-pill.is-cloud {
+      color: var(--rose-deep);
+      border-color: color-mix(in srgb, var(--rose) 22%, transparent);
+      background: color-mix(in srgb, var(--paper-card) 68%, var(--paper-strong) 32%);
+    }
+
+    .save-snapshot-pill.is-error {
+      color: color-mix(in srgb, var(--rose) 72%, var(--rose-deep) 28%);
+      border-color: color-mix(in srgb, var(--rose) 28%, transparent);
+      background: color-mix(in srgb, var(--paper-card) 82%, var(--blush-light) 18%);
     }
 
     .save-status-line {
@@ -2437,6 +2475,11 @@
           <div class="button-row">
             <button class="btn-secondary" id="save-now-btn" type="button" onclick="saveNow()">save now</button>
           </div>
+          <div class="save-snapshot" id="save-snapshot">
+            <span class="save-snapshot-pill" id="save-snapshot-cloud">guest mode</span>
+            <span class="save-snapshot-pill" id="save-snapshot-device">device copy on</span>
+            <span class="save-snapshot-pill" id="save-snapshot-edit">ready</span>
+          </div>
         </div>
 
         <div class="wall-glance-card">
@@ -3677,39 +3720,69 @@
       const badge = document.getElementById('save-status-badge');
       const detail = document.getElementById('save-status-detail');
       const saveNowButton = document.getElementById('save-now-btn');
+      const snapshotCloud = document.getElementById('save-snapshot-cloud');
+      const snapshotDevice = document.getElementById('save-snapshot-device');
+      const snapshotEdit = document.getElementById('save-snapshot-edit');
       const signedInEmail = cloudState.user?.email || 'your account';
 
-      if (!title || !badge || !detail || !saveNowButton) return;
+      if (!title || !badge || !detail || !saveNowButton || !snapshotCloud || !snapshotDevice || !snapshotEdit) return;
 
       badge.classList.remove('is-cloud', 'is-saving', 'is-error');
+      snapshotCloud.classList.remove('is-cloud', 'is-error');
+      snapshotDevice.classList.remove('is-cloud', 'is-error');
+      snapshotEdit.classList.remove('is-cloud', 'is-error');
 
       if (saveMeta.phase === 'error') {
         title.textContent = 'save needs attention';
         badge.textContent = 'issue';
         badge.classList.add('is-error');
         detail.innerHTML = `<strong>Your latest wall is still cached locally.</strong> ${escapeHtml(saveMeta.lastError || 'Something interrupted saving.')}`;
+        snapshotCloud.textContent = 'sync issue';
+        snapshotCloud.classList.add('is-error');
+        snapshotDevice.textContent = 'device copy safe';
+        snapshotEdit.textContent = saveMeta.lastLocalSavedAt ? `edited ${formatSavedTimestamp(saveMeta.lastLocalSavedAt)}` : 'retry needed';
       } else if (saveMeta.phase === 'saving' && shouldUseCloudSync()) {
         title.textContent = 'saving to cloud';
         badge.textContent = 'syncing';
         badge.classList.add('is-saving');
         detail.innerHTML = `<strong>Syncing for ${escapeHtml(signedInEmail)}.</strong> The newest wall copy is saved here first, then pushed to the cloud.`;
+        snapshotCloud.textContent = 'syncing now';
+        snapshotCloud.classList.add('is-cloud');
+        snapshotDevice.textContent = 'device copy on';
+        snapshotEdit.textContent = `edited ${formatSavedTimestamp(saveMeta.lastLocalSavedAt || Date.now())}`;
       } else if (saveMeta.lastCloudSavedAt && Boolean(cloudState.user)) {
         title.textContent = 'saved to cloud';
         badge.textContent = 'cloud';
         badge.classList.add('is-cloud');
         detail.innerHTML = `<strong>${escapeHtml(signedInEmail)}</strong> · synced ${formatSavedTimestamp(saveMeta.lastCloudSavedAt)}. A browser copy stays here too.`;
+        snapshotCloud.textContent = 'cloud sync on';
+        snapshotCloud.classList.add('is-cloud');
+        snapshotDevice.textContent = 'device copy on';
+        snapshotEdit.textContent = `edited ${formatSavedTimestamp(saveMeta.lastCloudSavedAt)}`;
       } else if (saveMeta.lastLocalSavedAt) {
         title.textContent = Boolean(cloudState.user) ? 'saved here, cloud next' : 'saved on this device';
         badge.textContent = Boolean(cloudState.user) ? 'local' : 'device';
         detail.innerHTML = Boolean(cloudState.user)
           ? `<strong>${escapeHtml(signedInEmail)}</strong> · saved in this browser ${formatSavedTimestamp(saveMeta.lastLocalSavedAt)} while cloud sync catches up.`
           : `<strong>Guest mode</strong> · saved in this browser ${formatSavedTimestamp(saveMeta.lastLocalSavedAt)}.`;
+        snapshotCloud.textContent = Boolean(cloudState.user) ? 'cloud waiting' : 'guest mode';
+        if (Boolean(cloudState.user)) {
+          snapshotCloud.classList.add('is-cloud');
+        }
+        snapshotDevice.textContent = Boolean(cloudState.user) ? 'device copy on' : 'device only';
+        snapshotEdit.textContent = `edited ${formatSavedTimestamp(saveMeta.lastLocalSavedAt)}`;
       } else {
         title.textContent = Boolean(cloudState.user) ? 'cloud sync ready' : 'guest auto-save on';
         badge.textContent = Boolean(cloudState.user) ? 'cloud' : 'device';
         detail.textContent = Boolean(cloudState.user)
           ? `${signedInEmail} is connected. New wall changes save here first, then sync automatically.`
           : 'Guest mode keeps this wall on this device and browser until you sign in.';
+        snapshotCloud.textContent = Boolean(cloudState.user) ? 'cloud ready' : 'guest mode';
+        if (Boolean(cloudState.user)) {
+          snapshotCloud.classList.add('is-cloud');
+        }
+        snapshotDevice.textContent = Boolean(cloudState.user) ? 'device copy on' : 'device only';
+        snapshotEdit.textContent = 'ready';
       }
 
       saveNowButton.disabled = saveMeta.phase === 'saving' && !shouldUseCloudSync();
