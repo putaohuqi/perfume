@@ -546,42 +546,42 @@
       position: absolute;
       left: 50%;
       bottom: 56px;
-      width: 72%;
-      height: 24px;
+      width: 68%;
+      height: 20px;
       transform: translateX(-50%);
       border-radius: 50%;
       background: radial-gradient(circle, var(--glow) 0%, rgba(232, 196, 184, 0) 72%);
-      filter: blur(2px);
-      opacity: 0.78;
+      filter: blur(4px);
+      opacity: 0.34;
       transition: transform 0.35s ease, opacity 0.35s ease;
       z-index: 0;
     }
 
     .bottle-card:hover::before {
       transform: translateX(-50%) scale(1.1);
-      opacity: 0.98;
+      opacity: 0.48;
     }
 
     .bottle-card::after {
       content: '';
       position: absolute;
       left: 50%;
-      bottom: 88px;
-      width: clamp(92px, 56%, 148px);
-      height: 22px;
+      bottom: 84px;
+      width: clamp(82px, 48%, 126px);
+      height: 15px;
       transform: translateX(-50%);
       border-radius: 50%;
-      background: radial-gradient(ellipse at center, rgba(74, 52, 41, 0.24) 0%, rgba(74, 52, 41, 0.14) 38%, rgba(74, 52, 41, 0) 76%);
-      filter: blur(9px);
-      opacity: 0.62;
+      background: radial-gradient(ellipse at center, rgba(74, 52, 41, 0.16) 0%, rgba(74, 52, 41, 0.07) 44%, rgba(74, 52, 41, 0) 78%);
+      filter: blur(7px);
+      opacity: 0.3;
       pointer-events: none;
       transition: transform 0.35s ease, opacity 0.35s ease;
       z-index: 0;
     }
 
     .bottle-card:hover::after {
-      transform: translateX(-50%) scale(1.08);
-      opacity: 0.76;
+      transform: translateX(-50%) scale(1.04);
+      opacity: 0.42;
     }
 
     .bottle-card:hover .card-actions {
@@ -611,25 +611,25 @@
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 10px 18px rgba(60, 30, 20, 0.16));
+      filter: drop-shadow(0 8px 14px rgba(60, 30, 20, 0.1));
       transition: filter 0.3s ease;
     }
 
     .bottle-card:hover .bottle-img-wrap img {
-      filter: drop-shadow(0 16px 24px rgba(60, 30, 20, 0.21));
+      filter: drop-shadow(0 12px 18px rgba(60, 30, 20, 0.14));
     }
 
     .wishlist .bottle-card::after {
-      opacity: 0.48;
+      opacity: 0.22;
     }
 
     .wishlist .bottle-img-wrap img {
-      filter: drop-shadow(0 10px 18px rgba(60, 30, 20, 0.15)) saturate(0.76);
+      filter: drop-shadow(0 8px 14px rgba(60, 30, 20, 0.09)) saturate(0.76);
       opacity: 0.88;
     }
 
     .wishlist .bottle-card:hover .bottle-img-wrap img {
-      filter: drop-shadow(0 18px 26px rgba(60, 30, 20, 0.22)) saturate(0.88);
+      filter: drop-shadow(0 12px 18px rgba(60, 30, 20, 0.14)) saturate(0.88);
       opacity: 1;
     }
 
@@ -812,6 +812,10 @@
       backdrop-filter: blur(16px);
       z-index: 2000;
       pointer-events: none;
+      max-height: min(520px, calc(100vh - 24px));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
     }
 
     .popup.visible {
@@ -837,6 +841,10 @@
       top: -8px;
       bottom: auto;
       clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    .popup.clamped::after {
+      display: none;
     }
 
     .popup-brand {
@@ -2282,8 +2290,9 @@
 
     function showPopup(card, item) {
       globalPopup.innerHTML = buildPopupContent(item);
-      globalPopup.classList.remove('flipped');
+      globalPopup.classList.remove('flipped', 'clamped');
       globalPopup.classList.add('visible');
+      globalPopup.style.maxHeight = `${Math.min(window.innerHeight - 24, 520)}px`;
 
       requestAnimationFrame(() => {
         const rect = card.getBoundingClientRect();
@@ -2291,10 +2300,16 @@
         const popupHeight = globalPopup.offsetHeight;
         let top = rect.top - popupHeight - 16;
         let flipped = false;
+        let clamped = false;
 
         if (top < 10) {
           top = rect.bottom + 16;
           flipped = true;
+        }
+
+        if (top + popupHeight > window.innerHeight - 12) {
+          top = Math.max(12, window.innerHeight - popupHeight - 12);
+          clamped = true;
         }
 
         let left = rect.left + rect.width / 2 - popupWidth / 2;
@@ -2304,11 +2319,12 @@
         globalPopup.style.left = `${left}px`;
 
         if (flipped) globalPopup.classList.add('flipped');
+        if (clamped) globalPopup.classList.add('clamped');
       });
     }
 
     function hidePopup() {
-      globalPopup.classList.remove('visible', 'flipped');
+      globalPopup.classList.remove('visible', 'flipped', 'clamped');
     }
 
     window.addEventListener('scroll', hidePopup, true);
@@ -2972,14 +2988,48 @@
 
     async function fetchFragranticaAccordNames(urlInput) {
       const normalizedUrl = normalizeUrl(urlInput);
-      const response = await fetch(`https://r.jina.ai/${normalizedUrl}`);
+      const text = await fetchTextFromCandidates(buildFragranticaProxyCandidates(normalizedUrl));
+      return parseFragranticaAccords(text);
+    }
 
-      if (!response.ok) {
-        throw new Error('The Fragrantica pull did not come through this time.');
+    function buildFragranticaProxyCandidates(normalizedUrl) {
+      const strippedUrl = String(normalizedUrl || '').replace(/^https?:\/\//i, '');
+      return [
+        `https://r.jina.ai/http://${strippedUrl}`,
+        `https://r.jina.ai/https://${strippedUrl}`,
+        `https://r.jina.ai/${normalizedUrl}`
+      ];
+    }
+
+    async function fetchTextFromCandidates(candidates = []) {
+      let lastError = '';
+
+      for (const candidate of candidates) {
+        try {
+          const response = await fetch(candidate, {
+            headers: {
+              Accept: 'text/plain'
+            }
+          });
+
+          if (!response.ok) {
+            lastError = `HTTP ${response.status}`;
+            continue;
+          }
+
+          const text = await response.text();
+          if (String(text || '').trim().length > 80) {
+            return text;
+          }
+
+          lastError = 'The response was empty.';
+        } catch (error) {
+          lastError = error?.message || 'Request failed.';
+        }
       }
 
-      const text = await response.text();
-      return parseFragranticaAccords(text);
+      console.warn('Fragrantica proxy attempts failed.', lastError);
+      throw new Error('The Fragrantica pull did not come through this time.');
     }
 
     function parseFragranticaAccords(text) {
@@ -3109,17 +3159,31 @@
       const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
       const backgroundColor = estimateBackgroundColorFromBorder(pixels, canvas.width, canvas.height);
       const chartBounds = detectAccordChartBounds(pixels, canvas.width, canvas.height, backgroundColor);
-      const bars = detectAccordBars(pixels, canvas.width, canvas.height, backgroundColor, chartBounds);
+      const chartRows = Tesseract
+        ? await readOrderedAccordRowsFromChart(Tesseract, canvas, chartBounds)
+        : [];
+      let bars = detectAccordBars(pixels, canvas.width, canvas.height, backgroundColor, chartBounds);
+
+      if ((!bars.length || (chartRows.length && bars.length < chartRows.length)) && chartRows.length) {
+        bars = buildBarsFromChartRows(pixels, canvas.width, canvas.height, chartRows, chartBounds, backgroundColor);
+      }
 
       if (!bars.length) return [];
 
-      let names = fragranticaNames.slice(0, bars.length);
-      if (!names.length) {
+      let names = [];
+
+      if (fragranticaNames.length >= Math.min(3, bars.length)) {
+        names = fragranticaNames.slice(0, bars.length);
+      } else if (chartRows.length >= Math.min(4, bars.length)) {
+        names = chartRows.map(row => titleCase(row.matchedName)).slice(0, bars.length);
+      } else if (Tesseract) {
         names = await readAccordLabelsFromBars(Tesseract, canvas, bars, backgroundColor);
       }
 
-      if (names.some(name => !name)) {
-        const fallbackNames = await readAccordLabelsFromChart(Tesseract, canvas, chartBounds, bars);
+      if (Tesseract && names.some(name => !name)) {
+        const fallbackNames = chartRows.length
+          ? chartRows.map(row => titleCase(row.matchedName))
+          : await readAccordLabelsFromChart(Tesseract, canvas, chartBounds, bars);
         names = mergeAccordNames(fallbackNames, names, bars.length);
       }
 
@@ -3142,6 +3206,53 @@
           };
         })
         .filter(Boolean);
+    }
+
+    async function readOrderedAccordRowsFromChart(Tesseract, sourceCanvas, chartBounds) {
+      if (!Tesseract) return [];
+
+      const padding = 12;
+      const scale = 3;
+      const chartCanvas = createCropCanvasFromRect(sourceCanvas, chartBounds, padding);
+      const scaledChartCanvas = upscaleCanvas(chartCanvas, scale);
+      const result = await Tesseract.recognize(scaledChartCanvas.toDataURL('image/png'), 'eng', {
+        tessedit_pageseg_mode: '6',
+        tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -'
+      });
+
+      return dedupeAccordRows(
+        groupWordsIntoRows(result.data?.words || [], scaledChartCanvas.height)
+          .map(row => {
+            const candidate = scoreAccordText(row.words.map(word => word.text).join(' '), row.words.reduce((sum, word) => sum + (Number(word.confidence) || 0), 0) / Math.max(1, row.words.length));
+            if (!candidate.label) return null;
+
+            return {
+              matchedName: candidate.label,
+              score: candidate.score,
+              centerY: clamp((row.centerY / scale) + chartBounds.y0 - padding, chartBounds.y0, chartBounds.y1),
+              y0: clamp((row.y0 / scale) + chartBounds.y0 - padding, chartBounds.y0, chartBounds.y1),
+              y1: clamp((row.y1 / scale) + chartBounds.y0 - padding, chartBounds.y0, chartBounds.y1),
+              x0: clamp((row.x0 / scale) + chartBounds.x0 - padding, chartBounds.x0, chartBounds.x1),
+              x1: clamp((row.x1 / scale) + chartBounds.x0 - padding, chartBounds.x0, chartBounds.x1)
+            };
+          })
+          .filter(Boolean)
+      ).slice(0, 8);
+    }
+
+    function buildBarsFromChartRows(pixels, width, height, chartRows, chartBounds, backgroundColor) {
+      return chartRows
+        .map(row => {
+          const estimate = estimateAccordBar(pixels, width, height, row, backgroundColor);
+          return {
+            x0: clamp(estimate.left, chartBounds.x0, chartBounds.x1),
+            x1: clamp(estimate.right, chartBounds.x0, chartBounds.x1),
+            y0: clamp(Math.round(row.y0) - 4, chartBounds.y0, chartBounds.y1),
+            y1: clamp(Math.round(row.y1) + 4, chartBounds.y0, chartBounds.y1),
+            width: Math.max(1, estimate.right - estimate.left + 1)
+          };
+        })
+        .filter(bar => bar.width > Math.max(36, (chartBounds.x1 - chartBounds.x0 + 1) * 0.1));
     }
 
     async function readAccordLabelsFromBars(Tesseract, sourceCanvas, bars, backgroundColor) {
@@ -3167,25 +3278,14 @@
 
       setExtractStatus('Cross-checking the whole chart for any missed labels…', 'loading');
 
-      const chartCanvas = createCropCanvasFromRect(sourceCanvas, chartBounds, 12);
-      const result = await Tesseract.recognize(upscaleCanvas(chartCanvas, 3).toDataURL('image/png'), 'eng', {
-        tessedit_pageseg_mode: '6',
-        tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -'
-      });
-
-      const rows = groupWordsIntoRows(result.data?.words || [], chartCanvas.height)
-        .map(row => ({
-          ...row,
-          matchedName: findClosestAccord(row.words.map(word => word.text).join(' '))
-        }))
-        .filter(row => row.matchedName);
+      const rows = await readOrderedAccordRowsFromChart(Tesseract, sourceCanvas, chartBounds);
 
       if (!rows.length) {
         return [];
       }
 
       return bars.map(bar => {
-        const barCenter = ((bar.y0 + bar.y1) / 2) - chartBounds.y0 + 12;
+        const barCenter = (bar.y0 + bar.y1) / 2;
         const closest = rows
           .map(row => ({
             row,
@@ -3393,7 +3493,7 @@
       }
 
       const groups = groupAccordBarRows(rows)
-        .filter(group => group.length >= 8)
+        .filter(group => group.length >= 4)
         .slice(0, 8);
 
       return groups.map(group => {
@@ -3428,12 +3528,12 @@
         const shouldSplit =
           row.y - previousRow.y > 2 ||
           (
-            currentGroup.length >= 6 &&
+            currentGroup.length >= 4 &&
             (
-              colorShift > 18 ||
-              rightShift > 24 ||
-              leftShift > 12 ||
-              widthShift > 24
+              colorShift > 16 ||
+              rightShift > 20 ||
+              leftShift > 10 ||
+              widthShift > 18
             )
           );
 
@@ -3495,26 +3595,38 @@
       const backgroundLuminance = averageLuminance(backgroundColor);
       const hsl = rgbToHsl(pixel.r, pixel.g, pixel.b);
 
-      return distance > 14 && (hsl.s > 0.025 || Math.abs(luminance - backgroundLuminance) > 8) && luminance < 252;
+      return distance > 9 && (hsl.s > 0.012 || Math.abs(luminance - backgroundLuminance) > 5) && luminance < 254;
     }
 
     function sampleAccordBarColor(pixels, width, height, bar, backgroundColor) {
-      const sampleStartX = clamp(Math.round(bar.x0 + Math.min(18, bar.width * 0.08)), 0, width - 1);
-      const sampleEndX = clamp(Math.round(Math.min(bar.x0 + Math.max(72, bar.width * 0.28), bar.x1 - 6)), 0, width - 1);
       const sampleStartY = clamp(Math.round(bar.y0 + (bar.y1 - bar.y0) * 0.22), 0, height - 1);
       const sampleEndY = clamp(Math.round(bar.y1 - (bar.y1 - bar.y0) * 0.22), 0, height - 1);
       const samples = [];
+      const sampleZones = [
+        {
+          startX: clamp(Math.round(bar.x0 + Math.min(18, bar.width * 0.06)), 0, width - 1),
+          endX: clamp(Math.round(Math.min(bar.x0 + Math.max(64, bar.width * 0.26), bar.x1 - 12)), 0, width - 1)
+        },
+        {
+          startX: clamp(Math.round(Math.max(bar.x0 + bar.width * 0.72, bar.x0 + 12)), 0, width - 1),
+          endX: clamp(Math.round(bar.x1 - 8), 0, width - 1)
+        }
+      ];
 
-      for (let y = sampleStartY; y <= sampleEndY; y += 1) {
-        for (let x = sampleStartX; x <= sampleEndX; x += 2) {
-          const pixel = getPixel(pixels, width, x, y);
-          if (!isAccordBarPixel(pixel, backgroundColor)) continue;
-          if (averageLuminance(pixel) < 45) continue;
-          samples.push(pixel);
+      for (const zone of sampleZones) {
+        if (zone.endX <= zone.startX) continue;
+
+        for (let y = sampleStartY; y <= sampleEndY; y += 1) {
+          for (let x = zone.startX; x <= zone.endX; x += 2) {
+            const pixel = getPixel(pixels, width, x, y);
+            if (!isAccordBarPixel(pixel, backgroundColor)) continue;
+            if (averageLuminance(pixel) < 38) continue;
+            samples.push(pixel);
+          }
         }
       }
 
-      return averagePixels(samples) || backgroundColor;
+      return dominantQuantizedColor(samples, backgroundColor) || averagePixels(samples) || backgroundColor;
     }
 
     function sampleAccordBarColorFromCanvas(canvas, backgroundColor) {
@@ -3610,6 +3722,49 @@
       };
     }
 
+    function dominantQuantizedColor(pixels, backgroundColor) {
+      if (!pixels.length) return null;
+
+      const buckets = new Map();
+      const backgroundLuminance = averageLuminance(backgroundColor);
+
+      pixels.forEach(pixel => {
+        const distance = colorDistance(pixel, backgroundColor);
+        const luminanceDelta = Math.abs(averageLuminance(pixel) - backgroundLuminance);
+        if (distance < 5 && luminanceDelta < 4) return;
+
+        const key = [
+          Math.round(pixel.r / 12) * 12,
+          Math.round(pixel.g / 12) * 12,
+          Math.round(pixel.b / 12) * 12
+        ].join('|');
+
+        const weight = 1 + Math.max(0, distance - 5) / 18 + Math.max(0, luminanceDelta - 2) / 10;
+        const bucket = buckets.get(key) || {
+          r: 0,
+          g: 0,
+          b: 0,
+          weight: 0
+        };
+
+        bucket.r += pixel.r * weight;
+        bucket.g += pixel.g * weight;
+        bucket.b += pixel.b * weight;
+        bucket.weight += weight;
+        buckets.set(key, bucket);
+      });
+
+      const best = Array.from(buckets.values()).sort((a, b) => b.weight - a.weight)[0];
+      if (!best || !best.weight) return null;
+
+      return {
+        r: Math.round(best.r / best.weight),
+        g: Math.round(best.g / best.weight),
+        b: Math.round(best.b / best.weight),
+        a: 255
+      };
+    }
+
     function averageLuminance(pixel) {
       return (pixel.r + pixel.g + pixel.b) / 3;
     }
@@ -3625,7 +3780,7 @@
         .filter(word => {
           const text = String(word.text || '').trim();
           const confidence = Number(word.confidence) || 0;
-          return confidence >= 35 && /[a-z]/i.test(text);
+          return confidence >= 20 && /[a-z]/i.test(text);
         })
         .map(word => ({
           text: String(word.text || '').trim(),
@@ -3673,10 +3828,10 @@
         .filter(row => row.words.length > 0);
     }
 
-    function estimateAccordBar(pixels, width, height, row) {
+    function estimateAccordBar(pixels, width, height, row, backgroundColor = null) {
       const bandTop = clamp(Math.floor(row.y0 - 4), 0, height - 1);
       const bandBottom = clamp(Math.ceil(row.y1 + 4), 0, height - 1);
-      const baseColor = sampleDominantColor(pixels, width, height, row.x0, bandTop, row.x1, bandBottom);
+      const baseColor = sampleDominantColor(pixels, width, height, row.x0, bandTop, row.x1, bandBottom, backgroundColor);
       const center = Math.floor((row.x0 + row.x1) / 2);
       const columnScores = new Array(width).fill(0);
 
@@ -3711,6 +3866,8 @@
       const refinedColor = sampleDominantColor(pixels, width, height, left, bandTop, right, bandBottom, baseColor);
 
       return {
+        left,
+        right,
         width: rawWidth,
         color: refinedColor
       };
@@ -3722,10 +3879,7 @@
       const startY = clamp(Math.floor(Math.min(y0, y1)), 0, height - 1);
       const endY = clamp(Math.ceil(Math.max(y0, y1)), 0, height - 1);
 
-      let totalR = 0;
-      let totalG = 0;
-      let totalB = 0;
-      let count = 0;
+      const samples = [];
 
       for (let y = startY; y <= endY; y += 2) {
         for (let x = startX; x <= endX; x += 2) {
@@ -3733,24 +3887,13 @@
           if (pixel.a < 20) continue;
 
           const hsl = rgbToHsl(pixel.r, pixel.g, pixel.b);
-          const usable = hsl.l < 0.95 && (hsl.s > 0.05 || hsl.l < 0.7);
+          const usable = hsl.l < 0.985 && (hsl.s > 0.012 || hsl.l < 0.92);
           if (!usable) continue;
-
-          totalR += pixel.r;
-          totalG += pixel.g;
-          totalB += pixel.b;
-          count += 1;
+          samples.push(pixel);
         }
       }
 
-      if (!count) return fallback || { r: 215, g: 170, b: 150, a: 255 };
-
-      return {
-        r: Math.round(totalR / count),
-        g: Math.round(totalG / count),
-        b: Math.round(totalB / count),
-        a: 255
-      };
+      return dominantQuantizedColor(samples, fallback || { r: 248, g: 243, b: 238, a: 255 }) || averagePixels(samples) || fallback || { r: 215, g: 170, b: 150, a: 255 };
     }
 
     function getPixel(pixels, width, x, y) {
@@ -3792,7 +3935,7 @@
         }
       });
 
-      return bestScore <= 3 ? best : '';
+      return bestScore <= Math.max(3, Math.round(best.length * 0.34)) ? best : '';
     }
 
     function normalizeAccordLabel(value) {
@@ -3800,8 +3943,30 @@
         .toLowerCase()
         .replace(/[^a-z\s-]/g, ' ')
         .replace(/\b0\b/g, 'o')
+        .replace(/\bcoc0nut\b/g, 'coconut')
+        .replace(/\bcoconut\b/g, 'coconut')
+        .replace(/\blactonlc\b/g, 'lactonic')
+        .replace(/\btropica\b/g, 'tropical')
+        .replace(/\bterpenlc\b/g, 'terpenic')
+        .replace(/\bvaniila\b/g, 'vanilla')
         .replace(/\s+/g, ' ')
         .trim();
+    }
+
+    function dedupeAccordRows(rows = []) {
+      return rows.reduce((result, row) => {
+        const last = result[result.length - 1];
+
+        if (last && last.matchedName === row.matchedName) {
+          if ((row.score || 0) > (last.score || 0)) {
+            result[result.length - 1] = row;
+          }
+          return result;
+        }
+
+        result.push(row);
+        return result;
+      }, []);
     }
 
     function getAccordColor(name, index = 0) {
