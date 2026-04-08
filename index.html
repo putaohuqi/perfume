@@ -96,9 +96,10 @@
 
     body::after {
       background:
-        radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.64) 0%, rgba(255, 255, 255, 0) 22%),
-        radial-gradient(circle at 82% 26%, color-mix(in srgb, var(--blush-light) 82%, white 18%) 0%, rgba(255, 235, 228, 0) 18%),
-        radial-gradient(circle at 68% 70%, var(--page-glow-bottom) 0%, rgba(243, 208, 188, 0) 24%);
+        radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--paper-strong) 72%, white 28%) 0%, transparent 22%),
+        radial-gradient(circle at 82% 26%, color-mix(in srgb, var(--blush-light) 88%, white 12%) 0%, transparent 22%),
+        radial-gradient(circle at 18% 78%, color-mix(in srgb, var(--sage) 72%, white 28%) 0%, transparent 24%),
+        radial-gradient(circle at 68% 70%, var(--page-glow-bottom) 0%, transparent 28%);
       z-index: 0;
     }
 
@@ -138,7 +139,12 @@
       position: relative;
       padding: 28px 30px 24px;
       border-radius: 34px;
-      background: linear-gradient(135deg, var(--paper-card) 0%, var(--paper-card-soft) 100%);
+      background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--paper-card) 78%, var(--blush-light) 22%) 0%,
+        color-mix(in srgb, var(--paper-card) 84%, var(--gold) 16%) 46%,
+        color-mix(in srgb, var(--paper-card-soft) 72%, var(--sage) 28%) 100%
+      );
       border: 1px solid color-mix(in srgb, var(--blush-muted) 24%, transparent);
       box-shadow: var(--shadow-soft);
       overflow: hidden;
@@ -152,7 +158,7 @@
       width: 180px;
       height: 180px;
       border-radius: 50%;
-      background: radial-gradient(circle, var(--hero-sparkle) 0%, rgba(245, 218, 204, 0) 72%);
+      background: radial-gradient(circle, var(--hero-sparkle) 0%, transparent 72%);
       opacity: 0.9;
     }
 
@@ -223,7 +229,11 @@
       gap: 8px;
       border-radius: 999px;
       padding: 9px 14px;
-      background: color-mix(in srgb, var(--paper-strong) 88%, var(--blush-light) 12%);
+      background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--paper-strong) 70%, var(--blush-light) 30%) 0%,
+        color-mix(in srgb, var(--paper-strong) 76%, var(--sage) 24%) 100%
+      );
       border: 1px solid color-mix(in srgb, var(--blush-muted) 26%, transparent);
       font-size: 0.68rem;
       letter-spacing: 0.12em;
@@ -249,7 +259,11 @@
       gap: 12px 14px;
       padding: 18px;
       border-radius: 30px;
-      background: var(--panel-bg);
+      background: linear-gradient(
+        155deg,
+        color-mix(in srgb, var(--panel-bg) 80%, var(--blush-light) 20%) 0%,
+        color-mix(in srgb, var(--panel-bg) 76%, var(--sage) 24%) 100%
+      );
       border: 1px solid color-mix(in srgb, var(--blush-muted) 18%, transparent);
       box-shadow: var(--shadow-soft);
       backdrop-filter: blur(14px);
@@ -263,7 +277,11 @@
       align-items: center;
       padding: 14px 16px;
       border-radius: 24px;
-      background: linear-gradient(135deg, color-mix(in srgb, var(--blush-light) 22%, white 78%) 0%, color-mix(in srgb, var(--paper-strong) 86%, white 14%) 100%);
+      background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--paper-strong) 58%, var(--blush-light) 42%) 0%,
+        color-mix(in srgb, var(--paper-strong) 62%, var(--sage) 38%) 100%
+      );
       border: 1px solid color-mix(in srgb, var(--blush-muted) 24%, transparent);
     }
 
@@ -283,7 +301,7 @@
 
     .profile-badge.has-photo {
       background: rgba(255, 255, 255, 0.6);
-      box-shadow: 0 14px 30px rgba(94, 58, 41, 0.18);
+      box-shadow: 0 14px 30px color-mix(in srgb, var(--ink) 18%, transparent);
     }
 
     .profile-badge img {
@@ -346,7 +364,11 @@
       margin-top: 14px;
       padding: 18px;
       border-radius: 28px;
-      background: color-mix(in srgb, var(--paper) 88%, white 12%);
+      background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--paper) 72%, var(--blush-light) 28%) 0%,
+        color-mix(in srgb, var(--paper) 76%, var(--sage) 24%) 100%
+      );
       border: 1px solid color-mix(in srgb, var(--blush-muted) 18%, transparent);
       box-shadow: var(--shadow-soft);
       backdrop-filter: blur(16px);
@@ -474,7 +496,11 @@
       gap: 8px;
       padding: 14px 16px;
       border-radius: 24px;
-      background: linear-gradient(180deg, color-mix(in srgb, var(--paper-strong) 90%, white 10%), color-mix(in srgb, var(--blush-light) 22%, white 78%));
+      background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--paper-strong) 68%, var(--blush-light) 32%) 0%,
+        color-mix(in srgb, var(--paper-card-soft) 66%, var(--sage) 34%) 100%
+      );
       border: 1px solid color-mix(in srgb, var(--blush-muted) 20%, transparent);
       box-shadow: 0 14px 26px color-mix(in srgb, var(--ink) 8%, transparent);
       align-content: start;
@@ -551,7 +577,11 @@
       min-height: 92px;
       padding: 14px 16px;
       border-radius: 22px;
-      background: linear-gradient(180deg, var(--paper-card), var(--paper-card-soft));
+      background: linear-gradient(
+        160deg,
+        color-mix(in srgb, var(--paper-card) 78%, var(--blush-light) 22%) 0%,
+        color-mix(in srgb, var(--paper-card-soft) 72%, var(--sage) 28%) 100%
+      );
       border: 1px solid color-mix(in srgb, var(--blush-muted) 20%, transparent);
       display: flex;
       flex-direction: column;
@@ -578,7 +608,11 @@
       margin-top: 26px;
       padding: 26px 0 34px;
       border-radius: 38px;
-      background: var(--section-bg);
+      background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--section-bg) 84%, var(--paper) 16%) 0%,
+        color-mix(in srgb, var(--section-bg) 78%, var(--sage) 22%) 100%
+      );
       border: 1px solid color-mix(in srgb, var(--blush-muted) 18%, transparent);
       box-shadow: var(--shadow-soft);
       overflow: hidden;
@@ -763,7 +797,12 @@
       height: 15px;
       transform: translateX(-50%);
       border-radius: 50%;
-      background: radial-gradient(ellipse at center, rgba(74, 52, 41, 0.16) 0%, rgba(74, 52, 41, 0.07) 44%, rgba(74, 52, 41, 0) 78%);
+      background: radial-gradient(
+        ellipse at center,
+        color-mix(in srgb, var(--ink) 22%, transparent) 0%,
+        color-mix(in srgb, var(--ink) 10%, transparent) 44%,
+        transparent 78%
+      );
       filter: blur(7px);
       opacity: 0.3;
       pointer-events: none;
@@ -2401,8 +2440,8 @@
         swatches: ['#01162b', '#00385a', '#6a90b4', '#d2dbeb'],
         vars: {
           '--cream': '#eef3fa',
-          '--paper': 'rgba(243, 248, 255, 0.86)',
-          '--paper-strong': 'rgba(248, 251, 255, 0.97)',
+          '--paper': 'rgba(235, 243, 252, 0.88)',
+          '--paper-strong': 'rgba(241, 248, 255, 0.98)',
           '--blush': '#94a2bf',
           '--blush-light': '#d2dbeb',
           '--blush-muted': '#6a90b4',
@@ -2418,23 +2457,23 @@
           '--wishlist-bg': 'linear-gradient(180deg, rgba(210, 219, 235, 0.92) 0%, rgba(148, 162, 191, 0.82) 100%)',
           '--wishlist-shelf': '#5a7393',
           '--line': 'rgba(1, 22, 43, 0.12)',
-          '--page-glow-left': 'rgba(210, 219, 235, 0.82)',
-          '--page-glow-right': 'rgba(148, 162, 191, 0.52)',
-          '--page-glow-bottom': 'rgba(106, 144, 180, 0.22)',
-          '--page-base-top': '#f8fbff',
-          '--page-base-mid': '#eef3fa',
-          '--page-base-bottom': '#dfe8f5',
+          '--page-glow-left': 'rgba(210, 219, 235, 0.9)',
+          '--page-glow-right': 'rgba(148, 162, 191, 0.7)',
+          '--page-glow-bottom': 'rgba(106, 144, 180, 0.38)',
+          '--page-base-top': '#eef5ff',
+          '--page-base-mid': '#e3eef9',
+          '--page-base-bottom': '#cedef1',
           '--hero-sparkle': 'rgba(210, 219, 235, 0.86)',
-          '--panel-bg': 'rgba(248, 251, 255, 0.9)',
-          '--modal-bg': 'rgba(246, 250, 255, 0.98)',
-          '--button-bg': 'rgba(239, 246, 255, 0.95)',
-          '--paper-card': 'rgba(247, 250, 255, 0.92)',
-          '--paper-card-soft': 'rgba(227, 238, 250, 0.84)',
+          '--panel-bg': 'rgba(228, 239, 252, 0.92)',
+          '--modal-bg': 'rgba(240, 247, 255, 0.98)',
+          '--button-bg': 'rgba(228, 240, 252, 0.95)',
+          '--paper-card': 'rgba(234, 243, 252, 0.94)',
+          '--paper-card-soft': 'rgba(198, 216, 235, 0.88)',
           '--upload-bg': 'rgba(232, 240, 252, 0.78)',
           '--upload-hover-bg': 'rgba(224, 236, 250, 0.92)',
           '--extractor-bg': 'linear-gradient(180deg, rgba(236, 243, 254, 0.96) 0%, rgba(223, 235, 249, 0.92) 100%)',
-          '--section-bg': 'rgba(245, 249, 255, 0.76)',
-          '--section-highlight': 'rgba(106, 144, 180, 0.2)',
+          '--section-bg': 'rgba(225, 237, 251, 0.82)',
+          '--section-highlight': 'rgba(106, 144, 180, 0.32)',
           '--section-sheen': 'rgba(255, 255, 255, 0.24)',
           '--badge-start': '#6a90b4',
           '--badge-end': '#00385a',
@@ -2448,8 +2487,8 @@
         swatches: ['#c7d3db', '#a79a8a', '#fcf7df', '#3e3630'],
         vars: {
           '--cream': '#f6f3e8',
-          '--paper': 'rgba(252, 248, 233, 0.88)',
-          '--paper-strong': 'rgba(255, 251, 239, 0.97)',
+          '--paper': 'rgba(247, 243, 234, 0.9)',
+          '--paper-strong': 'rgba(252, 248, 240, 0.98)',
           '--blush': '#c7d3db',
           '--blush-light': '#e4ebee',
           '--blush-muted': '#a79a8a',
@@ -2465,23 +2504,23 @@
           '--wishlist-bg': 'linear-gradient(180deg, rgba(240, 244, 246, 0.92) 0%, rgba(199, 211, 219, 0.82) 100%)',
           '--wishlist-shelf': '#968a7d',
           '--line': 'rgba(62, 54, 48, 0.14)',
-          '--page-glow-left': 'rgba(252, 247, 223, 0.82)',
-          '--page-glow-right': 'rgba(199, 211, 219, 0.5)',
-          '--page-glow-bottom': 'rgba(167, 154, 138, 0.2)',
-          '--page-base-top': '#fdfbf0',
-          '--page-base-mid': '#f6f3e8',
-          '--page-base-bottom': '#ebe6d7',
+          '--page-glow-left': 'rgba(252, 247, 223, 0.9)',
+          '--page-glow-right': 'rgba(199, 211, 219, 0.68)',
+          '--page-glow-bottom': 'rgba(167, 154, 138, 0.34)',
+          '--page-base-top': '#fcfbf3',
+          '--page-base-mid': '#f1eee2',
+          '--page-base-bottom': '#e2ddd0',
           '--hero-sparkle': 'rgba(252, 247, 223, 0.86)',
-          '--panel-bg': 'rgba(252, 249, 238, 0.9)',
+          '--panel-bg': 'rgba(240, 239, 231, 0.92)',
           '--modal-bg': 'rgba(254, 251, 241, 0.98)',
-          '--button-bg': 'rgba(252, 248, 237, 0.95)',
-          '--paper-card': 'rgba(255, 251, 241, 0.92)',
-          '--paper-card-soft': 'rgba(241, 236, 221, 0.84)',
+          '--button-bg': 'rgba(241, 238, 231, 0.95)',
+          '--paper-card': 'rgba(238, 244, 247, 0.93)',
+          '--paper-card-soft': 'rgba(232, 224, 212, 0.88)',
           '--upload-bg': 'rgba(249, 245, 234, 0.78)',
           '--upload-hover-bg': 'rgba(253, 249, 239, 0.92)',
           '--extractor-bg': 'linear-gradient(180deg, rgba(252, 248, 236, 0.96) 0%, rgba(240, 234, 220, 0.92) 100%)',
-          '--section-bg': 'rgba(250, 246, 234, 0.76)',
-          '--section-highlight': 'rgba(199, 211, 219, 0.18)',
+          '--section-bg': 'rgba(241, 238, 229, 0.82)',
+          '--section-highlight': 'rgba(199, 211, 219, 0.3)',
           '--section-sheen': 'rgba(255, 255, 255, 0.34)',
           '--badge-start': '#c7d3db',
           '--badge-end': '#a79a8a',
@@ -2495,8 +2534,8 @@
         swatches: ['#ddd3c9', '#ecc4c3', '#928e5e', '#575527'],
         vars: {
           '--cream': '#f6efe5',
-          '--paper': 'rgba(251, 244, 236, 0.88)',
-          '--paper-strong': 'rgba(255, 248, 241, 0.97)',
+          '--paper': 'rgba(247, 241, 232, 0.9)',
+          '--paper-strong': 'rgba(253, 247, 240, 0.98)',
           '--blush': '#ecc4c3',
           '--blush-light': '#f4dddd',
           '--blush-muted': '#b97d7b',
@@ -2512,23 +2551,23 @@
           '--wishlist-bg': 'linear-gradient(180deg, rgba(247, 231, 231, 0.94) 0%, rgba(221, 211, 201, 0.82) 100%)',
           '--wishlist-shelf': '#8f8b5c',
           '--line': 'rgba(87, 85, 39, 0.14)',
-          '--page-glow-left': 'rgba(236, 196, 195, 0.74)',
-          '--page-glow-right': 'rgba(221, 211, 201, 0.58)',
-          '--page-glow-bottom': 'rgba(146, 142, 94, 0.22)',
-          '--page-base-top': '#fdf6ef',
-          '--page-base-mid': '#f6efe5',
-          '--page-base-bottom': '#ebe0d2',
+          '--page-glow-left': 'rgba(236, 196, 195, 0.86)',
+          '--page-glow-right': 'rgba(221, 211, 201, 0.64)',
+          '--page-glow-bottom': 'rgba(146, 142, 94, 0.34)',
+          '--page-base-top': '#fdf7ef',
+          '--page-base-mid': '#f3ebdf',
+          '--page-base-bottom': '#e8ddce',
           '--hero-sparkle': 'rgba(244, 221, 221, 0.86)',
-          '--panel-bg': 'rgba(252, 246, 239, 0.9)',
+          '--panel-bg': 'rgba(246, 239, 233, 0.92)',
           '--modal-bg': 'rgba(254, 248, 241, 0.98)',
-          '--button-bg': 'rgba(251, 244, 236, 0.95)',
-          '--paper-card': 'rgba(253, 246, 240, 0.92)',
-          '--paper-card-soft': 'rgba(244, 233, 225, 0.84)',
+          '--button-bg': 'rgba(247, 239, 232, 0.95)',
+          '--paper-card': 'rgba(250, 234, 236, 0.93)',
+          '--paper-card-soft': 'rgba(230, 232, 208, 0.88)',
           '--upload-bg': 'rgba(248, 239, 232, 0.78)',
           '--upload-hover-bg': 'rgba(252, 244, 238, 0.92)',
           '--extractor-bg': 'linear-gradient(180deg, rgba(252, 244, 238, 0.96) 0%, rgba(241, 232, 222, 0.92) 100%)',
-          '--section-bg': 'rgba(251, 244, 236, 0.76)',
-          '--section-highlight': 'rgba(185, 125, 123, 0.18)',
+          '--section-bg': 'rgba(246, 238, 231, 0.82)',
+          '--section-highlight': 'rgba(185, 125, 123, 0.32)',
           '--section-sheen': 'rgba(255, 255, 255, 0.3)',
           '--badge-start': '#ecc4c3',
           '--badge-end': '#928e5e',
@@ -2541,9 +2580,9 @@
         description: 'pastel pink, iced mint, and soft cafe brown',
         swatches: ['#ffd3d4', '#d5ebe4', '#f8f4e8', '#775c56'],
         vars: {
-          '--cream': '#f9f7ef',
-          '--paper': 'rgba(252, 251, 245, 0.9)',
-          '--paper-strong': 'rgba(255, 255, 250, 0.97)',
+          '--cream': '#f4f6f0',
+          '--paper': 'rgba(245, 247, 241, 0.92)',
+          '--paper-strong': 'rgba(250, 253, 248, 0.98)',
           '--blush': '#ffd3d4',
           '--blush-light': '#f9e6e6',
           '--blush-muted': '#d5ebe4',
@@ -2559,27 +2598,27 @@
           '--wishlist-bg': 'linear-gradient(180deg, rgba(249, 236, 236, 0.92) 0%, rgba(213, 235, 228, 0.84) 100%)',
           '--wishlist-shelf': '#baa9a3',
           '--line': 'rgba(119, 92, 86, 0.13)',
-          '--page-glow-left': 'rgba(255, 211, 212, 0.72)',
-          '--page-glow-right': 'rgba(213, 235, 228, 0.58)',
-          '--page-glow-bottom': 'rgba(248, 244, 232, 0.28)',
-          '--page-base-top': '#fffdf7',
-          '--page-base-mid': '#f9f7ef',
-          '--page-base-bottom': '#f3ede2',
-          '--hero-sparkle': 'rgba(255, 231, 232, 0.88)',
-          '--panel-bg': 'rgba(252, 250, 244, 0.9)',
-          '--modal-bg': 'rgba(255, 252, 247, 0.98)',
-          '--button-bg': 'rgba(252, 250, 244, 0.95)',
-          '--paper-card': 'rgba(255, 252, 247, 0.92)',
-          '--paper-card-soft': 'rgba(241, 237, 228, 0.84)',
-          '--upload-bg': 'rgba(250, 247, 240, 0.78)',
-          '--upload-hover-bg': 'rgba(255, 252, 246, 0.92)',
-          '--extractor-bg': 'linear-gradient(180deg, rgba(252, 249, 243, 0.96) 0%, rgba(239, 235, 227, 0.92) 100%)',
-          '--section-bg': 'rgba(252, 249, 242, 0.76)',
-          '--section-highlight': 'rgba(255, 211, 212, 0.18)',
+          '--page-glow-left': 'rgba(255, 211, 212, 0.94)',
+          '--page-glow-right': 'rgba(213, 235, 228, 0.84)',
+          '--page-glow-bottom': 'rgba(213, 235, 228, 0.42)',
+          '--page-base-top': '#fffaf9',
+          '--page-base-mid': '#eef5f0',
+          '--page-base-bottom': '#e1ebe3',
+          '--hero-sparkle': 'rgba(255, 214, 220, 0.92)',
+          '--panel-bg': 'rgba(238, 245, 241, 0.92)',
+          '--modal-bg': 'rgba(248, 251, 247, 0.98)',
+          '--button-bg': 'rgba(238, 245, 241, 0.95)',
+          '--paper-card': 'rgba(255, 235, 240, 0.94)',
+          '--paper-card-soft': 'rgba(225, 242, 236, 0.88)',
+          '--upload-bg': 'rgba(241, 247, 243, 0.8)',
+          '--upload-hover-bg': 'rgba(247, 251, 249, 0.94)',
+          '--extractor-bg': 'linear-gradient(180deg, rgba(248, 242, 246, 0.97) 0%, rgba(228, 242, 237, 0.94) 100%)',
+          '--section-bg': 'rgba(241, 246, 242, 0.84)',
+          '--section-highlight': 'rgba(255, 211, 212, 0.34)',
           '--section-sheen': 'rgba(255, 255, 255, 0.34)',
           '--badge-start': '#ffd3d4',
           '--badge-end': '#775c56',
-          '--popup-bg': 'rgba(255, 252, 247, 0.98)'
+          '--popup-bg': 'rgba(248, 251, 247, 0.98)'
         }
       },
       'gelato-date': {
@@ -2588,8 +2627,8 @@
         swatches: ['#f0eddc', '#b9ac8c', '#845f4a', '#dfa0aa'],
         vars: {
           '--cream': '#f5f0df',
-          '--paper': 'rgba(251, 247, 236, 0.88)',
-          '--paper-strong': 'rgba(255, 251, 242, 0.97)',
+          '--paper': 'rgba(247, 241, 232, 0.9)',
+          '--paper-strong': 'rgba(252, 247, 239, 0.98)',
           '--blush': '#dfa0aa',
           '--blush-light': '#f0ccd2',
           '--blush-muted': '#b9ac8c',
@@ -2605,23 +2644,23 @@
           '--wishlist-bg': 'linear-gradient(180deg, rgba(246, 232, 235, 0.92) 0%, rgba(240, 237, 220, 0.84) 100%)',
           '--wishlist-shelf': '#a98f80',
           '--line': 'rgba(132, 95, 74, 0.14)',
-          '--page-glow-left': 'rgba(223, 160, 170, 0.68)',
-          '--page-glow-right': 'rgba(240, 237, 220, 0.54)',
-          '--page-glow-bottom': 'rgba(185, 172, 140, 0.24)',
-          '--page-base-top': '#fefcf5',
-          '--page-base-mid': '#f5f0df',
-          '--page-base-bottom': '#ece2d6',
+          '--page-glow-left': 'rgba(223, 160, 170, 0.84)',
+          '--page-glow-right': 'rgba(240, 237, 220, 0.66)',
+          '--page-glow-bottom': 'rgba(185, 172, 140, 0.36)',
+          '--page-base-top': '#fcf8f0',
+          '--page-base-mid': '#f2ecde',
+          '--page-base-bottom': '#e7ddd0',
           '--hero-sparkle': 'rgba(240, 237, 220, 0.84)',
-          '--panel-bg': 'rgba(251, 247, 237, 0.9)',
+          '--panel-bg': 'rgba(245, 239, 231, 0.92)',
           '--modal-bg': 'rgba(254, 250, 241, 0.98)',
-          '--button-bg': 'rgba(251, 246, 235, 0.95)',
-          '--paper-card': 'rgba(254, 249, 240, 0.92)',
-          '--paper-card-soft': 'rgba(241, 233, 220, 0.84)',
+          '--button-bg': 'rgba(245, 239, 231, 0.95)',
+          '--paper-card': 'rgba(249, 232, 237, 0.93)',
+          '--paper-card-soft': 'rgba(232, 222, 210, 0.88)',
           '--upload-bg': 'rgba(250, 243, 233, 0.78)',
           '--upload-hover-bg': 'rgba(254, 248, 239, 0.92)',
           '--extractor-bg': 'linear-gradient(180deg, rgba(252, 246, 236, 0.96) 0%, rgba(239, 229, 216, 0.92) 100%)',
-          '--section-bg': 'rgba(251, 246, 235, 0.76)',
-          '--section-highlight': 'rgba(223, 160, 170, 0.18)',
+          '--section-bg': 'rgba(245, 238, 229, 0.82)',
+          '--section-highlight': 'rgba(223, 160, 170, 0.3)',
           '--section-sheen': 'rgba(255, 255, 255, 0.32)',
           '--badge-start': '#dfa0aa',
           '--badge-end': '#845f4a',
