@@ -826,7 +826,11 @@
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--ink-soft);
-      white-space: nowrap;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      white-space: normal;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -3490,6 +3494,33 @@
       }
     }
 
+    function resetGuestWallState() {
+      appState = createDefaultAppState();
+      saveMeta = createDefaultSaveMeta();
+      saveMeta.phase = 'idle';
+      saveMeta.lastError = '';
+      currentShelf = 'collection';
+      editingIndex = null;
+      editingShelf = null;
+      editingFragranceId = '';
+      currentRating = 0;
+      currentImageData = null;
+      currentBottleImageOriginal = null;
+      currentAccordImageData = null;
+      currentAccordImageOriginal = null;
+
+      try {
+        localStorage.removeItem(LEGACY_STORAGE_KEY);
+      } catch (error) {
+        console.warn('Could not clear legacy guest data during sign-out reset.', error);
+      }
+
+      persistApp({ queueCloud: false, updateStatus: false });
+      persistSaveMeta();
+      syncControls();
+      renderAll();
+    }
+
     function persistApp(options = {}) {
       const queueCloud = options.queueCloud !== false;
       const updateStatus = options.updateStatus !== false;
@@ -3715,7 +3746,7 @@
       if (!pool.length) {
         row.innerHTML = `<div class="shelf-mix-empty">Add a few fragrances and this little ledge will start showing your latest bottles.</div>`;
         title.textContent = 'latest additions';
-        brand.textContent = 'newest bottles across your wall';
+        brand.textContent = 'newest bottles on this wall';
         collectionCount.textContent = '0';
         wishlistCount.textContent = '0';
         return;
@@ -5027,12 +5058,8 @@
 
       if (!user) {
         cloudState.loadedUid = '';
-        if (saveMeta.phase === 'saved-cloud' || saveMeta.phase === 'saving') {
-          saveMeta.phase = saveMeta.lastLocalSavedAt ? 'saved-local' : 'idle';
-          persistSaveMeta();
-        }
-        renderAll();
-        setCloudStatus('Signed out. Guest mode is back on, so this wall will stay on this device until you sign in again.');
+        resetGuestWallState();
+        setCloudStatus('Signed out. This browser is back to a fresh guest wall, and any new guest bottles will save locally here.');
         return;
       }
 
