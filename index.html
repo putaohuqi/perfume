@@ -357,8 +357,18 @@
     }
 
     .profile-actions {
+      grid-column: 1;
+      grid-row: 2;
       display: grid;
       gap: 10px;
+      align-content: start;
+    }
+
+    .hero-right-stack {
+      grid-column: 2;
+      grid-row: 2 / span 2;
+      display: grid;
+      gap: 12px;
       align-content: start;
     }
 
@@ -636,6 +646,8 @@
     }
 
     .wall-glance-card {
+      grid-column: 1;
+      grid-row: 3;
       display: grid;
       gap: 12px;
       padding: 14px 16px;
@@ -652,7 +664,6 @@
 
     .latest-addition-card {
       display: grid;
-      grid-column: 2;
       gap: 12px;
       padding: 14px 16px;
       border-radius: 24px;
@@ -2380,12 +2391,12 @@
         grid-template-columns: 1fr;
       }
 
+      .profile-actions,
+      .hero-right-stack,
+      .wall-glance-card,
       .save-card {
-        grid-row: auto;
-      }
-
-      .latest-addition-card {
         grid-column: auto;
+        grid-row: auto;
       }
 
       .controls-bar {
@@ -2576,43 +2587,45 @@
           <p class="profile-note" id="profile-note-text" hidden></p>
         </div>
 
-        <div class="save-card">
-          <div class="save-status-line">
-            <div>
-              <div class="mini-label">save status</div>
-              <strong class="save-status-title" id="save-status-title">guest auto-save on</strong>
+        <div class="hero-right-stack">
+          <div class="save-card">
+            <div class="save-status-line">
+              <div>
+                <div class="mini-label">save status</div>
+                <strong class="save-status-title" id="save-status-title">guest auto-save on</strong>
+              </div>
+              <span class="save-status-badge" id="save-status-badge">device</span>
             </div>
-            <span class="save-status-badge" id="save-status-badge">device</span>
+            <p class="save-status-detail" id="save-status-detail">Every wall change is stored on this device and browser. Sign in if you want the same wall to sync across devices.</p>
+            <div class="button-row">
+              <button class="btn-secondary" id="save-now-btn" type="button" onclick="saveNow()">save now</button>
+            </div>
+            <div class="save-snapshot" id="save-snapshot">
+              <span class="save-snapshot-pill" id="save-snapshot-cloud">guest mode</span>
+              <span class="save-snapshot-pill" id="save-snapshot-device">device copy on</span>
+              <span class="save-snapshot-pill" id="save-snapshot-edit">ready</span>
+            </div>
           </div>
-          <p class="save-status-detail" id="save-status-detail">Every wall change is stored on this device and browser. Sign in if you want the same wall to sync across devices.</p>
-          <div class="button-row">
-            <button class="btn-secondary" id="save-now-btn" type="button" onclick="saveNow()">save now</button>
-          </div>
-          <div class="save-snapshot" id="save-snapshot">
-            <span class="save-snapshot-pill" id="save-snapshot-cloud">guest mode</span>
-            <span class="save-snapshot-pill" id="save-snapshot-device">device copy on</span>
-            <span class="save-snapshot-pill" id="save-snapshot-edit">ready</span>
-          </div>
-        </div>
 
-        <div class="latest-addition-card">
-          <div class="glance-title">
-            <div class="mini-label">latest addition</div>
-            <strong id="latest-addition-title">waiting for a bottle</strong>
-          </div>
-          <div class="latest-addition-body">
-            <div class="latest-addition-figure" id="latest-addition-figure">
-              <div class="latest-addition-fallback">✿</div>
+          <div class="latest-addition-card">
+            <div class="glance-title">
+              <div class="mini-label">latest addition</div>
+              <strong id="latest-addition-title">waiting for a bottle</strong>
             </div>
-            <div class="latest-addition-copy">
-              <div class="latest-addition-name" id="latest-addition-name">Nothing added yet</div>
-              <div class="latest-addition-brand" id="latest-addition-brand">start with a first fragrance</div>
-              <div class="latest-addition-note" id="latest-addition-note">The newest bottle across your wall will land here once you add one.</div>
+            <div class="latest-addition-body">
+              <div class="latest-addition-figure" id="latest-addition-figure">
+                <div class="latest-addition-fallback">✿</div>
+              </div>
+              <div class="latest-addition-copy">
+                <div class="latest-addition-name" id="latest-addition-name">Nothing added yet</div>
+                <div class="latest-addition-brand" id="latest-addition-brand">start with a first fragrance</div>
+                <div class="latest-addition-note" id="latest-addition-note">The newest bottle across your wall will land here once you add one.</div>
+              </div>
             </div>
-          </div>
-          <div class="latest-addition-meta">
-            <span class="latest-addition-pill" id="latest-addition-shelf">guest wall</span>
-            <span class="latest-addition-pill" id="latest-addition-time">ready</span>
+            <div class="latest-addition-meta">
+              <span class="latest-addition-pill" id="latest-addition-shelf">guest wall</span>
+              <span class="latest-addition-pill" id="latest-addition-time">ready</span>
+            </div>
           </div>
         </div>
 
