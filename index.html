@@ -398,6 +398,77 @@
       color: var(--ink-light);
     }
 
+    .save-card {
+      display: grid;
+      gap: 12px;
+      padding: 16px 18px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255, 251, 248, 0.94), rgba(251, 243, 237, 0.88));
+      border: 1px solid rgba(216, 171, 157, 0.18);
+      box-shadow: 0 14px 26px rgba(94, 58, 41, 0.06);
+    }
+
+    .save-status-line {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .save-status-title {
+      display: block;
+      margin-top: 5px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem;
+      font-weight: 500;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .save-status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 251, 248, 0.94);
+      border: 1px solid rgba(216, 171, 157, 0.2);
+      font-size: 0.64rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .save-status-badge.is-cloud {
+      color: #4f6f92;
+      border-color: rgba(79, 111, 146, 0.2);
+      background: rgba(241, 247, 255, 0.96);
+    }
+
+    .save-status-badge.is-saving {
+      color: var(--rose-deep);
+      border-color: rgba(191, 118, 101, 0.22);
+      background: rgba(255, 244, 238, 0.98);
+    }
+
+    .save-status-badge.is-error {
+      color: #91515b;
+      border-color: rgba(145, 81, 91, 0.24);
+      background: rgba(250, 241, 242, 0.96);
+    }
+
+    .save-status-detail {
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: var(--ink-light);
+    }
+
+    .save-status-detail strong {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -811,7 +882,7 @@
       box-shadow: 0 22px 54px rgba(60, 30, 20, 0.18), 0 4px 10px rgba(60, 30, 20, 0.08);
       backdrop-filter: blur(16px);
       z-index: 2000;
-      pointer-events: none;
+      pointer-events: auto;
       max-height: min(520px, calc(100vh - 24px));
       overflow-y: auto;
       overscroll-behavior: contain;
@@ -1158,6 +1229,46 @@
       color: var(--ink-light);
       font-size: 0.85rem;
       line-height: 1.7;
+    }
+
+    .config-textarea {
+      min-height: 148px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.78rem;
+      line-height: 1.55;
+    }
+
+    .cloud-status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: fit-content;
+      max-width: 100%;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 251, 248, 0.92);
+      border: 1px solid rgba(216, 171, 157, 0.18);
+      font-size: 0.72rem;
+      line-height: 1.5;
+      color: var(--ink-light);
+    }
+
+    .cloud-status.success {
+      color: #4f7a57;
+      border-color: rgba(79, 122, 87, 0.24);
+      background: rgba(238, 247, 239, 0.96);
+    }
+
+    .cloud-status.error {
+      color: #91515b;
+      border-color: rgba(145, 81, 91, 0.24);
+      background: rgba(250, 241, 242, 0.96);
+    }
+
+    .cloud-help {
+      font-size: 0.76rem;
+      line-height: 1.65;
+      color: var(--ink-soft);
     }
 
     .inline-action {
@@ -1598,8 +1709,23 @@
           <div class="button-row">
             <button class="btn-secondary" type="button" onclick="openProfileModal()">new wall</button>
             <button class="btn-secondary" type="button" onclick="openProfileModal(true)">edit profile</button>
+            <button class="btn-secondary" type="button" onclick="openCloudModal()">cloud account</button>
           </div>
-          <p class="profile-note">This project now supports lightweight local accounts, so each person can keep their own perfume wall in the same browser without touching anyone else’s shelf.</p>
+          <p class="profile-note" id="profile-note-text">This project now supports lightweight local accounts, so each person can keep their own perfume wall in the same browser without touching anyone else’s shelf.</p>
+        </div>
+
+        <div class="save-card">
+          <div class="save-status-line">
+            <div>
+              <div class="mini-label">save status</div>
+              <strong class="save-status-title" id="save-status-title">auto-save ready</strong>
+            </div>
+            <span class="save-status-badge" id="save-status-badge">browser</span>
+          </div>
+          <p class="save-status-detail" id="save-status-detail">Every wall change is stored in this browser. If you connect Firebase, this card will also tell you when the cloud copy is synced.</p>
+          <div class="button-row">
+            <button class="btn-secondary" id="save-now-btn" type="button" onclick="saveNow()">save now</button>
+          </div>
         </div>
 
         <div class="stats-grid">
@@ -1675,7 +1801,7 @@
     <section class="export-section">
       <div class="export-copy">
         <h3>back up this wall</h3>
-        <p id="export-note">Download the current profile as JSON so you can keep a snapshot, move it later, or wire it into a future real sign-in system.</p>
+        <p id="export-note">Download the current profile as JSON so you can keep a snapshot, move it later, or stash a backup before turning cloud sync on.</p>
       </div>
       <button class="export-btn" type="button" onclick="exportJSON()">download current wall</button>
     </section>
@@ -1817,7 +1943,7 @@
         <div class="form-group full">
           <label>How it works</label>
           <div class="extractor-card">
-            <p>Each wall lives in local storage for this browser right now, so different people can keep their own collections without mixing shelves. If you want true sign-in later, this structure is ready to plug into a backend like Supabase or Firebase.</p>
+            <p>Each wall always keeps a local browser copy first, so nobody loses their shelf if the connection flakes out. If you connect Firebase, these same walls can also sync to a real account across devices.</p>
           </div>
         </div>
       </div>
@@ -1825,6 +1951,59 @@
       <div class="modal-actions">
         <button class="btn-cancel" type="button" onclick="closeProfileModal()">cancel</button>
         <button class="btn-save" type="button" onclick="saveProfileModal()">save wall</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="cloud-overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h2>firebase cloud account</h2>
+          <p class="modal-sub">connect sign-in + sync so each person can keep their own wall</p>
+        </div>
+        <button class="modal-close" type="button" onclick="closeCloudModal()" aria-label="Close cloud account modal">×</button>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group full">
+          <label for="firebase-config-input">Firebase Web Config</label>
+          <textarea id="firebase-config-input" class="config-textarea" spellcheck="false" placeholder='{
+  "apiKey": "...",
+  "authDomain": "...",
+  "projectId": "...",
+  "storageBucket": "...",
+  "messagingSenderId": "...",
+  "appId": "..."
+}'></textarea>
+          <p class="cloud-help">Paste the web config object from your Firebase project. This is the client-side config Firebase expects in web apps, so it is okay for it to live in the browser.</p>
+          <div class="button-row">
+            <button class="btn-secondary" type="button" onclick="saveFirebaseConfig()">save firebase config</button>
+            <button class="btn-cancel" type="button" onclick="clearFirebaseConfig()">clear config</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="cloud-email">Email</label>
+          <input type="email" id="cloud-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label for="cloud-password">Password</label>
+          <input type="password" id="cloud-password" placeholder="at least 6 characters" autocomplete="current-password">
+        </div>
+
+        <div class="form-group full">
+          <div class="extractor-card">
+            <p>Enable Email/Password in Firebase Auth and create a Cloud Firestore database in the console first. After that, this app can sign people in and sync their shelves profile-by-profile.</p>
+            <div class="button-row">
+              <button class="btn-secondary" type="button" onclick="signInCloud()">sign in</button>
+              <button class="btn-secondary" type="button" onclick="signUpCloud()">create account</button>
+              <button class="btn-cancel" type="button" onclick="signOutCloud()">sign out</button>
+            </div>
+            <div class="cloud-status" id="cloud-auth-status">Cloud sync is off until you save a Firebase config.</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1866,6 +2045,9 @@
   <script>
     const APP_STORAGE_KEY = 'perfumeWallAppV2';
     const LEGACY_STORAGE_KEY = 'fragranceShelf';
+    const SAVE_META_STORAGE_KEY = APP_STORAGE_KEY + ':save-meta';
+    const FIREBASE_CONFIG_STORAGE_KEY = APP_STORAGE_KEY + ':firebase-config';
+    const FIREBASE_SDK_VERSION = '12.11.0';
 
     const ACCORD_KEYWORDS = [
       'white floral', 'yellow floral', 'green floral', 'soft spicy', 'fresh spicy',
@@ -1895,6 +2077,7 @@
 
     let appState = createDefaultAppState();
     let uiState = { search: '', sortBy: 'added', sortDir: 'desc' };
+    let saveMeta = createDefaultSaveMeta();
     let currentShelf = 'collection';
     let editingIndex = null;
     let editingShelf = null;
@@ -1909,11 +2092,17 @@
     let cropState = createEmptyCropState();
     let bottleNormalizationPromise = null;
     let bottleNormalizationProfileId = '';
+    let popupHideTimer = null;
+    let activePopupKey = '';
+    let cloudState = createDefaultCloudState();
 
     const globalPopup = document.getElementById('global-popup');
     const cropOverlay = document.getElementById('crop-overlay');
     const cropViewport = document.getElementById('crop-viewport');
     const cropImage = document.getElementById('crop-image');
+
+    globalPopup.addEventListener('mouseenter', clearPopupHideTimer);
+    globalPopup.addEventListener('mouseleave', scheduleHidePopup);
 
     function emptyData() {
       return { collection: [], wishlist: [] };
@@ -1937,6 +2126,33 @@
         startY: 0,
         startOffsetX: 0,
         startOffsetY: 0
+      };
+    }
+
+    function createDefaultSaveMeta() {
+      return {
+        phase: 'idle',
+        lastLocalSavedAt: 0,
+        lastCloudSavedAt: 0,
+        lastError: ''
+      };
+    }
+
+    function createDefaultCloudState() {
+      return {
+        config: null,
+        sdk: null,
+        app: null,
+        auth: null,
+        db: null,
+        user: null,
+        loadedUid: '',
+        initializing: false,
+        loadingRemote: false,
+        savePromise: null,
+        saveTimer: null,
+        resyncQueued: false,
+        unsubscribeAuth: null
       };
     }
 
@@ -2032,8 +2248,31 @@
         }
       }
 
+      const savedMeta = localStorage.getItem(SAVE_META_STORAGE_KEY);
+      if (savedMeta) {
+        try {
+          const parsed = JSON.parse(savedMeta);
+          saveMeta = {
+            ...createDefaultSaveMeta(),
+            ...parsed
+          };
+        } catch (error) {
+          console.warn('Could not restore save metadata.', error);
+        }
+      }
+
+      if (saveMeta.phase === 'saving') {
+        saveMeta.phase = saveMeta.lastCloudSavedAt ? 'saved-cloud' : (saveMeta.lastLocalSavedAt ? 'saved-local' : 'idle');
+      }
+
+      cloudState.config = readStoredFirebaseConfig();
+
       syncControls();
       renderAll();
+      syncCloudModal();
+      if (cloudState.config) {
+        void initializeFirebaseFromStoredConfig();
+      }
     }
 
     function upgradeAppState(raw = {}) {
@@ -2057,13 +2296,56 @@
       return { activeProfileId, profiles };
     }
 
-    function persistApp() {
+    function persistUiState() {
       try {
-        localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(appState));
         localStorage.setItem(APP_STORAGE_KEY + ':ui', JSON.stringify(uiState));
         return true;
       } catch (error) {
+        console.error('Could not persist UI state.', error);
+        return false;
+      }
+    }
+
+    function persistSaveMeta() {
+      try {
+        localStorage.setItem(SAVE_META_STORAGE_KEY, JSON.stringify(saveMeta));
+      } catch (error) {
+        console.warn('Could not persist save metadata.', error);
+      }
+    }
+
+    function persistApp(options = {}) {
+      const queueCloud = options.queueCloud !== false;
+      const updateStatus = options.updateStatus !== false;
+      const includeUi = options.includeUi !== false;
+      try {
+        localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(appState));
+        if (includeUi) {
+          localStorage.setItem(APP_STORAGE_KEY + ':ui', JSON.stringify(uiState));
+        }
+
+        if (updateStatus) {
+          saveMeta.lastLocalSavedAt = Date.now();
+          saveMeta.lastError = '';
+          saveMeta.phase = shouldUseCloudSync() && queueCloud ? 'saving' : 'saved-local';
+          persistSaveMeta();
+          renderSaveUi();
+        }
+
+        if (queueCloud && shouldUseCloudSync()) {
+          queueCloudSave();
+        }
+        return true;
+      } catch (error) {
         console.error('Could not persist perfume wall state.', error);
+        if (updateStatus) {
+          saveMeta.phase = 'error';
+          saveMeta.lastError = isStorageQuotaError(error)
+            ? 'This browser wall ran out of storage space.'
+            : 'This browser could not save the latest wall changes just now.';
+          persistSaveMeta();
+          renderSaveUi();
+        }
         const message = isStorageQuotaError(error)
           ? 'This browser wall ran out of local storage. Try cropping bottle PNGs tighter or replacing a few oversized images first.'
           : 'This browser could not save the latest wall changes just now.';
@@ -2082,6 +2364,8 @@
 
     function renderAll() {
       renderProfileUi();
+      renderAccountUi();
+      renderSaveUi();
       renderStats();
       renderShelf('collection');
       renderShelf('wishlist');
@@ -2102,6 +2386,74 @@
       document.getElementById('profile-badge').textContent = makeMonogram(profile.name);
       document.getElementById('active-profile-pill').textContent = profile.name;
       document.getElementById('hero-subtitle').textContent = `A plush little vanity for ${profile.tagline}`;
+    }
+
+    function renderAccountUi() {
+      const signedIn = Boolean(cloudState.user);
+      const configured = Boolean(cloudState.config);
+      const storageMode = signedIn
+        ? 'saved locally + firebase cloud'
+        : configured
+          ? 'browser save + firebase ready'
+          : 'saved in this browser';
+
+      document.getElementById('storage-mode-pill').textContent = storageMode;
+      document.getElementById('profile-note-text').textContent = signedIn
+        ? `Signed in as ${cloudState.user.email || 'this Firebase account'}. This wall still keeps a browser copy, and now it also syncs to the cloud.`
+        : configured
+          ? 'Firebase is configured here, so you can sign in from the cloud account button whenever you want to sync walls across devices.'
+          : 'This project still supports lightweight local accounts, so different people can keep their own perfume walls in the same browser without touching anyone else’s shelf.';
+
+      const cloudStatus = document.getElementById('cloud-auth-status');
+      if (cloudStatus) {
+        cloudStatus.classList.remove('success', 'error');
+        if (signedIn) {
+          cloudStatus.textContent = `Signed in as ${cloudState.user.email || cloudState.user.uid}. Cloud sync is on for this wall.`;
+          cloudStatus.classList.add('success');
+        } else if (configured) {
+          cloudStatus.textContent = 'Firebase is configured. Sign in or create an account here to sync walls across devices.';
+        } else {
+          cloudStatus.textContent = 'Cloud sync is off until you save a Firebase config.';
+        }
+      }
+    }
+
+    function renderSaveUi() {
+      const title = document.getElementById('save-status-title');
+      const badge = document.getElementById('save-status-badge');
+      const detail = document.getElementById('save-status-detail');
+      const saveNowButton = document.getElementById('save-now-btn');
+
+      if (!title || !badge || !detail || !saveNowButton) return;
+
+      badge.classList.remove('is-cloud', 'is-saving', 'is-error');
+
+      if (saveMeta.phase === 'error') {
+        title.textContent = 'save needs attention';
+        badge.textContent = 'issue';
+        badge.classList.add('is-error');
+        detail.innerHTML = `<strong>Your latest wall is still cached locally.</strong> ${escapeHtml(saveMeta.lastError || 'Something interrupted saving.')}`;
+      } else if (saveMeta.phase === 'saving' && shouldUseCloudSync()) {
+        title.textContent = 'saving to cloud';
+        badge.textContent = 'syncing';
+        badge.classList.add('is-saving');
+        detail.innerHTML = `<strong>Saved locally ${formatSavedTimestamp(saveMeta.lastLocalSavedAt)}.</strong> Pushing the newest wall copy to Firebase now.`;
+      } else if (saveMeta.lastCloudSavedAt && Boolean(cloudState.user)) {
+        title.textContent = 'saved to cloud';
+        badge.textContent = 'cloud';
+        badge.classList.add('is-cloud');
+        detail.innerHTML = `<strong>Last cloud sync ${formatSavedTimestamp(saveMeta.lastCloudSavedAt)}.</strong> This wall is also cached in this browser for quick reloads.`;
+      } else if (saveMeta.lastLocalSavedAt) {
+        title.textContent = 'saved locally';
+        badge.textContent = 'browser';
+        detail.innerHTML = `<strong>Last browser save ${formatSavedTimestamp(saveMeta.lastLocalSavedAt)}.</strong> Use Firebase if you want this wall to follow you across devices.`;
+      } else {
+        title.textContent = 'auto-save ready';
+        badge.textContent = Boolean(cloudState.config) ? 'ready' : 'browser';
+        detail.textContent = 'Every wall change is stored in this browser. If you connect Firebase, this card will also tell you when the cloud copy is synced.';
+      }
+
+      saveNowButton.disabled = saveMeta.phase === 'saving' && !shouldUseCloudSync();
     }
 
     function renderStats() {
@@ -2139,12 +2491,9 @@
       container.innerHTML = cards + addButton;
 
       container.querySelectorAll('.bottle-card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-          const shelfName = card.dataset.shelf;
-          const index = Number(card.dataset.index);
-          showPopup(card, getCurrentData()[shelfName][index]);
-        });
-        card.addEventListener('mouseleave', hidePopup);
+        card.addEventListener('mouseenter', () => openPopupForCard(card));
+        card.addEventListener('mousemove', clearPopupHideTimer);
+        card.addEventListener('mouseleave', scheduleHidePopup);
       });
 
       const shownText = visibleItems.length === totalItems
@@ -2204,9 +2553,10 @@
     }
 
     function buildCard(item, index, shelf, viewIndex) {
-      const tilt = seededRange(`${appState.activeProfileId}-${shelf}-${item.brand}-${item.name}-tilt`, -6.4, 6.4).toFixed(2);
-      const rise = seededRange(`${appState.activeProfileId}-${shelf}-${item.brand}-${item.name}-rise`, -6, 8).toFixed(2);
-      const scale = seededRange(`${appState.activeProfileId}-${shelf}-${item.brand}-${item.name}-scale`, 0.96, 1.05).toFixed(3);
+      const tiltSeed = `${appState.activeProfileId}-${shelf}-${item.brand}-${item.name}`;
+      const tilt = getBalancedBottleTilt(tiltSeed, viewIndex).toFixed(2);
+      const rise = seededRange(`${tiltSeed}-rise`, -6, 8).toFixed(2);
+      const scale = seededRange(`${tiltSeed}-scale`, 0.96, 1.05).toFixed(3);
       const glow = item.accords?.[0]?.color || getAccordColor(item.name || item.brand || 'default', index);
       const imageMarkup = item.image
         ? `<img src="${escapeAttr(item.image)}" alt="${escapeAttr(item.name || 'fragrance bottle')}">`
@@ -2288,7 +2638,25 @@
       `;
     }
 
+    function openPopupForCard(card) {
+      const shelfName = card.dataset.shelf;
+      const index = Number(card.dataset.index);
+      const item = getCurrentData()[shelfName][index];
+      if (!item) return;
+
+      const popupKey = `${shelfName}:${index}`;
+      clearPopupHideTimer();
+
+      if (activePopupKey === popupKey && globalPopup.classList.contains('visible')) {
+        return;
+      }
+
+      activePopupKey = popupKey;
+      showPopup(card, item);
+    }
+
     function showPopup(card, item) {
+      clearPopupHideTimer();
       globalPopup.innerHTML = buildPopupContent(item);
       globalPopup.classList.remove('flipped', 'clamped');
       globalPopup.classList.add('visible');
@@ -2323,7 +2691,23 @@
       });
     }
 
+    function scheduleHidePopup() {
+      clearPopupHideTimer();
+      popupHideTimer = window.setTimeout(() => {
+        hidePopup();
+      }, 120);
+    }
+
+    function clearPopupHideTimer() {
+      if (popupHideTimer) {
+        window.clearTimeout(popupHideTimer);
+        popupHideTimer = null;
+      }
+    }
+
     function hidePopup() {
+      clearPopupHideTimer();
+      activePopupKey = '';
       globalPopup.classList.remove('visible', 'flipped', 'clamped');
     }
 
@@ -2338,20 +2722,20 @@
 
     function setSearch(value) {
       uiState.search = value;
-      persistApp();
+      persistUiState();
       renderAll();
     }
 
     function setSort(value) {
       uiState.sortBy = value;
-      persistApp();
+      persistUiState();
       renderAll();
       syncControls();
     }
 
     function toggleSortDirection() {
       uiState.sortDir = uiState.sortDir === 'asc' ? 'desc' : 'asc';
-      persistApp();
+      persistUiState();
       renderAll();
       syncControls();
     }
@@ -2360,7 +2744,7 @@
       uiState.search = '';
       uiState.sortBy = 'added';
       uiState.sortDir = 'desc';
-      persistApp();
+      persistUiState();
       syncControls();
       renderAll();
     }
@@ -2457,12 +2841,25 @@
       document.getElementById('profile-overlay').classList.remove('open');
     }
 
+    function openCloudModal() {
+      syncCloudModal();
+      document.getElementById('cloud-overlay').classList.add('open');
+    }
+
+    function closeCloudModal() {
+      document.getElementById('cloud-overlay').classList.remove('open');
+    }
+
     document.getElementById('modal-overlay').addEventListener('click', event => {
       if (event.target === event.currentTarget) closeModal();
     });
 
     document.getElementById('profile-overlay').addEventListener('click', event => {
       if (event.target === event.currentTarget) closeProfileModal();
+    });
+
+    document.getElementById('cloud-overlay').addEventListener('click', event => {
+      if (event.target === event.currentTarget) closeCloudModal();
     });
 
     cropOverlay.addEventListener('click', event => {
@@ -2478,6 +2875,7 @@
       if (event.key === 'Escape') {
         closeModal();
         closeProfileModal();
+        closeCloudModal();
         closeCropper();
       }
     });
@@ -2516,6 +2914,640 @@
       appState.activeProfileId = profileId;
       persistApp();
       renderAll();
+    }
+
+    function syncCloudModal() {
+      const configInput = document.getElementById('firebase-config-input');
+      const emailInput = document.getElementById('cloud-email');
+
+      if (configInput) {
+        configInput.value = cloudState.config ? JSON.stringify(cloudState.config, null, 2) : '';
+      }
+
+      if (emailInput && cloudState.user?.email) {
+        emailInput.value = cloudState.user.email;
+      }
+    }
+
+    function shouldUseCloudSync() {
+      return Boolean(cloudState.db && cloudState.user);
+    }
+
+    function formatSavedTimestamp(value) {
+      if (!value) return 'just now';
+
+      try {
+        return new Intl.DateTimeFormat(undefined, {
+          hour: 'numeric',
+          minute: '2-digit'
+        }).format(new Date(value));
+      } catch (error) {
+        return new Date(value).toLocaleTimeString();
+      }
+    }
+
+    function setCloudStatus(message, tone = '') {
+      const node = document.getElementById('cloud-auth-status');
+      if (!node) return;
+      node.textContent = message;
+      node.classList.remove('success', 'error');
+      if (tone) {
+        node.classList.add(tone);
+      }
+    }
+
+    async function saveNow() {
+      const button = document.getElementById('save-now-btn');
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = shouldUseCloudSync() ? 'syncing...' : 'saving...';
+
+      try {
+        const saved = persistApp();
+        if (!saved) return;
+
+        if (shouldUseCloudSync()) {
+          await flushCloudSave({ manual: true });
+        }
+      } catch (error) {
+        console.error('Manual save did not complete cleanly.', error);
+      } finally {
+        button.disabled = false;
+        button.textContent = originalText;
+      }
+    }
+
+    function readStoredFirebaseConfig() {
+      const windowConfig = sanitizeFirebaseConfig(window.PERFUME_WALL_FIREBASE_CONFIG);
+      if (windowConfig) return windowConfig;
+
+      const raw = localStorage.getItem(FIREBASE_CONFIG_STORAGE_KEY);
+      if (!raw) return null;
+
+      try {
+        return sanitizeFirebaseConfig(JSON.parse(raw));
+      } catch (error) {
+        console.warn('Could not read stored Firebase config.', error);
+        return null;
+      }
+    }
+
+    async function saveFirebaseConfig() {
+      const input = document.getElementById('firebase-config-input');
+      const parsed = parseFirebaseConfigInput(input.value);
+
+      if (!parsed) {
+        setCloudStatus('That Firebase config did not parse cleanly yet.', 'error');
+        return;
+      }
+
+      cloudState.config = parsed;
+      localStorage.setItem(FIREBASE_CONFIG_STORAGE_KEY, JSON.stringify(parsed));
+      syncCloudModal();
+      renderAccountUi();
+      renderSaveUi();
+      setCloudStatus('Firebase config saved. Loading the SDK now…');
+      await initializeFirebaseFromStoredConfig(true);
+    }
+
+    async function clearFirebaseConfig() {
+      if (cloudState.user) {
+        await signOutCloud({ keepModalOpen: true });
+      }
+
+      if (cloudState.saveTimer) {
+        window.clearTimeout(cloudState.saveTimer);
+      }
+
+      if (cloudState.unsubscribeAuth) {
+        cloudState.unsubscribeAuth();
+      }
+
+      if (cloudState.app && cloudState.sdk?.deleteApp) {
+        try {
+          await cloudState.sdk.deleteApp(cloudState.app);
+        } catch (error) {
+          console.warn('Could not fully tear down Firebase app.', error);
+        }
+      }
+
+      cloudState = {
+        ...createDefaultCloudState(),
+        config: null
+      };
+
+      localStorage.removeItem(FIREBASE_CONFIG_STORAGE_KEY);
+      if (saveMeta.phase === 'saved-cloud' || saveMeta.phase === 'saving') {
+        saveMeta.phase = saveMeta.lastLocalSavedAt ? 'saved-local' : 'idle';
+        persistSaveMeta();
+      }
+
+      syncCloudModal();
+      renderAll();
+      setCloudStatus('Firebase config cleared. This browser is back to local-only saves.');
+    }
+
+    async function initializeFirebaseFromStoredConfig(forceReset = false) {
+      if (!cloudState.config) {
+        renderAccountUi();
+        renderSaveUi();
+        return false;
+      }
+
+      if (cloudState.initializing) return false;
+      cloudState.initializing = true;
+      setCloudStatus('Loading Firebase…');
+
+      try {
+        const sdk = await loadFirebaseSdk();
+
+        if (forceReset && cloudState.unsubscribeAuth) {
+          cloudState.unsubscribeAuth();
+          cloudState.unsubscribeAuth = null;
+        }
+
+        if (forceReset && cloudState.app && sdk.deleteApp) {
+          try {
+            await sdk.deleteApp(cloudState.app);
+          } catch (error) {
+            console.warn('Could not reset the previous Firebase app instance.', error);
+          }
+          cloudState.app = null;
+          cloudState.auth = null;
+          cloudState.db = null;
+          cloudState.user = null;
+          cloudState.loadedUid = '';
+        }
+
+        if (!cloudState.app) {
+          const appName = 'perfume-wall-cloud';
+          const existingApp = sdk.getApps().find(app => app.name === appName);
+          cloudState.app = existingApp || sdk.initializeApp(cloudState.config, appName);
+          cloudState.auth = sdk.getAuth(cloudState.app);
+          cloudState.db = sdk.getFirestore(cloudState.app);
+        }
+
+        if (!cloudState.unsubscribeAuth) {
+          cloudState.unsubscribeAuth = sdk.onAuthStateChanged(cloudState.auth, user => {
+            void handleCloudAuthStateChanged(user);
+          });
+        }
+
+        renderAccountUi();
+        renderSaveUi();
+        setCloudStatus(
+          cloudState.user
+            ? `Signed in as ${cloudState.user.email || cloudState.user.uid}.`
+            : 'Firebase is configured. Sign in or create an account when you are ready.'
+        );
+        return true;
+      } catch (error) {
+        console.error('Could not initialize Firebase.', error);
+        setCloudStatus(formatFirebaseError(error), 'error');
+        return false;
+      } finally {
+        cloudState.initializing = false;
+      }
+    }
+
+    async function loadFirebaseSdk() {
+      if (cloudState.sdk) {
+        return cloudState.sdk;
+      }
+
+      const base = `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}`;
+      const [appModule, authModule, firestoreModule] = await Promise.all([
+        import(`${base}/firebase-app.js`),
+        import(`${base}/firebase-auth.js`),
+        import(`${base}/firebase-firestore.js`)
+      ]);
+
+      cloudState.sdk = {
+        initializeApp: appModule.initializeApp,
+        getApps: appModule.getApps,
+        deleteApp: appModule.deleteApp,
+        getAuth: authModule.getAuth,
+        onAuthStateChanged: authModule.onAuthStateChanged,
+        signInWithEmailAndPassword: authModule.signInWithEmailAndPassword,
+        createUserWithEmailAndPassword: authModule.createUserWithEmailAndPassword,
+        signOut: authModule.signOut,
+        getFirestore: firestoreModule.getFirestore,
+        doc: firestoreModule.doc,
+        getDoc: firestoreModule.getDoc,
+        setDoc: firestoreModule.setDoc,
+        collection: firestoreModule.collection,
+        getDocs: firestoreModule.getDocs,
+        deleteDoc: firestoreModule.deleteDoc
+      };
+
+      return cloudState.sdk;
+    }
+
+    async function signUpCloud() {
+      const credentials = getCloudCredentials();
+      if (!credentials) return;
+
+      const ready = await initializeFirebaseFromStoredConfig();
+      if (!ready) return;
+
+      setCloudStatus('Creating your Firebase account…');
+
+      try {
+        await cloudState.sdk.createUserWithEmailAndPassword(cloudState.auth, credentials.email, credentials.password);
+        document.getElementById('cloud-password').value = '';
+      } catch (error) {
+        console.error('Could not create Firebase account.', error);
+        setCloudStatus(formatFirebaseError(error), 'error');
+      }
+    }
+
+    async function signInCloud() {
+      const credentials = getCloudCredentials();
+      if (!credentials) return;
+
+      const ready = await initializeFirebaseFromStoredConfig();
+      if (!ready) return;
+
+      setCloudStatus('Signing you into Firebase…');
+
+      try {
+        await cloudState.sdk.signInWithEmailAndPassword(cloudState.auth, credentials.email, credentials.password);
+        document.getElementById('cloud-password').value = '';
+      } catch (error) {
+        console.error('Could not sign in to Firebase.', error);
+        setCloudStatus(formatFirebaseError(error), 'error');
+      }
+    }
+
+    async function signOutCloud(options = {}) {
+      if (!cloudState.auth || !cloudState.sdk?.signOut) {
+        setCloudStatus('There is no Firebase session to sign out right now.');
+        return;
+      }
+
+      if (!cloudState.user) {
+        setCloudStatus('You are already signed out.');
+        return;
+      }
+
+      try {
+        await cloudState.sdk.signOut(cloudState.auth);
+        if (!options.keepModalOpen) {
+          closeCloudModal();
+        }
+      } catch (error) {
+        console.error('Could not sign out of Firebase.', error);
+        setCloudStatus(formatFirebaseError(error), 'error');
+      }
+    }
+
+    async function handleCloudAuthStateChanged(user) {
+      cloudState.user = user || null;
+      syncCloudModal();
+
+      if (!user) {
+        cloudState.loadedUid = '';
+        if (saveMeta.phase === 'saved-cloud' || saveMeta.phase === 'saving') {
+          saveMeta.phase = saveMeta.lastLocalSavedAt ? 'saved-local' : 'idle';
+          persistSaveMeta();
+        }
+        renderAll();
+        setCloudStatus(cloudState.config
+          ? 'Signed out. This browser copy stays here until you sign in again.'
+          : 'Cloud sync is off until you save a Firebase config.');
+        return;
+      }
+
+      try {
+        await hydrateFromCloud(user);
+      } catch (error) {
+        console.error('Could not hydrate perfume wall from Firebase.', error);
+        setCloudStatus(formatFirebaseError(error), 'error');
+        saveMeta.phase = 'error';
+        saveMeta.lastError = 'Firebase could not load this wall right now.';
+        persistSaveMeta();
+        renderSaveUi();
+      }
+    }
+
+    async function hydrateFromCloud(user) {
+      if (!user || !cloudState.db) return;
+      if (cloudState.loadingRemote) return;
+      if (cloudState.loadedUid === user.uid) {
+        renderAll();
+        return;
+      }
+
+      cloudState.loadingRemote = true;
+      setCloudStatus('Opening your cloud wall…');
+
+      try {
+        const remote = await fetchCloudWall(user.uid);
+
+        if (remote?.appState) {
+          appState = remote.appState;
+          persistApp({ queueCloud: false, updateStatus: false });
+          saveMeta.lastLocalSavedAt = Date.now();
+          saveMeta.lastCloudSavedAt = remote.updatedAtMs || Date.now();
+          saveMeta.lastError = '';
+          saveMeta.phase = 'saved-cloud';
+          persistSaveMeta();
+        } else {
+          const savedLocally = persistApp({ queueCloud: false, updateStatus: false });
+          if (savedLocally) {
+            const syncedAt = await pushCloudStateToFirebase();
+            saveMeta.lastLocalSavedAt = saveMeta.lastLocalSavedAt || Date.now();
+            saveMeta.lastCloudSavedAt = syncedAt;
+            saveMeta.lastError = '';
+            saveMeta.phase = 'saved-cloud';
+            persistSaveMeta();
+          }
+        }
+
+        cloudState.loadedUid = user.uid;
+        syncControls();
+        renderAll();
+        setCloudStatus(`Signed in as ${user.email || user.uid}. Cloud sync is on.`, 'success');
+      } finally {
+        cloudState.loadingRemote = false;
+      }
+    }
+
+    function queueCloudSave(delay = 720) {
+      if (!shouldUseCloudSync() || cloudState.loadingRemote) return;
+
+      if (cloudState.saveTimer) {
+        window.clearTimeout(cloudState.saveTimer);
+      }
+
+      cloudState.saveTimer = window.setTimeout(() => {
+        cloudState.saveTimer = null;
+        void flushCloudSave();
+      }, delay);
+    }
+
+    async function flushCloudSave(options = {}) {
+      if (!shouldUseCloudSync()) return false;
+
+      if (cloudState.saveTimer) {
+        window.clearTimeout(cloudState.saveTimer);
+        cloudState.saveTimer = null;
+      }
+
+      if (cloudState.savePromise) {
+        cloudState.resyncQueued = true;
+        return cloudState.savePromise;
+      }
+
+      saveMeta.phase = 'saving';
+      saveMeta.lastError = '';
+      persistSaveMeta();
+      renderSaveUi();
+
+      cloudState.savePromise = pushCloudStateToFirebase()
+        .then(syncedAt => {
+          saveMeta.lastCloudSavedAt = syncedAt;
+          saveMeta.lastError = '';
+          saveMeta.phase = 'saved-cloud';
+          persistSaveMeta();
+          renderSaveUi();
+          renderAccountUi();
+          setCloudStatus(`Saved to Firebase at ${formatSavedTimestamp(syncedAt)}.`, 'success');
+          return true;
+        })
+        .catch(error => {
+          console.error('Could not sync perfume wall to Firebase.', error);
+          saveMeta.phase = 'error';
+          saveMeta.lastError = `Cloud sync failed, but the browser copy is still safe. ${formatFirebaseError(error)}`;
+          persistSaveMeta();
+          renderSaveUi();
+          renderAccountUi();
+          setCloudStatus(formatFirebaseError(error), 'error');
+          if (!options.manual) {
+            return false;
+          }
+          throw error;
+        })
+        .finally(() => {
+          cloudState.savePromise = null;
+          if (cloudState.resyncQueued) {
+            cloudState.resyncQueued = false;
+            void flushCloudSave();
+          }
+        });
+
+      return cloudState.savePromise;
+    }
+
+    async function fetchCloudWall(uid) {
+      const { doc, getDoc, collection, getDocs } = cloudState.sdk;
+      const rootRef = doc(cloudState.db, 'perfumeWalls', uid);
+      const rootSnapshot = await getDoc(rootRef);
+
+      if (!rootSnapshot.exists()) {
+        return null;
+      }
+
+      const rootData = rootSnapshot.data() || {};
+      const profilesSnapshot = await getDocs(collection(rootRef, 'profiles'));
+      const rawProfiles = {};
+
+      for (const profileDoc of profilesSnapshot.docs) {
+        const profileData = profileDoc.data() || {};
+        const fragrancesSnapshot = await getDocs(collection(profileDoc.ref, 'fragrances'));
+        const profileWall = emptyData();
+
+        fragrancesSnapshot.forEach(fragranceDoc => {
+          const fragranceData = fragranceDoc.data() || {};
+          const shelf = fragranceData.shelf === 'wishlist' ? 'wishlist' : 'collection';
+          profileWall[shelf].push(normalizeFragrance({
+            ...fragranceData,
+            id: fragranceDoc.id
+          }));
+        });
+
+        rawProfiles[profileDoc.id] = {
+          name: profileData.name || 'my fragrance wall',
+          tagline: profileData.tagline || 'soft petals, sweet woods, and a little chaos.',
+          data: profileWall
+        };
+      }
+
+      return {
+        appState: upgradeAppState({
+          activeProfileId: rootData.activeProfileId,
+          profiles: Object.keys(rawProfiles).length ? rawProfiles : createDefaultAppState().profiles
+        }),
+        updatedAtMs: Number(rootData.updatedAtMs) || 0
+      };
+    }
+
+    async function pushCloudStateToFirebase() {
+      const now = Date.now();
+      const { doc, setDoc, collection, getDocs, deleteDoc } = cloudState.sdk;
+      const uid = cloudState.user.uid;
+      const rootRef = doc(cloudState.db, 'perfumeWalls', uid);
+      const profileIds = Object.keys(appState.profiles);
+
+      await setDoc(rootRef, {
+        activeProfileId: appState.activeProfileId,
+        updatedAtMs: now,
+        profileIds
+      }, { merge: true });
+
+      const profilesCollection = collection(rootRef, 'profiles');
+      const existingProfilesSnapshot = await getDocs(profilesCollection);
+      const staleProfileIds = new Set(existingProfilesSnapshot.docs.map(profileDoc => profileDoc.id));
+
+      for (const [profileId, profile] of Object.entries(appState.profiles)) {
+        const profileRef = doc(profilesCollection, profileId);
+        await setDoc(profileRef, {
+          id: profileId,
+          name: profile.name,
+          tagline: profile.tagline,
+          createdAt: profile.createdAt || null,
+          updatedAtMs: now
+        }, { merge: true });
+
+        const fragranceCollection = collection(profileRef, 'fragrances');
+        const existingFragrancesSnapshot = await getDocs(fragranceCollection);
+        const staleFragranceIds = new Set(existingFragrancesSnapshot.docs.map(fragranceDoc => fragranceDoc.id));
+
+        for (const fragrance of serializeProfileFragrances(profile)) {
+          const fragranceRef = doc(fragranceCollection, fragrance.id);
+          await setDoc(fragranceRef, fragrance, { merge: false });
+          staleFragranceIds.delete(fragrance.id);
+        }
+
+        for (const staleFragranceId of staleFragranceIds) {
+          await deleteDoc(doc(fragranceCollection, staleFragranceId));
+        }
+
+        staleProfileIds.delete(profileId);
+      }
+
+      for (const staleProfileId of staleProfileIds) {
+        const staleProfileRef = doc(profilesCollection, staleProfileId);
+        const staleFragrancesSnapshot = await getDocs(collection(staleProfileRef, 'fragrances'));
+        for (const staleFragrance of staleFragrancesSnapshot.docs) {
+          await deleteDoc(staleFragrance.ref);
+        }
+        await deleteDoc(staleProfileRef);
+      }
+
+      return now;
+    }
+
+    function serializeProfileFragrances(profile) {
+      const serializeShelf = (items, shelf) => items.map(item => ({
+        id: item.id,
+        shelf,
+        brand: item.brand || '',
+        name: item.name || '',
+        image: item.image || null,
+        imageVersion: Number(item.imageVersion) || 0,
+        top: item.top || '',
+        mid: item.mid || '',
+        base: item.base || '',
+        accords: normalizeAccords(item.accords || []),
+        rating: clamp(Number(item.rating) || 0, 0, 5),
+        note: item.note || '',
+        createdAt: item.createdAt || new Date().toISOString()
+      }));
+
+      return [
+        ...serializeShelf(profile.data.collection || [], 'collection'),
+        ...serializeShelf(profile.data.wishlist || [], 'wishlist')
+      ];
+    }
+
+    function getCloudCredentials() {
+      const email = document.getElementById('cloud-email').value.trim();
+      const password = document.getElementById('cloud-password').value;
+
+      if (!cloudState.config) {
+        setCloudStatus('Save your Firebase config first so the sign-in buttons know where to connect.', 'error');
+        return null;
+      }
+
+      if (!email) {
+        setCloudStatus('Add an email address for this Firebase account.', 'error');
+        return null;
+      }
+
+      if (!password || password.length < 6) {
+        setCloudStatus('Use a password with at least 6 characters.', 'error');
+        return null;
+      }
+
+      return { email, password };
+    }
+
+    function parseFirebaseConfigInput(text) {
+      const trimmed = String(text || '').trim();
+      if (!trimmed) return null;
+
+      let candidate = trimmed;
+
+      if (!candidate.startsWith('{')) {
+        const objectStart = candidate.indexOf('{');
+        const objectEnd = candidate.lastIndexOf('}');
+        if (objectStart >= 0 && objectEnd > objectStart) {
+          candidate = candidate.slice(objectStart, objectEnd + 1);
+        }
+      }
+
+      candidate = candidate
+        .replace(/^[^{]+/, '')
+        .replace(/;+\s*$/, '')
+        .replace(/([{,]\s*)([A-Za-z0-9_]+)\s*:/g, '$1"$2":')
+        .replace(/'/g, '"')
+        .replace(/,\s*([}\]])/g, '$1');
+
+      try {
+        return sanitizeFirebaseConfig(JSON.parse(candidate));
+      } catch (error) {
+        console.warn('Could not parse Firebase config input.', error);
+        return null;
+      }
+    }
+
+    function sanitizeFirebaseConfig(value) {
+      if (!value || typeof value !== 'object') return null;
+
+      const sanitized = {
+        apiKey: String(value.apiKey || '').trim(),
+        authDomain: String(value.authDomain || '').trim(),
+        projectId: String(value.projectId || '').trim(),
+        storageBucket: String(value.storageBucket || '').trim(),
+        messagingSenderId: String(value.messagingSenderId || '').trim(),
+        appId: String(value.appId || '').trim(),
+        measurementId: String(value.measurementId || '').trim()
+      };
+
+      if (!sanitized.apiKey || !sanitized.authDomain || !sanitized.projectId || !sanitized.appId) {
+        return null;
+      }
+
+      return sanitized;
+    }
+
+    function formatFirebaseError(error) {
+      const code = String(error?.code || '');
+      const friendly = {
+        'auth/email-already-in-use': 'That email already has an account. Try signing in instead.',
+        'auth/invalid-email': 'That email address does not look valid yet.',
+        'auth/invalid-api-key': 'The Firebase apiKey looks wrong for this project.',
+        'auth/network-request-failed': 'The network dropped while talking to Firebase.',
+        'auth/operation-not-allowed': 'Email/password sign-in is not enabled in Firebase Auth yet.',
+        'auth/user-not-found': 'No Firebase account exists for that email yet.',
+        'auth/wrong-password': 'That password did not match this Firebase account.',
+        'auth/invalid-credential': 'Those Firebase credentials did not work. Double-check the email, password, and config.',
+        'permission-denied': 'Firestore denied this request. Check your Firebase rules and signed-in user.',
+        'failed-precondition': 'Cloud Firestore may not be created yet for this Firebase project.'
+      };
+
+      return friendly[code] || error?.message || 'Firebase hit a snag.';
     }
 
     function setRating(value) {
@@ -2936,7 +3968,9 @@
 
     function updateExportNote() {
       const profile = getCurrentProfile();
-      document.getElementById('export-note').textContent = `Download ${profile.name}'s current wall as JSON so you can keep a snapshot, move it later, or wire it into a future real sign-in system.`;
+      document.getElementById('export-note').textContent = cloudState.user
+        ? `Download ${profile.name}'s current wall as a local JSON backup even though it already syncs to Firebase.`
+        : `Download ${profile.name}'s current wall as JSON so you can keep a snapshot, move it later, or keep a backup before turning Firebase on.`;
     }
 
     async function extractAccordsFromFragrantica() {
@@ -2980,6 +4014,20 @@
           : `Pulled ${accords.length} accord names from Fragrantica. Add the cropped screenshot too for exact widths and colours.`;
         setExtractStatus(message, 'success');
       } catch (error) {
+        if (currentAccordImageData) {
+          try {
+            const Tesseract = await ensureTesseract();
+            const accords = await buildAccordsFromScreenshot(currentAccordImageData, Tesseract, []);
+            if (accords.length) {
+              replaceAccordRows(accords);
+              setExtractStatus(`${error.message} I still filled ${accords.length} accords from the screenshot so you are not stuck.`, 'success');
+              return;
+            }
+          } catch (fallbackError) {
+            console.warn('Could not recover with screenshot-only extraction after Fragrantica fetch failed.', fallbackError);
+          }
+        }
+
         setExtractStatus(`${error.message} Uploading the accord screenshot is the most reliable fallback.`, 'error');
       } finally {
         toggleExtractorButtons(false);
@@ -3018,6 +4066,12 @@
           }
 
           const text = await response.text();
+          const proxyError = readProxyErrorMessage(text);
+          if (proxyError) {
+            lastError = proxyError;
+            continue;
+          }
+
           if (String(text || '').trim().length > 80) {
             return text;
           }
@@ -3029,7 +4083,24 @@
       }
 
       console.warn('Fragrantica proxy attempts failed.', lastError);
-      throw new Error('The Fragrantica pull did not come through this time.');
+      throw new Error(lastError || 'The Fragrantica pull did not come through this time.');
+    }
+
+    function readProxyErrorMessage(text) {
+      const raw = String(text || '').trim();
+      if (!raw.startsWith('{')) return '';
+
+      try {
+        const parsed = JSON.parse(raw);
+        const message = parsed.readableMessage || parsed.message || '';
+        if (/blocked until/i.test(message) || /SecurityCompromiseError/i.test(message)) {
+          return 'Fragrantica is temporarily blocked by the text proxy right now, so link pulling may fail for a bit.';
+        }
+      } catch (error) {
+        return '';
+      }
+
+      return '';
     }
 
     function parseFragranticaAccords(text) {
@@ -3170,20 +4241,27 @@
 
       if (!bars.length) return [];
 
-      let names = [];
+      let names = new Array(bars.length).fill('');
 
       if (fragranticaNames.length >= Math.min(3, bars.length)) {
-        names = fragranticaNames.slice(0, bars.length);
-      } else if (chartRows.length >= Math.min(4, bars.length)) {
-        names = chartRows.map(row => normalizeExtractedAccordName(row.matchedName)).slice(0, bars.length);
-      } else if (Tesseract) {
-        names = await readAccordLabelsFromBars(Tesseract, canvas, bars, backgroundColor);
+        names = mergeAccordNames(fragranticaNames, names, bars.length);
+      }
+
+      if (chartRows.length) {
+        names = mergeAccordNames(
+          chartRows.map(row => normalizeExtractedAccordName(row.matchedName)),
+          names,
+          bars.length
+        );
       }
 
       if (Tesseract && names.some(name => !name)) {
-        const fallbackNames = chartRows.length
-          ? chartRows.map(row => normalizeExtractedAccordName(row.matchedName))
-          : await readAccordLabelsFromChart(Tesseract, canvas, chartBounds, bars);
+        const barNames = await readAccordLabelsFromBars(Tesseract, canvas, bars, backgroundColor);
+        names = mergeAccordNames(barNames, names, bars.length);
+      }
+
+      if (Tesseract && names.some(name => !name)) {
+        const fallbackNames = await readAccordLabelsFromChart(Tesseract, canvas, chartBounds, bars);
         names = mergeAccordNames(fallbackNames, names, bars.length);
       }
 
@@ -4173,6 +5251,14 @@
 
     function rgbToHex(r, g, b) {
       return `#${[r, g, b].map(part => clamp(Math.round(part), 0, 255).toString(16).padStart(2, '0')).join('')}`;
+    }
+
+    function getBalancedBottleTilt(seed, viewIndex = 0) {
+      const directionSeed = hashString(`${seed}-direction`);
+      const direction = ((directionSeed + viewIndex) % 2 === 0) ? -1 : 1;
+      const magnitude = seededRange(`${seed}-magnitude`, 1.4, 5.8);
+      const jitter = seededRange(`${seed}-jitter`, -0.55, 0.55);
+      return clamp((direction * magnitude) + jitter, -6.2, 6.2);
     }
 
     function hexToRgba(hex, alpha = 1) {
