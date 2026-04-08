@@ -1967,7 +1967,7 @@
 
       <div class="form-grid">
         <div class="form-group full">
-          <label for="firebase-config-input">Firebase Web Config</label>
+          <label for="firebase-config-input">Firebase Web Config (optional override)</label>
           <textarea id="firebase-config-input" class="config-textarea" spellcheck="false" placeholder='{
   "apiKey": "...",
   "authDomain": "...",
@@ -1976,10 +1976,10 @@
   "messagingSenderId": "...",
   "appId": "..."
 }'></textarea>
-          <p class="cloud-help">Paste the web config object from your Firebase project. This is the client-side config Firebase expects in web apps, so it is okay for it to live in the browser.</p>
+          <p class="cloud-help">This site already has Firebase wired in for public visitors. You only need this box if you want to override the project while testing in your own browser.</p>
           <div class="button-row">
-            <button class="btn-secondary" type="button" onclick="saveFirebaseConfig()">save firebase config</button>
-            <button class="btn-cancel" type="button" onclick="clearFirebaseConfig()">clear config</button>
+            <button class="btn-secondary" type="button" onclick="saveFirebaseConfig()">save override config</button>
+            <button class="btn-cancel" type="button" onclick="clearFirebaseConfig()">reset to site config</button>
           </div>
         </div>
 
@@ -1995,13 +1995,13 @@
 
         <div class="form-group full">
           <div class="extractor-card">
-            <p>Enable Email/Password in Firebase Auth and create a Cloud Firestore database in the console first. After that, this app can sign people in and sync their shelves profile-by-profile.</p>
+            <p>Sign in or create an account to keep your wall synced across devices. This site is already connected to its Firebase project, so most people never need to touch the config box above.</p>
             <div class="button-row">
               <button class="btn-secondary" type="button" onclick="signInCloud()">sign in</button>
               <button class="btn-secondary" type="button" onclick="signUpCloud()">create account</button>
               <button class="btn-cancel" type="button" onclick="signOutCloud()">sign out</button>
             </div>
-            <div class="cloud-status" id="cloud-auth-status">Cloud sync is off until you save a Firebase config.</div>
+            <div class="cloud-status" id="cloud-auth-status">Cloud sign-in is ready. Create an account or sign in when you want your wall to follow you.</div>
           </div>
         </div>
       </div>
@@ -2048,6 +2048,15 @@
     const SAVE_META_STORAGE_KEY = APP_STORAGE_KEY + ':save-meta';
     const FIREBASE_CONFIG_STORAGE_KEY = APP_STORAGE_KEY + ':firebase-config';
     const FIREBASE_SDK_VERSION = '12.11.0';
+    const DEFAULT_FIREBASE_CONFIG = {
+      apiKey: 'AIzaSyA6Yh6hp3TjI92Iy6pELwRZzHcDH2mzQg4',
+      authDomain: 'perfume-f30c6.firebaseapp.com',
+      projectId: 'perfume-f30c6',
+      storageBucket: 'perfume-f30c6.firebasestorage.app',
+      messagingSenderId: '674656694455',
+      appId: '1:674656694455:web:381debc7e7b4b144d7dd32',
+      measurementId: 'G-GH4GCZT0XY'
+    };
 
     const ACCORD_KEYWORDS = [
       'white floral', 'yellow floral', 'green floral', 'soft spicy', 'fresh spicy',
@@ -2982,13 +2991,13 @@
       if (windowConfig) return windowConfig;
 
       const raw = localStorage.getItem(FIREBASE_CONFIG_STORAGE_KEY);
-      if (!raw) return null;
+      if (!raw) return sanitizeFirebaseConfig(DEFAULT_FIREBASE_CONFIG);
 
       try {
-        return sanitizeFirebaseConfig(JSON.parse(raw));
+        return sanitizeFirebaseConfig(JSON.parse(raw)) || sanitizeFirebaseConfig(DEFAULT_FIREBASE_CONFIG);
       } catch (error) {
         console.warn('Could not read stored Firebase config.', error);
-        return null;
+        return sanitizeFirebaseConfig(DEFAULT_FIREBASE_CONFIG);
       }
     }
 
@@ -3006,7 +3015,7 @@
       syncCloudModal();
       renderAccountUi();
       renderSaveUi();
-      setCloudStatus('Firebase config saved. Loading the SDK now…');
+      setCloudStatus('Override config saved. Loading Firebase now…');
       await initializeFirebaseFromStoredConfig(true);
     }
 
@@ -3031,9 +3040,10 @@
         }
       }
 
+      const fallbackConfig = sanitizeFirebaseConfig(DEFAULT_FIREBASE_CONFIG);
       cloudState = {
         ...createDefaultCloudState(),
-        config: null
+        config: fallbackConfig
       };
 
       localStorage.removeItem(FIREBASE_CONFIG_STORAGE_KEY);
@@ -3044,7 +3054,12 @@
 
       syncCloudModal();
       renderAll();
-      setCloudStatus('Firebase config cleared. This browser is back to local-only saves.');
+      setCloudStatus(fallbackConfig
+        ? 'Override cleared. This browser is back on the site’s built-in Firebase project.'
+        : 'Firebase config cleared.');
+      if (fallbackConfig) {
+        await initializeFirebaseFromStoredConfig(true);
+      }
     }
 
     async function initializeFirebaseFromStoredConfig(forceReset = false) {
