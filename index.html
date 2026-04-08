@@ -554,11 +554,34 @@
       filter: blur(2px);
       opacity: 0.78;
       transition: transform 0.35s ease, opacity 0.35s ease;
+      z-index: 0;
     }
 
     .bottle-card:hover::before {
       transform: translateX(-50%) scale(1.1);
       opacity: 0.98;
+    }
+
+    .bottle-card::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 88px;
+      width: clamp(92px, 56%, 148px);
+      height: 22px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(74, 52, 41, 0.24) 0%, rgba(74, 52, 41, 0.14) 38%, rgba(74, 52, 41, 0) 76%);
+      filter: blur(9px);
+      opacity: 0.62;
+      pointer-events: none;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      z-index: 0;
+    }
+
+    .bottle-card:hover::after {
+      transform: translateX(-50%) scale(1.08);
+      opacity: 0.76;
     }
 
     .bottle-card:hover .card-actions {
@@ -576,6 +599,8 @@
       transform: translateY(var(--card-rise)) rotate(var(--tilt)) scale(var(--card-scale));
       transform-origin: bottom center;
       transition: transform 0.4s cubic-bezier(.22, .68, 0, 1.2);
+      position: relative;
+      z-index: 1;
     }
 
     .bottle-card:hover .bottle-img-wrap {
@@ -586,12 +611,16 @@
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 12px 20px rgba(60, 30, 20, 0.18));
+      filter: drop-shadow(0 10px 18px rgba(60, 30, 20, 0.16));
       transition: filter 0.3s ease;
     }
 
     .bottle-card:hover .bottle-img-wrap img {
-      filter: drop-shadow(0 20px 28px rgba(60, 30, 20, 0.24));
+      filter: drop-shadow(0 16px 24px rgba(60, 30, 20, 0.21));
+    }
+
+    .wishlist .bottle-card::after {
+      opacity: 0.48;
     }
 
     .wishlist .bottle-img-wrap img {
@@ -696,6 +725,8 @@
 
     .bottle-name {
       margin-top: 14px;
+      position: relative;
+      z-index: 1;
       text-align: center;
       font-size: 0.74rem;
       letter-spacing: 0.09em;
