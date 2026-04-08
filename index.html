@@ -131,11 +131,14 @@
       display: grid;
       grid-template-columns: minmax(0, 1.02fr) minmax(430px, 0.98fr);
       gap: 22px;
-      align-items: start;
+      align-items: stretch;
       padding: 22px 0 18px;
     }
 
     .hero-copy {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
       position: relative;
       padding: 28px 30px 24px;
       border-radius: 34px;
@@ -256,6 +259,8 @@
     .hero-panel {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-content: start;
+      height: 100%;
       gap: 12px 14px;
       padding: 18px;
       border-radius: 30px;
@@ -1874,6 +1879,7 @@
     @media (max-width: 1120px) {
       .hero {
         grid-template-columns: 1fr;
+        align-items: start;
       }
 
       .hero-panel {
@@ -2245,7 +2251,7 @@
       <div class="form-grid">
         <div class="form-group">
           <label for="p-name">Display Name</label>
-          <input type="text" id="p-name" placeholder="e.g. Maggie's Wall">
+          <input type="text" id="p-name" placeholder="e.g. signature shelf">
         </div>
         <div class="form-group">
           <label for="p-tagline">Shelf Mood</label>
