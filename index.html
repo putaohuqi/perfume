@@ -3059,9 +3059,9 @@
           candidates.forEach(candidate => {
             const matched = findClosestAccord(candidate);
             if (matched) {
-              const titled = titleCase(matched);
-              if (!accordNames.includes(titled)) {
-                accordNames.push(titled);
+              const normalizedName = normalizeExtractedAccordName(matched);
+              if (!accordNames.includes(normalizedName)) {
+                accordNames.push(normalizedName);
               }
             }
           });
@@ -3175,14 +3175,14 @@
       if (fragranticaNames.length >= Math.min(3, bars.length)) {
         names = fragranticaNames.slice(0, bars.length);
       } else if (chartRows.length >= Math.min(4, bars.length)) {
-        names = chartRows.map(row => titleCase(row.matchedName)).slice(0, bars.length);
+        names = chartRows.map(row => normalizeExtractedAccordName(row.matchedName)).slice(0, bars.length);
       } else if (Tesseract) {
         names = await readAccordLabelsFromBars(Tesseract, canvas, bars, backgroundColor);
       }
 
       if (Tesseract && names.some(name => !name)) {
         const fallbackNames = chartRows.length
-          ? chartRows.map(row => titleCase(row.matchedName))
+          ? chartRows.map(row => normalizeExtractedAccordName(row.matchedName))
           : await readAccordLabelsFromChart(Tesseract, canvas, chartBounds, bars);
         names = mergeAccordNames(fallbackNames, names, bars.length);
       }
@@ -3294,7 +3294,7 @@
           .sort((a, b) => a.delta - b.delta)[0];
 
         return closest && closest.delta <= Math.max(24, (bar.y1 - bar.y0) * 0.85)
-          ? titleCase(closest.row.matchedName)
+          ? normalizeExtractedAccordName(closest.row.matchedName)
           : '';
       });
     }
@@ -3350,7 +3350,7 @@
       const score = confidence + inclusiveBonus - distance * 18;
 
       return {
-        label: titleCase(matched),
+        label: normalizeExtractedAccordName(matched),
         score
       };
     }
@@ -3676,9 +3676,9 @@
       const result = [];
 
       hits.forEach(hit => {
-        const titled = titleCase(hit.name);
-        if (!result.includes(titled)) {
-          result.push(titled);
+        const normalizedName = normalizeExtractedAccordName(hit.name);
+        if (!result.includes(normalizedName)) {
+          result.push(normalizedName);
         }
       });
 
@@ -3951,6 +3951,10 @@
         .replace(/\bvaniila\b/g, 'vanilla')
         .replace(/\s+/g, ' ')
         .trim();
+    }
+
+    function normalizeExtractedAccordName(value) {
+      return normalizeAccordLabel(value);
     }
 
     function dedupeAccordRows(rows = []) {
