@@ -6,7 +6,7 @@
   <title>my fragrance shelf</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --cream: #fbf6f0;
@@ -32,6 +32,7 @@
       --page-max: 1380px;
       --shadow-soft: 0 18px 40px rgba(94, 58, 41, 0.08);
       --shadow-card: 0 24px 60px rgba(94, 58, 41, 0.14);
+      --display-serif: 'Cormorant Garamond', 'Noto Serif SC', 'Songti SC', 'STSong', serif;
     }
 
     * {
@@ -104,15 +105,15 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(330px, 0.85fr);
-      gap: 26px;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 20px;
       align-items: start;
-      padding: 26px 0 20px;
+      padding: 22px 0 18px;
     }
 
     .hero-copy {
       position: relative;
-      padding: 34px 34px 30px;
+      padding: 28px 30px 24px;
       border-radius: 34px;
       background: linear-gradient(135deg, rgba(255, 252, 249, 0.92) 0%, rgba(250, 240, 233, 0.82) 100%);
       border: 1px solid rgba(200, 151, 127, 0.15);
@@ -164,11 +165,11 @@
     .hero h1 {
       position: relative;
       z-index: 1;
-      font-family: 'Cormorant Garamond', serif;
+      font-family: var(--display-serif);
       font-weight: 300;
       font-style: italic;
-      font-size: clamp(3rem, 7vw, 5.35rem);
-      line-height: 0.96;
+      font-size: clamp(2.75rem, 5.9vw, 4.8rem);
+      line-height: 0.94;
       letter-spacing: 0.02em;
       color: var(--ink);
       text-wrap: balance;
@@ -178,9 +179,9 @@
       position: relative;
       z-index: 1;
       max-width: 640px;
-      margin-top: 18px;
-      font-size: 1rem;
-      line-height: 1.75;
+      margin-top: 14px;
+      font-size: 0.96rem;
+      line-height: 1.62;
       color: var(--ink-light);
     }
 
@@ -189,8 +190,8 @@
       z-index: 1;
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 24px;
+      gap: 8px;
+      margin-top: 18px;
     }
 
     .hero-ribbon span {
@@ -198,10 +199,10 @@
       align-items: center;
       gap: 8px;
       border-radius: 999px;
-      padding: 10px 16px;
+      padding: 9px 14px;
       background: rgba(255, 250, 246, 0.88);
       border: 1px solid rgba(191, 118, 101, 0.14);
-      font-size: 0.73rem;
+      font-size: 0.68rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--ink-light);
@@ -215,8 +216,9 @@
 
     .hero-panel {
       display: grid;
-      gap: 16px;
-      padding: 22px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px 14px;
+      padding: 18px;
       border-radius: 30px;
       background: rgba(255, 253, 250, 0.86);
       border: 1px solid rgba(165, 120, 96, 0.12);
@@ -225,28 +227,29 @@
     }
 
     .profile-card {
+      grid-column: 1 / -1;
       display: grid;
       grid-template-columns: auto 1fr;
-      gap: 16px;
+      gap: 14px;
       align-items: center;
-      padding: 16px;
+      padding: 14px 16px;
       border-radius: 24px;
       background: linear-gradient(135deg, rgba(252, 244, 238, 0.96) 0%, rgba(255, 251, 247, 0.92) 100%);
       border: 1px solid rgba(212, 169, 154, 0.22);
     }
 
     .profile-badge {
-      width: 64px;
-      height: 64px;
-      border-radius: 22px;
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: linear-gradient(160deg, rgba(232, 196, 184, 0.95), rgba(214, 171, 157, 0.95));
       color: white;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem;
-      box-shadow: 0 16px 30px rgba(191, 118, 101, 0.24);
+      font-family: var(--display-serif);
+      font-size: 1.7rem;
+      box-shadow: 0 14px 24px rgba(191, 118, 101, 0.2);
     }
 
     .mini-label,
@@ -262,23 +265,24 @@
 
     .profile-card h2 {
       margin-top: 4px;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.9rem;
+      font-family: var(--display-serif);
+      font-size: 1.6rem;
       font-weight: 400;
       line-height: 1.05;
       color: var(--ink);
     }
 
     .profile-card p:last-child {
-      margin-top: 6px;
-      font-size: 0.92rem;
+      margin-top: 4px;
+      font-size: 0.84rem;
       color: var(--ink-light);
-      line-height: 1.5;
+      line-height: 1.45;
     }
 
     .profile-actions {
       display: grid;
-      gap: 12px;
+      gap: 10px;
+      align-content: start;
     }
 
     .controls-bar,
@@ -379,6 +383,11 @@
       color: var(--rose-deep);
     }
 
+    .hero-panel .btn-secondary {
+      padding: 9px 14px;
+      font-size: 0.84rem;
+    }
+
     .btn-save {
       padding: 12px 22px;
       background: linear-gradient(135deg, var(--rose) 0%, var(--rose-deep) 100%);
@@ -393,19 +402,20 @@
     }
 
     .profile-note {
-      font-size: 0.79rem;
-      line-height: 1.6;
+      font-size: 0.75rem;
+      line-height: 1.45;
       color: var(--ink-light);
     }
 
     .save-card {
       display: grid;
-      gap: 12px;
-      padding: 16px 18px;
+      gap: 8px;
+      padding: 14px 16px;
       border-radius: 24px;
       background: linear-gradient(180deg, rgba(255, 251, 248, 0.94), rgba(251, 243, 237, 0.88));
       border: 1px solid rgba(216, 171, 157, 0.18);
       box-shadow: 0 14px 26px rgba(94, 58, 41, 0.06);
+      align-content: start;
     }
 
     .save-status-line {
@@ -417,9 +427,9 @@
 
     .save-status-title {
       display: block;
-      margin-top: 5px;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.55rem;
+      margin-top: 4px;
+      font-family: var(--display-serif);
+      font-size: 1.3rem;
       font-weight: 500;
       line-height: 1;
       color: var(--ink);
@@ -459,8 +469,8 @@
     }
 
     .save-status-detail {
-      font-size: 0.82rem;
-      line-height: 1.6;
+      font-size: 0.76rem;
+      line-height: 1.45;
       color: var(--ink-light);
     }
 
@@ -470,15 +480,16 @@
     }
 
     .stats-grid {
+      grid-column: 1 / -1;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      gap: 10px;
     }
 
     .stat-card {
-      min-height: 112px;
-      padding: 16px 18px;
-      border-radius: 24px;
+      min-height: 92px;
+      padding: 14px 16px;
+      border-radius: 22px;
       background: linear-gradient(180deg, rgba(255, 252, 249, 0.92), rgba(249, 241, 235, 0.82));
       border: 1px solid rgba(216, 171, 157, 0.18);
       display: flex;
@@ -488,16 +499,16 @@
     }
 
     .stat-card strong {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.4rem;
+      font-family: var(--display-serif);
+      font-size: 2rem;
       font-weight: 400;
       line-height: 1;
       color: var(--ink);
     }
 
     .stat-card span:last-child {
-      font-size: 0.83rem;
-      line-height: 1.5;
+      font-size: 0.75rem;
+      line-height: 1.4;
       color: var(--ink-light);
     }
 
@@ -537,7 +548,7 @@
     }
 
     .section-label {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: var(--display-serif);
       font-size: 1.55rem;
       font-weight: 500;
       color: var(--ink);
@@ -830,11 +841,12 @@
       display: block;
       margin-bottom: 5px;
       font-size: 0.95rem;
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 500;
+      font-family: var(--display-serif);
+      font-weight: 400;
       letter-spacing: 0.02em;
       text-transform: none;
       color: var(--ink);
+      font-synthesis-weight: none;
     }
 
     .add-btn {
@@ -865,7 +877,7 @@
     .add-btn span {
       font-size: 2.6rem;
       line-height: 1;
-      font-family: 'Cormorant Garamond', serif;
+      font-family: var(--display-serif);
     }
 
     .add-btn small {
@@ -946,11 +958,13 @@
     }
 
     .popup-name {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: var(--display-serif);
       font-size: 1.22rem;
       line-height: 1.1;
       margin-bottom: 10px;
       color: var(--ink);
+      font-weight: 400;
+      font-synthesis-weight: none;
     }
 
     .popup-rating {
@@ -1065,7 +1079,7 @@
     }
 
     .export-copy h3 {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: var(--display-serif);
       font-weight: 400;
       font-size: 1.5rem;
       color: var(--ink);
@@ -1122,7 +1136,7 @@
     }
 
     .modal h2 {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: var(--display-serif);
       font-weight: 400;
       font-size: 2rem;
       color: var(--ink);
@@ -1604,6 +1618,7 @@
       }
 
       .hero-panel {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         max-width: 760px;
       }
     }
@@ -1628,6 +1643,10 @@
 
       .hero-copy {
         padding: 28px 24px 26px;
+      }
+
+      .hero-panel {
+        grid-template-columns: 1fr;
       }
 
       .controls-bar {
@@ -1706,7 +1725,7 @@
         <p id="hero-subtitle">A plush little vanity for bottles, notes, and the moods they leave behind.</p>
         <div class="hero-ribbon">
           <span id="active-profile-pill">local wall</span>
-          <span id="storage-mode-pill">saved in this browser</span>
+          <span id="storage-mode-pill">guest mode · this device</span>
         </div>
       </div>
 
@@ -1714,7 +1733,7 @@
         <div class="profile-card">
           <div class="profile-badge" id="profile-badge">M</div>
           <div>
-            <div class="mini-label">active account</div>
+            <div class="mini-label">active wall</div>
             <h2 id="profile-name-display">my fragrance wall</h2>
             <p id="profile-tagline-display">soft petals, sweet woods, and a little chaos.</p>
           </div>
@@ -1728,20 +1747,20 @@
           <div class="button-row">
             <button class="btn-secondary" type="button" onclick="openProfileModal()">new wall</button>
             <button class="btn-secondary" type="button" onclick="openProfileModal(true)">edit profile</button>
-            <button class="btn-secondary" type="button" onclick="openCloudModal()">cloud account</button>
+            <button class="btn-secondary" type="button" onclick="openCloudModal()">account</button>
           </div>
-          <p class="profile-note" id="profile-note-text">This project now supports lightweight local accounts, so each person can keep their own perfume wall in the same browser without touching anyone else’s shelf.</p>
+          <p class="profile-note" id="profile-note-text">Guest mode saves this wall on this device and browser. Sign in if you want your shelf to sync across devices too.</p>
         </div>
 
         <div class="save-card">
           <div class="save-status-line">
             <div>
               <div class="mini-label">save status</div>
-              <strong class="save-status-title" id="save-status-title">auto-save ready</strong>
+              <strong class="save-status-title" id="save-status-title">guest auto-save on</strong>
             </div>
-            <span class="save-status-badge" id="save-status-badge">browser</span>
+            <span class="save-status-badge" id="save-status-badge">device</span>
           </div>
-          <p class="save-status-detail" id="save-status-detail">Every wall change is stored in this browser. If you connect Firebase, this card will also tell you when the cloud copy is synced.</p>
+          <p class="save-status-detail" id="save-status-detail">Every wall change is stored on this device and browser. Sign in if you want the same wall to sync across devices.</p>
           <div class="button-row">
             <button class="btn-secondary" id="save-now-btn" type="button" onclick="saveNow()">save now</button>
           </div>
@@ -1945,7 +1964,7 @@
       <div class="modal-head">
         <div>
           <h2 id="profile-modal-title">new wall</h2>
-          <p class="modal-sub" id="profile-modal-sub">create a local account for another perfume lover</p>
+          <p class="modal-sub" id="profile-modal-sub">create another wall for this browser</p>
         </div>
         <button class="modal-close" type="button" onclick="closeProfileModal()" aria-label="Close profile editor">×</button>
       </div>
@@ -1962,7 +1981,7 @@
         <div class="form-group full">
           <label>How it works</label>
           <div class="extractor-card">
-            <p>Each wall always keeps a local browser copy first, so nobody loses their shelf if the connection flakes out. If you connect Firebase, these same walls can also sync to a real account across devices.</p>
+            <p>Each wall always keeps a local browser copy first, so nobody loses their shelf if the connection flakes out. Signing in simply adds cloud sync on top of that for cross-device access.</p>
           </div>
         </div>
       </div>
@@ -1978,24 +1997,26 @@
     <div class="modal">
       <div class="modal-head">
         <div>
-          <h2>firebase cloud account</h2>
-          <p class="modal-sub">connect sign-in + sync so each person can keep their own wall</p>
+          <h2>account</h2>
+          <p class="modal-sub">sign in to sync your wall, or keep browsing as a guest</p>
         </div>
-        <button class="modal-close" type="button" onclick="closeCloudModal()" aria-label="Close cloud account modal">×</button>
+        <button class="modal-close" type="button" onclick="closeCloudModal()" aria-label="Close account modal">×</button>
       </div>
 
       <div class="form-grid">
         <div class="form-group full">
+          <label>Guest mode</label>
+          <div class="extractor-card">
+            <p>This wall already works without an account. If you stay as a guest, everything is saved locally on this device and browser only.</p>
+            <div class="button-row">
+              <button class="btn-cancel" type="button" onclick="closeCloudModal()">keep using guest mode</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group full" hidden>
           <label for="firebase-config-input">Firebase Web Config (optional override)</label>
-          <textarea id="firebase-config-input" class="config-textarea" spellcheck="false" placeholder='{
-  "apiKey": "...",
-  "authDomain": "...",
-  "projectId": "...",
-  "storageBucket": "...",
-  "messagingSenderId": "...",
-  "appId": "..."
-}'></textarea>
-          <p class="cloud-help">This site already has Firebase wired in for public visitors. You only need this box if you want to override the project while testing in your own browser.</p>
+          <textarea id="firebase-config-input" class="config-textarea" spellcheck="false"></textarea>
           <div class="button-row">
             <button class="btn-secondary" type="button" onclick="saveFirebaseConfig()">save override config</button>
             <button class="btn-cancel" type="button" onclick="clearFirebaseConfig()">reset to site config</button>
@@ -2014,13 +2035,13 @@
 
         <div class="form-group full">
           <div class="extractor-card">
-            <p>Sign in or create an account to keep your wall synced across devices. This site is already connected to its Firebase project, so most people never need to touch the config box above.</p>
+            <p>Create an account or sign in if you want your wall to sync across devices and browsers automatically.</p>
             <div class="button-row">
               <button class="btn-secondary" type="button" onclick="signInCloud()">sign in</button>
               <button class="btn-secondary" type="button" onclick="signUpCloud()">create account</button>
               <button class="btn-cancel" type="button" onclick="signOutCloud()">sign out</button>
             </div>
-            <div class="cloud-status" id="cloud-auth-status">Cloud sign-in is ready. Create an account or sign in when you want your wall to follow you.</div>
+            <div class="cloud-status" id="cloud-auth-status">Guest mode is active. Sign in or create an account when you want this wall to follow you.</div>
           </div>
         </div>
       </div>
@@ -2423,17 +2444,15 @@
       const signedIn = Boolean(cloudState.user);
       const configured = Boolean(cloudState.config);
       const storageMode = signedIn
-        ? 'saved locally + firebase cloud'
-        : configured
-          ? 'browser save + firebase ready'
-          : 'saved in this browser';
+        ? 'saved here + synced to cloud'
+        : 'guest mode · this device';
 
       document.getElementById('storage-mode-pill').textContent = storageMode;
       document.getElementById('profile-note-text').textContent = signedIn
         ? `Signed in as ${cloudState.user.email || 'this Firebase account'}. This wall still keeps a browser copy, and now it also syncs to the cloud.`
         : configured
-          ? 'Firebase is configured here, so you can sign in from the cloud account button whenever you want to sync walls across devices.'
-          : 'This project still supports lightweight local accounts, so different people can keep their own perfume walls in the same browser without touching anyone else’s shelf.';
+          ? 'Guest mode saves this wall on this device and browser. Use the account button anytime if you want your shelf to sync across devices too.'
+          : 'Guest mode saves this wall on this device and browser. If cloud sync is unavailable, your local wall still stays here.';
 
       const cloudStatus = document.getElementById('cloud-auth-status');
       if (cloudStatus) {
@@ -2441,10 +2460,10 @@
         if (signedIn) {
           cloudStatus.textContent = `Signed in as ${cloudState.user.email || cloudState.user.uid}. Cloud sync is on for this wall.`;
           cloudStatus.classList.add('success');
-        } else if (configured) {
-          cloudStatus.textContent = 'Firebase is configured. Sign in or create an account here to sync walls across devices.';
         } else {
-          cloudStatus.textContent = 'Cloud sync is off until you save a Firebase config.';
+          cloudStatus.textContent = configured
+            ? 'Guest mode is active. This wall is only stored on this device until you sign in or create an account.'
+            : 'Guest mode is active. This wall is saved on this device only right now.';
         }
       }
     }
@@ -2475,13 +2494,17 @@
         badge.classList.add('is-cloud');
         detail.innerHTML = `<strong>Last cloud sync ${formatSavedTimestamp(saveMeta.lastCloudSavedAt)}.</strong> This wall is also cached in this browser for quick reloads.`;
       } else if (saveMeta.lastLocalSavedAt) {
-        title.textContent = 'saved locally';
-        badge.textContent = 'browser';
-        detail.innerHTML = `<strong>Last browser save ${formatSavedTimestamp(saveMeta.lastLocalSavedAt)}.</strong> Use Firebase if you want this wall to follow you across devices.`;
+        title.textContent = Boolean(cloudState.user) ? 'saved here, cloud next' : 'saved on this device';
+        badge.textContent = Boolean(cloudState.user) ? 'local' : 'device';
+        detail.innerHTML = Boolean(cloudState.user)
+          ? `<strong>Last browser save ${formatSavedTimestamp(saveMeta.lastLocalSavedAt)}.</strong> This copy is safe here while cloud sync catches up.`
+          : `<strong>Last browser save ${formatSavedTimestamp(saveMeta.lastLocalSavedAt)}.</strong> Guest mode keeps this wall on this device until you sign in.`;
       } else {
-        title.textContent = 'auto-save ready';
-        badge.textContent = Boolean(cloudState.config) ? 'ready' : 'browser';
-        detail.textContent = 'Every wall change is stored in this browser. If you connect Firebase, this card will also tell you when the cloud copy is synced.';
+        title.textContent = Boolean(cloudState.user) ? 'cloud sync ready' : 'guest auto-save on';
+        badge.textContent = Boolean(cloudState.user) ? 'cloud' : 'device';
+        detail.textContent = Boolean(cloudState.user)
+          ? 'New wall changes will save here first and then sync to your account automatically.'
+          : 'Every wall change is stored on this device and browser. Sign in if you want the same wall to sync across devices.';
       }
 
       saveNowButton.disabled = saveMeta.phase === 'saving' && !shouldUseCloudSync();
@@ -2972,8 +2995,8 @@
 
       document.getElementById('profile-modal-title').textContent = editCurrent ? 'edit wall' : 'new wall';
       document.getElementById('profile-modal-sub').textContent = editCurrent
-        ? 'tune the active account details'
-        : 'create a local account for another perfume lover';
+        ? 'tune the active wall details'
+        : 'create another wall for this browser';
       document.getElementById('p-name').value = editCurrent ? profile.name : '';
       document.getElementById('p-tagline').value = editCurrent ? profile.tagline : '';
 
@@ -3247,7 +3270,7 @@
         setCloudStatus(
           cloudState.user
             ? `Signed in as ${cloudState.user.email || cloudState.user.uid}.`
-            : 'Firebase is configured. Sign in or create an account when you are ready.'
+            : 'Guest mode is active. Sign in or create an account whenever you want this wall to sync across devices.'
         );
         return true;
       } catch (error) {
@@ -3361,9 +3384,7 @@
           persistSaveMeta();
         }
         renderAll();
-        setCloudStatus(cloudState.config
-          ? 'Signed out. This browser copy stays here until you sign in again.'
-          : 'Cloud sync is off until you save a Firebase config.');
+        setCloudStatus('Signed out. Guest mode is back on, so this wall will stay on this device until you sign in again.');
         return;
       }
 
